@@ -86,7 +86,7 @@ def main():
     ap = argparse.ArgumentParser(description="Convert CHAT (.cha) to .RTTM")
     # Define which arguments the program accepts
     ap.add_argument("input", help="A .cha file or a directory of .cha files")
-    ap.add_argument("-o", default="rttm_out", help="Output directory")
+    ap.add_argument("-o","--out", default="rttm_out", help="Output directory")
 
     #Activate to add offset time to all start time when run the command otherwise use the exact time written in the cha file
     ap.add_argument("--use-comment-offset", action="store_true",

@@ -1,51 +1,84 @@
 #!/usr/bin/env python3
-from pathlib import Path
+# Batch-diarize WAV files in ./wav and write RTTM files to ./hyp_rttm
 
-import torch
-import torchaudio
+from pathlib import Path
+import os, sys
+import torch, torchaudio
 from pyannote.audio import Pipeline
 
 
+def load_pipeline() -> Pipeline:
+    """
+    Load the community diarization pipeline.
+    Token is read from env (HUGGINGFACE_HUB_TOKEN).
+    We try both kwarg styles to handle old/new pyannote/hub versions.
+    """
+    repo = "pyannote/speaker-diarization-community-1"
+    tok = os.getenv("HUGGINGFACE_HUB_TOKEN")
+    try:
+        # Older stacks use `use_auth_token=`
+        return Pipeline.from_pretrained(repo, use_auth_token=tok) if tok else Pipeline.from_pretrained(repo)
+    except TypeError:
+        # Newer stacks use `token=`
+        return Pipeline.from_pretrained(repo, token=tok) if tok else Pipeline.from_pretrained(repo)
+
+
 def main():
-    wav_dir = Path("wav")         
-    out_dir = Path("hyp_rttm")  # folder to save output RTTM files （hyp is hypothesis) 
-    out_dir.mkdir(parents=True, exist_ok=True) 
+    # Input/output folders
+    wav_dir = Path("wav")
+    out_dir = Path("hyp_rttm")
+    out_dir.mkdir(parents=True, exist_ok=True)
 
-    # load community diarization pipeline (requires HF token)
-    pipeline = Pipeline.from_pretrained(
-        "pyannote/speaker-diarization-community-1",
-        token = ""
-    )
+    # Load diarization model (requires accepting model terms + token)
+    try:
+        pipeline = load_pipeline()
+        if pipeline is None:
+            print("error: access denied (accept model terms, set HUGGINGFACE_HUB_TOKEN)")
+            sys.exit(1)
+    except Exception as e:
+        print(f"error: pipeline load failed: {e}")
+        sys.exit(1)
 
-    # use GPU if available, otherwise CPU
+    # Use GPU if available, else CPU
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     pipeline.to(device)
 
-    count = 0
+    # Collect .wav inputs
+    wavs = sorted(wav_dir.glob("*.wav"))
+    if not wavs:
+        print(f"no .wav files in {wav_dir.resolve()}")
+        return
 
-    # loop through all .wav files in wav/ directory
-    for wav_path in sorted(wav_dir.glob("*.wav")):
-        uri = wav_path.stem  # get filename without extension
-        print(f"Processing {wav_path} ...")
+    ok = fail = 0
 
-        # load waveform using torchaudio (avoids torchcodec issues)
-        waveform, sr = torchaudio.load(str(wav_path))
+    # Disable autograd for faster inference
+    with torch.inference_mode():
+        for p in wavs:
+            try:
+                # Load audio via torchaudio (FFmpeg/torchcodec path)
+                x, sr = torchaudio.load(str(p))
 
-        if waveform.shape[0] > 1:
-            waveform = torch.mean(waveform, dim=0, keepdim=True)
+                # Fold multichannel → mono (keep native sample rate)
+                if x.shape[0] > 1:
+                    x = torch.mean(x, dim=0, keepdim=True)
 
-        # run pyannote diarization on the audio data
-        diarization = pipeline({"waveform": waveform, "sample_rate": sr})
+                # Run diarization on tensor input
+                ann = pipeline({"waveform": x, "sample_rate": sr})
 
-        # write diarization result to RTTM
-        out_path = out_dir / f"{uri}.rttm"
-        with out_path.open("w", encoding="utf-8") as f:
-            diarization.write_rttm(f)
+                # Write RTTM next to outputs
+                out = out_dir / (p.stem + ".rttm")
+                with out.open("w", encoding="utf-8") as f:
+                    ann.write_rttm(f)
 
-        print(f"  -> wrote {out_path}")
-        count += 1
+                print(f"wrote {out}")
+                ok += 1
 
-    print(f"Done. Wrote {count} RTTM file(s) to {out_dir}")
+            except Exception as e:
+                # Keep going even if one file fails
+                print(f"fail {p.name}: {e}")
+                fail += 1
+
+    print(f"done: {ok} ok, {fail} failed")
 
 
 if __name__ == "__main__":

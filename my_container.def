@@ -1,0 +1,20 @@
+Bootstrap: docker                 # Build this image starting from a Docker base image
+From: python:3.9-slim             # Use the official slim Python 3.9 image as the base
+
+%post                              # Commands run at build time (inside the image)
+  set -e                           # Exit immediately if any command fails
+  apt-get update && apt-get install -y --no-install-recommends \
+    build-essential ffmpeg \       # compilers/tools + FFmpeg for audio I/O
+    libglib2.0-0 libxext6 libsm6 libxrender1 \  # lightweight X libs some packages expect
+    git wget curl ca-certificates && \          # common CLI tools + CA certs
+    apt-get clean && rm -rf /var/lib/apt/lists/*  # keep image small
+
+  python3 -m pip install --upgrade pip
+  # Install CUDA 12.1-compatible PyTorch/TorchAudio wheels (GPU-enabled)
+  python3 -m pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+
+  # Pin versions to avoid token/use_auth_token API mismatch; add torchcodec for torchaudio decoding
+  python3 -m pip install --no-cache-dir "pyannote.audio==3.1.1" "huggingface_hub==0.19.4" torchcodec
+
+%runscript                         # What runs when you `apptainer run ... <args>`
+  exec "$@"                        # Just execute whatever command/args you pass (e.g., python3 script.py)

@@ -1,8 +1,8 @@
 """
-Pipeline orchestration for speaker diarization and voice-type classification.
+pipeline orchestration for speaker diarization and voice type classification
 
-This module integrates pyannote diarization with VTC voice-type classification,
-processing audio files end-to-end and producing enriched RTTM output.
+this module integrates pyannote diarization with vtc voice type classification
+processing audio files end to end and producing enriched rttm output
 """
 
 from __future__ import annotations
@@ -24,23 +24,23 @@ logger = logging.getLogger(__name__)
 
 
 class HFTokenError(Exception):
-    """Raised when Hugging Face token is not available."""
+    """raised when hugging face token is not available"""
 
     pass
 
 
 def _get_hf_token(config: PipelineConfig) -> str:
     """
-    Retrieve Hugging Face token from environment variable.
+    retrieve hugging face token from environment variable
 
-    Args:
-        config: Pipeline configuration containing the token env var name.
+    args
+        config pipeline configuration containing the token env var name
 
-    Returns:
-        The Hugging Face token value.
+    returns
+        the hugging face token value
 
-    Raises:
-        HFTokenError: If the environment variable is not set.
+    raises
+        hftokenerror if the environment variable is not set
     """
     token_env_var = config.huggingface.token_env_var
     token = os.environ.get(token_env_var)
@@ -56,20 +56,20 @@ def _get_hf_token(config: PipelineConfig) -> str:
 
 def _discover_audio_files(input_dir: Path) -> List[Path]:
     """
-    Discover audio files in the input directory.
+    discover audio files in the input directory
 
-    Args:
-        input_dir: Directory to search for audio files.
+    args
+        input_dir directory to search for audio files
 
-    Returns:
-        Sorted list of audio file paths (WAV and FLAC).
+    returns
+        sorted list of audio file paths wav and flac
     """
     audio_files = []
 
     for pattern in ["*.wav", "*.WAV", "*.flac", "*.FLAC"]:
         audio_files.extend(input_dir.glob(pattern))
 
-    # Sort for deterministic processing order
+    # sort for deterministic processing order
     return sorted(audio_files)
 
 
@@ -80,21 +80,21 @@ def _slice_segment(
     end: float,
 ) -> torch.Tensor:
     """
-    Slice a segment from the waveform tensor.
+    slice a segment from the waveform tensor
 
-    Args:
-        waveform: Full audio waveform, shape (1, num_samples).
-        sample_rate: Sample rate of the waveform.
-        start: Segment start time in seconds.
-        end: Segment end time in seconds.
+    args:
+        waveform: full audio waveform, shape (1, num_samples)
+        sample_rate: sample rate of the waveform
+        start: segment start time in seconds
+        end: segment end time in seconds
 
-    Returns:
-        Sliced waveform tensor for the segment.
+    returns
+        sliced waveform tensor for the segment
     """
     start_sample = int(start * sample_rate)
     end_sample = int(end * sample_rate)
 
-    # Clamp to valid range
+    # clamp to valid range
     start_sample = max(0, start_sample)
     end_sample = min(waveform.shape[-1], end_sample)
 
@@ -109,36 +109,36 @@ def _process_file(
     sample_rate: int,
 ) -> Dict:
     """
-    Process a single audio file through diarization and classification.
+    process a single audio file through diarization and classification
 
-    Args:
-        audio_path: Path to the audio file.
-        diarizer: Pyannote diarization adapter.
-        classifier: VTC voice-type classifier.
-        output_dir: Directory to write output files.
-        sample_rate: Target sample rate.
+    args
+        audio_path: path to the audio file
+        diarizer: pyannote diarization adapter
+        classifier: vtc voice type classifier
+        output_dir: directory to write output files
+        sample_rate: target sample rate (16000 Hz)
 
-    Returns:
-        Dictionary containing processing results and statistics.
+    returns
+        dictionary containing processing results and statistics
     """
     uri = audio_path.stem
     logger.info(f"Processing {audio_path} ...")
 
-    # Step 1: Run diarization
+    # step 1 run diarization
     annotation = diarizer.diarize_file(audio_path)
 
-    # Step 2: Load waveform for segment classification
+    # step 2 load waveform for segment classification
     waveform, sr = diarizer.get_waveform(audio_path)
 
-    # Step 3: Classify each segment
+    # step 3 classify each segment
     voice_type_mapping: Dict[Tuple[float, float], str] = {}
     scores_data: List[Dict] = []
 
     for segment, track, speaker_label in annotation.itertracks(yield_label=True):
-        # Slice segment from waveform
+        # slice segment from waveform
         segment_waveform = _slice_segment(waveform, sr, segment.start, segment.end)
 
-        # Skip very short segments (< 100ms)
+        # skip very short segments less than 100ms
         if segment_waveform.shape[-1] < int(0.1 * sr):
             logger.debug(
                 f"Skipping short segment {segment.start:.3f}-{segment.end:.3f}"
@@ -146,15 +146,15 @@ def _process_file(
             probs = {"FEM": 0.0, "MAL": 0.0, "KCHI": 0.0, "OCH": 0.0}
             primary_label = "UNK"
         else:
-            # Predict voice type
+            # predict voice type
             probs = classifier.predict_segment(segment_waveform, sr)
             primary_label = max(probs, key=probs.get)
 
-        # Store mapping for RTTM
+        # store mapping for rttm
         key = segment_key(segment.start, segment.end)
         voice_type_mapping[key] = primary_label
 
-        # Store full scores for JSON output
+        # store full scores for json output
         scores_data.append(
             {
                 "start": round(segment.start, 3),
@@ -165,19 +165,19 @@ def _process_file(
             }
         )
 
-    # Step 4: Write outputs
+    # step 4 write outputs
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    # Write enriched RTTM
+    # write enriched rttm
     rttm_path = output_dir / f"{uri}.rttm"
     write_enriched_rttm(annotation, uri, rttm_path, voice_type_mapping)
     logger.info(f"  -> wrote {rttm_path}")
 
-    # Write plain RTTM as backup
+    # write plain rttm as backup
     plain_rttm_path = output_dir / f"{uri}_plain.rttm"
     write_plain_rttm(annotation, uri, plain_rttm_path)
 
-    # Write VTC scores JSON
+    # write vtc scores json
     scores_path = output_dir / f"{uri}_vtc_scores.json"
     with open(scores_path, "w", encoding="utf-8") as f:
         json.dump(
@@ -203,37 +203,37 @@ def _process_file(
 
 def run_pipeline(config: PipelineConfig) -> Dict:
     """
-    Run the complete diarization and voice-type classification pipeline.
+    run the complete diarization and voice type classification pipeline
 
-    This is the main entry point for processing audio files.
+    this is the main entry point for processing audio files
 
-    Args:
-        config: Pipeline configuration.
+    args
+        config pipeline configuration
 
-    Returns:
-        Dictionary containing processing summary and results.
+    returns
+        dictionary containing processing summary and results
 
-    Raises:
-        HFTokenError: If Hugging Face token is not set.
-        FileNotFoundError: If input directory does not exist.
+    raises
+        HFTokenError if hugging face token is not set
+        FileNotFoundError if input directory does not exist
     """
-    # Setup logging
+    # setup logging
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     )
 
-    # Resolve HF token (never log it!)
+    # resolve hf token never log it
     hf_token = _get_hf_token(config)
 
-    # Validate input directory
+    # validate input directory
     input_dir = Path(config.io.input_dir)
     if not input_dir.exists():
         raise FileNotFoundError(f"Input directory not found: {input_dir}")
 
     output_dir = Path(config.io.output_dir)
 
-    # Discover audio files
+    # discover audio files
     audio_files = _discover_audio_files(input_dir)
     if not audio_files:
         logger.warning(f"No audio files found in {input_dir}")
@@ -241,7 +241,7 @@ def run_pipeline(config: PipelineConfig) -> Dict:
 
     logger.info(f"Found {len(audio_files)} audio file(s) in {input_dir}")
 
-    # Initialize adapters
+    # initialize adapters
     logger.info("Initializing pyannote diarization pipeline...")
     diarizer = PyannoteDiarizer(
         model_id=config.models.pyannote_pipeline,
@@ -262,7 +262,7 @@ def run_pipeline(config: PipelineConfig) -> Dict:
             "Install VTC to enable actual voice-type classification."
         )
 
-    # Process each file
+    # process each file
     results = []
     for audio_path in audio_files:
         try:
@@ -278,7 +278,7 @@ def run_pipeline(config: PipelineConfig) -> Dict:
             logger.error(f"Failed to process {audio_path}: {e}")
             results.append({"uri": audio_path.stem, "error": str(e)})
 
-    # Summary
+    # summary
     successful = sum(1 for r in results if "error" not in r)
     logger.info(
         f"Done. Processed {successful}/{len(audio_files)} file(s). "
@@ -292,4 +292,3 @@ def run_pipeline(config: PipelineConfig) -> Dict:
         "vtc_available": classifier.is_available,
         "files": results,
     }
-

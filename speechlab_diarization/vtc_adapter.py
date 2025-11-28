@@ -1,10 +1,10 @@
 """
-VTC 2.0 voice-type classification adapter.
+vtc 2.0 voice type classification adapter
 
-Provides a clean interface for voice-type classification using VTC 2.0.
-Currently a stub implementation - will be completed once VTC is integrated.
+provides a clean interface for voice type classification using vtc 20
+currently a stub implementation - will be completed once vtc is integrated
 
-VTC labels: FEM (female adult), MAL (male adult), KCHI (key child), OCH (other child)
+vtc labels: FEM (female adult), MAL (male adult), KCHI (key child), OCH (other child)
 """
 
 from __future__ import annotations
@@ -16,23 +16,23 @@ import torch
 
 logger = logging.getLogger(__name__)
 
-# VTC voice type labels
+# vtc voice type labels
 VTC_LABELS = ["FEM", "MAL", "KCHI", "OCH"]
 
 
 class VoiceTypeClassifier:
     """
-    Voice-type classification using VTC 2.0.
+    voice type classification using vtc 2.0
 
-    Classifies audio segments into voice types:
-    - FEM: Female adult
-    - MAL: Male adult
-    - KCHI: Key child (target child)
-    - OCH: Other child
+    classifies audio segments into voice types:
+    - fem: female adult
+    - mal: male adult
+    - kchi: key child (target child)
+    - och: other child
 
-    Note: This is currently a stub implementation. The actual VTC integration
-    will be added once the VTC package is properly installed and its
-    inference code (scripts/infer.py) is examined.
+    note this is currently a stub implementation the actual vtc integration
+    will be added once the vtc package is properly installed and its
+    inference code scripts inferpy is examined
     """
 
     def __init__(
@@ -41,19 +41,19 @@ class VoiceTypeClassifier:
         device: str = "cuda",
     ) -> None:
         """
-        Initialize the VTC voice-type classifier.
+        initialize the vtc voice type classifier
 
-        Args:
-            checkpoint_or_config: Path to VTC checkpoint or config file.
-                If None, will attempt to use a default path inside the container.
-            device: Device to run inference on ("cuda" or "cpu").
+        args
+            checkpoint_or_config: path to vtc checkpoint or config file
+                if none will attempt to use a default path inside the container
+            device: device to run inference on cuda or cpu
         """
         self.checkpoint_path = checkpoint_or_config
         self.device = torch.device(device if torch.cuda.is_available() else "cpu")
         self._model = None
         self._is_stub = True
 
-        # Try to import VTC and load the model
+        # try to import vtc and load the model
         try:
             self._initialize_vtc()
             self._is_stub = False
@@ -69,25 +69,25 @@ class VoiceTypeClassifier:
 
     def _initialize_vtc(self) -> None:
         """
-        Initialize the actual VTC model.
+        initialize the actual vtc model
 
-        This method will be implemented once VTC is properly integrated.
-        It should:
-        1. Import the VTC model classes
-        2. Load the checkpoint or config
-        3. Move the model to the specified device
-        4. Set up any required preprocessing
+        this method will be implemented once vtc is properly integrated
+        it should:
+        1. import the vtc model classes
+        2. load the checkpoint or config
+        3. move the model to the specified device
+        4. set up any required preprocessing
         """
-        # TODO: Implement actual VTC initialization
-        # Example structure based on typical PyTorch inference:
+        # TODO: implement actual vtc initialization
+        # example structure based on typical pytorch inference
         #
-        # from vtc.model import VTCModel  # or whatever the actual import is
-        # from vtc.config import load_config
+        # from vtcmodel import vtcmodel  or whatever the actual import is
+        # from vtcconfig import load_config
         #
-        # if self.checkpoint_path:
-        #     config = load_config(self.checkpoint_path)
-        # else:
-        #     config = load_config("/app/vtc_checkpoint/config.yaml")
+        # if selfcheckpoint_path
+        #     config = load_configselfcheckpoint_path
+        # else
+        #     config = load_configappvtc_checkpointconfigyaml
         #
         # self._model = VTCModel(config)
         # self._model.load_state_dict(torch.load(checkpoint_path))
@@ -101,17 +101,17 @@ class VoiceTypeClassifier:
         sample_rate: int,
     ) -> Dict[str, float]:
         """
-        Predict voice type probabilities for an audio segment.
+        predict voice type probabilities for an audio segment
 
-        Args:
-            waveform: Audio waveform tensor, shape (1, num_samples) or (num_samples,).
-                Should be single-channel (mono) at 16kHz.
-            sample_rate: Sample rate of the waveform (should be 16000).
+        args
+            waveform audio waveform tensor shape (1,  num_samples) or (num_samples,)
+                should be single channel (mono) at 16khz
+            sample_rate sample rate of the waveform (should be 16000)
 
-        Returns:
-            Dictionary mapping voice type labels to probabilities.
-            Keys: "FEM", "MAL", "KCHI", "OCH"
-            Values: Probabilities summing to 1.0
+        returns
+            dictionary mapping voice type labels to probabilities
+            keys: "fem", "mal", "kchi", "och"
+            values: probabilities summing to 1.0
         """
         if self._is_stub:
             return self._stub_predict()
@@ -120,9 +120,9 @@ class VoiceTypeClassifier:
 
     def _stub_predict(self) -> Dict[str, float]:
         """
-        Return placeholder predictions when VTC is not available.
+        return placeholder predictions when vtc is not available
 
-        Returns uniform probabilities across all voice types.
+        returns uniform probabilities across all voice types
         """
         return {label: 0.25 for label in VTC_LABELS}
 
@@ -132,58 +132,59 @@ class VoiceTypeClassifier:
         sample_rate: int,
     ) -> Dict[str, float]:
         """
-        Run actual VTC inference on a segment.
+        run actual vtc inference on a segment
 
-        This method will be implemented once VTC is properly integrated.
-        It should:
-        1. Ensure waveform is at 16kHz
-        2. Apply any required preprocessing (feature extraction)
-        3. Run the model forward pass
-        4. Convert logits to probabilities
-        5. Return as a dictionary
+        this method will be implemented once vtc is properly integrated
+        it should
+        1. ensure waveform is at 16khz
+        2. apply any required preprocessing feature extraction
+        3. run the model forward pass
+        4. convert logits to probabilities
+        5. return as a dictionary
 
-        Args:
-            waveform: Audio waveform tensor.
-            sample_rate: Sample rate of the waveform.
+        args
+            waveform audio waveform tensor
+            sample_rate sample rate of the waveform
 
-        Returns:
-            Dictionary mapping voice type labels to probabilities.
+        returns
+            dictionary mapping voice type labels to probabilities
         """
-        # TODO: Implement actual VTC inference
-        # Example structure:
+        # todo implement actual vtc inference
+        # example structure
         #
-        # # Ensure correct sample rate
-        # if sample_rate != 16000:
-        #     waveform = torchaudio.transforms.Resample(sample_rate, 16000)(waveform)
+        # ensure correct sample rate
+        # if sample_rate != 16000
+        #     waveform = torchaudio transformsresamplesample_rate 16000waveform
         #
-        # # Ensure correct shape (batch, channels, samples)
+        # ensure correct shape (batch, channels, samples)
         # if waveform.dim() == 1:
         #     waveform = waveform.unsqueeze(0).unsqueeze(0)
         # elif waveform.dim() == 2:
         #     waveform = waveform.unsqueeze(0)
         #
-        # # Move to device
+        # move to device
         # waveform = waveform.to(self.device)
         #
-        # # Run inference
+        # run inference
         # with torch.no_grad():
         #     logits = self._model(waveform)
         #     probs = torch.softmax(logits, dim=-1)
         #
-        # # Convert to dict
+        # convert to dict
         # probs = probs.squeeze().cpu().numpy()
         # return {label: float(prob) for label, prob in zip(VTC_LABELS, probs)}
 
-        # Fallback to stub for now
+        # fallback to stub for now
         return self._stub_predict()
 
     @property
     def is_available(self) -> bool:
-        """Check if VTC model is properly loaded and available."""
+        """check if vtc model is properly loaded and available"""
         return not self._is_stub
 
     @property
     def labels(self) -> list[str]:
-        """Return the list of voice type labels."""
+        """return the list of voice type labels"""
         return VTC_LABELS.copy()
+
 

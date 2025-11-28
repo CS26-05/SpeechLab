@@ -1,7 +1,7 @@
 """
-SpeechLab Diarization Package
+speechlab diarization package
 
-Integrates pyannote speaker diarization with VTC 2.0 voice-type classification.
+integrates pyannote speaker diarization with vtc 20 voice type classification
 """
 
 __version__ = "0.1.0"
@@ -33,4 +33,3 @@ __all__ = [
     "write_enriched_rttm",
     "run_pipeline",
 ]
-

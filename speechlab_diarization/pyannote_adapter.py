@@ -1,8 +1,8 @@
 """
-Pyannote diarization adapter.
+pyannote diarization adapter
 
-Provides a clean interface for speaker diarization using pyannote.audio.
-Refactored from the original WavToRttm.py script.
+provides a clean interface for speaker diarization using pyannote audio
+refactored from the original wavtorttm.py script
 """
 
 from __future__ import annotations
@@ -18,10 +18,10 @@ from pyannote.core import Annotation
 
 class PyannoteDiarizer:
     """
-    Speaker diarization using pyannote.audio pipeline.
+    speaker diarization using pyannote audio pipeline
 
-    Handles single-file diarization with audio loading, preprocessing,
-    and pipeline inference.
+    handles single file diarization with audio loading preprocessing
+    and pipeline inference
     """
 
     def __init__(
@@ -32,44 +32,44 @@ class PyannoteDiarizer:
         target_sample_rate: int = 16000,
     ) -> None:
         """
-        Initialize the pyannote diarization pipeline.
+        initialize the pyannote diarization pipeline
 
-        Args:
-            model_id: Hugging Face model identifier (e.g., "pyannote/speaker-diarization-community-1").
-            hf_token: Hugging Face authentication token (read from environment, never logged).
-            device: Device to run inference on ("cuda" or "cpu").
-            target_sample_rate: Target sample rate for audio processing.
+        args
+            model_id: hugging face model identifier (e.g. "pyannote/speaker-diarization-community-1")
+            hf_token: hugging face authentication token (read from environment never logged)
+            device: device to run inference on (cuda or cpu)
+            target_sample_rate: target sample rate for audio processing (16000 Hz)
         """
         self.model_id = model_id
         self.device = torch.device(device if torch.cuda.is_available() else "cpu")
         self.target_sample_rate = target_sample_rate
 
-        # Load the pyannote pipeline
+        # load the pyannote pipeline
         self.pipeline = Pipeline.from_pretrained(model_id, use_auth_token=hf_token)
         self.pipeline.to(self.device)
 
     def _load_audio(self, audio_path: Path) -> Tuple[torch.Tensor, int]:
         """
-        Load and preprocess audio file.
+        load and preprocess audio file
 
-        - Loads audio using torchaudio
-        - Downmixes to mono if multi-channel
-        - Resamples to target sample rate if needed
+        - loads audio using torchaudio
+        - downmixes to mono if multi channel
+        - resamples to target sample rate if needed
 
-        Args:
-            audio_path: Path to the audio file.
+        args:
+            audio_path path to the audio file
 
-        Returns:
-            Tuple of (waveform tensor, sample rate).
-            Waveform shape is (1, num_samples) - single channel.
+        returns
+            tuple of (waveform tensor, sample rate) 
+            waveform shape is (1, num_samples) - single channel
         """
         waveform, sample_rate = torchaudio.load(str(audio_path))
 
-        # Downmix to mono if stereo or multi-channel
+        # downmix to mono if stereo or multi channel
         if waveform.shape[0] > 1:
             waveform = torch.mean(waveform, dim=0, keepdim=True)
 
-        # Resample if needed
+        # resample if needed
         if sample_rate != self.target_sample_rate:
             resampler = torchaudio.transforms.Resample(
                 orig_freq=sample_rate, new_freq=self.target_sample_rate
@@ -81,36 +81,35 @@ class PyannoteDiarizer:
 
     def diarize_file(self, audio_path: Union[str, Path]) -> Annotation:
         """
-        Perform speaker diarization on a single audio file.
+        perform speaker diarization on a single audio file
 
-        Args:
-            audio_path: Path to the audio file (WAV, FLAC, etc.).
+        args
+            audio_path path to the audio file (wav, flac, etc.)
 
-        Returns:
-            pyannote Annotation object containing speaker segments.
+        returns
+            pyannote annotation object containing speaker segments
         """
         audio_path = Path(audio_path)
 
-        # Load and preprocess audio
+        # load and preprocess audio
         waveform, sample_rate = self._load_audio(audio_path)
 
-        # Run diarization pipeline
-        # Note: waveform stays on CPU, pipeline handles device transfer internally
+        # run diarization pipeline
+        # note waveform stays on cpu pipeline handles device transfer internally
         diarization = self.pipeline({"waveform": waveform, "sample_rate": sample_rate})
 
         return diarization
 
     def get_waveform(self, audio_path: Union[str, Path]) -> Tuple[torch.Tensor, int]:
         """
-        Get preprocessed waveform for an audio file.
+        get preprocessed waveform for an audio file
 
-        Useful for passing to VTC classifier after diarization.
+        useful for passing to vtc classifier after diarization
 
-        Args:
-            audio_path: Path to the audio file.
+        args:
+            audio_path path to the audio file
 
-        Returns:
-            Tuple of (waveform tensor, sample rate).
+        returns
+            tuple of (waveform tensor, sample rate)
         """
         return self._load_audio(Path(audio_path))
-

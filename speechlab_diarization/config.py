@@ -1,8 +1,8 @@
 """
-Configuration management for SpeechLab Diarization.
+configuration management for speechlab diarization
 
-Provides dataclass-based configuration with YAML loading and environment variable support.
-The Hugging Face token is NEVER stored in config - only the env var name is stored.
+provides dataclass based configuration with yaml loading and environment variable support
+the hugging face token is NEVER stored in config only the env var name is stored
 """
 
 from __future__ import annotations
@@ -17,7 +17,7 @@ import yaml
 
 @dataclass
 class ModelConfig:
-    """Model configuration for diarization and voice-type classification."""
+    """model configuration for diarization and voice type classification"""
 
     pyannote_pipeline: str = "pyannote/speaker-diarization-community-1"
     vtc_checkpoint: Optional[str] = None
@@ -25,14 +25,14 @@ class ModelConfig:
 
 @dataclass
 class HuggingFaceConfig:
-    """Hugging Face configuration - stores only the env var name, never the token."""
+    """hugging face configuration - stores only the env var name never the token"""
 
     token_env_var: str = "HF_TOKEN"
 
 
 @dataclass
 class RuntimeConfig:
-    """Runtime configuration for audio processing."""
+    """runtime configuration for audio processing"""
 
     sample_rate: int = 16000
     device: str = "cuda"
@@ -41,7 +41,7 @@ class RuntimeConfig:
 
 @dataclass
 class IOConfig:
-    """Input/output directory configuration."""
+    """input output directory configuration"""
 
     input_dir: str = "/data/input"
     output_dir: str = "/data/output"
@@ -49,7 +49,7 @@ class IOConfig:
 
 @dataclass
 class PipelineConfig:
-    """Complete pipeline configuration aggregating all config sections."""
+    """complete pipeline configuration aggregating all config sections"""
 
     models: ModelConfig = field(default_factory=ModelConfig)
     huggingface: HuggingFaceConfig = field(default_factory=HuggingFaceConfig)
@@ -58,7 +58,7 @@ class PipelineConfig:
 
 
 def _dict_to_config(data: dict) -> PipelineConfig:
-    """Convert a dictionary (from YAML) to PipelineConfig."""
+    """convert a dictionary from yaml to pipelineconfig"""
     models_data = data.get("models", {})
     hf_data = data.get("huggingface", {})
     runtime_data = data.get("runtime", {})
@@ -88,45 +88,35 @@ def _dict_to_config(data: dict) -> PipelineConfig:
 
 def load_config(config_path: Optional[str] = None) -> PipelineConfig:
     """
-    Load pipeline configuration with the following resolution order:
+    load pipeline configuration with the following resolution order
 
-    1. If config_path argument is provided, load from that path.
-    2. If SPEECHLAB_CONFIG environment variable is set, load from that path.
-    3. If config.yaml exists at the repo root (relative to this file), load it.
-    4. Default to /app/config.yaml (for inside-container use).
-    5. If no config file found, return default configuration.
-
-    Args:
-        config_path: Optional explicit path to config file.
-
-    Returns:
-        PipelineConfig instance with loaded or default values.
-
-    Raises:
-        FileNotFoundError: If an explicitly specified config_path does not exist.
-        yaml.YAMLError: If the config file contains invalid YAML.
+    1. if config_path argument is provided load from that path
+    2. if speechlab_config environment variable is set load from that path
+    3. if config.yaml exists at the repo root (relative to this file) load it
+    4. default to app/config.yaml for inside container use
+    5. if no config file found return default configuration
     """
-    # Resolution order for config file path
+    # resolution order for config file path
     paths_to_try: list[tuple[Optional[str], str]] = []
 
-    # 1. Explicit argument
+    # 1 explicit argument
     if config_path:
         paths_to_try.append((config_path, "argument"))
 
-    # 2. Environment variable
+    # 2 environment variable
     env_config = os.environ.get("SPEECHLAB_CONFIG")
     if env_config:
         paths_to_try.append((env_config, "SPEECHLAB_CONFIG env var"))
 
-    # 3. Repo root config.yaml (relative to this module)
+    # 3 repo root configyaml relative to this module
     repo_root = Path(__file__).parent.parent
     repo_config = repo_root / "config.yaml"
     paths_to_try.append((str(repo_config), "repo root"))
 
-    # 4. Container default
+    # 4 container default
     paths_to_try.append(("/app/config.yaml", "container default"))
 
-    # Try each path in order
+    # try each path in order
     for path, source in paths_to_try:
         if path is None:
             continue
@@ -137,9 +127,8 @@ def load_config(config_path: Optional[str] = None) -> PipelineConfig:
                 data = yaml.safe_load(f) or {}
             return _dict_to_config(data)
         elif source == "argument":
-            # If explicitly specified, it must exist
+            # if explicitly specified it must exist
             raise FileNotFoundError(f"Config file not found: {path}")
 
-    # 5. Return defaults if no config file found
+    # 5 return defaults if no config file found
     return PipelineConfig()
-

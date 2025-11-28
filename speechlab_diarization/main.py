@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-Entry point for SpeechLab Diarization.
+entry point for speechlab diarization
 
-Usage:
-    python -m speechlab_diarization.main [--config CONFIG_PATH]
+usage
+    python -m speechlab_diarization main [--config CONFIG_PATH]
 
-The HF_TOKEN environment variable must be set with a valid Hugging Face token.
+the hf_token environment variable must be set with a valid hugging face token
 """
 
 from __future__ import annotations
@@ -19,10 +19,10 @@ from .pipeline import HFTokenError, run_pipeline
 
 def main() -> int:
     """
-    Main entry point for the diarization pipeline.
+    main entry point for the diarization pipeline
 
-    Returns:
-        Exit code (0 for success, 1 for error).
+    returns
+        exit code 0 for success 1 for error
     """
     parser = argparse.ArgumentParser(
         description="SpeechLab Diarization: Speaker diarization with voice-type classification",
@@ -53,13 +53,13 @@ Environment Variables:
     args = parser.parse_args()
 
     try:
-        # Load configuration
+        # load configuration
         config = load_config(args.config)
 
-        # Run the pipeline
+        # run the pipeline
         result = run_pipeline(config)
 
-        # Report summary
+        # report summary
         if result["processed"] == result["total"]:
             print(f"\nSuccess: Processed {result['processed']} file(s)")
             return 0
@@ -74,7 +74,7 @@ Environment Variables:
         return 1
 
     except HFTokenError as e:
-        # Never print the token, only the error message
+        # never print the token only the error message
         print(f"Authentication error: {e}", file=sys.stderr)
         print(
             "Please set the HF_TOKEN environment variable with your Hugging Face token.",
@@ -93,4 +93,3 @@ Environment Variables:
 
 if __name__ == "__main__":
     sys.exit(main())
-

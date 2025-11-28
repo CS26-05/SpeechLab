@@ -1,8 +1,8 @@
 """
-RTTM file utilities.
+rttm file utilities
 
-Provides functions for writing standard and enriched RTTM files.
-Enriched RTTM includes voice-type labels from VTC classification.
+provides functions for writing standard and enriched rttm files
+enriched rttm includes voice type labels from vtc classification
 """
 
 from __future__ import annotations
@@ -15,16 +15,16 @@ from pyannote.core import Annotation
 
 def segment_key(start: float, end: float) -> Tuple[float, float]:
     """
-    Create a consistent key for segment identification.
+    create a consistent key for segment identification
 
-    Uses rounded values to avoid floating-point comparison issues.
+    uses rounded values to avoid floating point comparison issues
 
-    Args:
-        start: Segment start time in seconds.
-        end: Segment end time in seconds.
+    args
+        start segment start time in seconds
+        end segment end time in seconds
 
-    Returns:
-        Tuple of (rounded_start, rounded_end) with 3 decimal places.
+    returns
+        tuple of rounded_start rounded_end with 3 decimal places
     """
     return (round(start, 3), round(end, 3))
 
@@ -35,22 +35,22 @@ def write_plain_rttm(
     output_path: Union[str, Path],
 ) -> None:
     """
-    Write a standard RTTM file from a pyannote Annotation.
+    write a standard rttm file from a pyannote annotation
 
-    Uses pyannote's built-in RTTM writer.
+    uses pyannotes built in rttm writer
 
-    RTTM format:
+    rrtm format:
     SPEAKER <uri> 1 <start> <duration> <NA> <NA> <speaker_id> <NA> <NA>
 
-    Args:
-        annotation: pyannote Annotation object containing speaker segments.
-        uri: Unique resource identifier (typically the filename stem).
-        output_path: Path to write the RTTM file.
+    args
+        annotation: pyannote annotation object containing speaker segments
+        uri: unique resource identifier (typically the filename stem)
+        output_path: path to write the rttm file
     """
     output_path = Path(output_path)
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
-    # Set the URI on the annotation
+    # set the uri on the annotation
     annotation.uri = uri
 
     with open(output_path, "w", encoding="utf-8") as f:
@@ -64,19 +64,19 @@ def write_enriched_rttm(
     voice_type_mapping: Dict[Tuple[float, float], str],
 ) -> None:
     """
-    Write an enriched RTTM file with voice-type labels.
+    write an enriched rttm file with voice type labels
 
-    Extends the standard RTTM format by appending voice_type=<label> to each line.
+    extends the standard rttm format by appending voice_type=<label> to each line
 
-    Enriched RTTM format:
+    enriched RTTM format:
     SPEAKER <uri> 1 <start> <duration> <NA> <NA> <speaker_id> <NA> voice_type=<label>
 
-    Args:
-        annotation: pyannote Annotation object containing speaker segments.
-        uri: Unique resource identifier (typically the filename stem).
-        output_path: Path to write the RTTM file.
-        voice_type_mapping: Dictionary mapping (start, end) tuples to voice-type labels.
-            Keys should be created using segment_key() for consistency.
+    args
+        annotation: pyannote annotation object containing speaker segments
+        uri: unique resource identifier (typically the filename stem)
+        output_path: path to write the rttm file
+        voice_type_mapping: dictionary mapping (start, end) tuples to voice-type labels
+            keys should be created using segment_key() for consistency
     """
     output_path = Path(output_path)
     output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -88,11 +88,11 @@ def write_enriched_rttm(
         duration = segment.duration
         speaker_id = label
 
-        # Look up voice type using segment key
+        # look up voice type using segment key
         key = segment_key(segment.start, segment.end)
         voice_type = voice_type_mapping.get(key, "UNK")
 
-        # RTTM format with voice_type extension
+        # rttm format with voice_type extension
         # SPEAKER <file> <channel> <start> <duration> <NA> <NA> <speaker> <NA> <extra>
         line = (
             f"SPEAKER {uri} 1 {start:.3f} {duration:.3f} "
@@ -110,18 +110,18 @@ def parse_enriched_rttm(
     rttm_path: Union[str, Path],
 ) -> list[dict]:
     """
-    Parse an enriched RTTM file.
+    parse an enriched rttm file
 
-    Args:
-        rttm_path: Path to the enriched RTTM file.
+    args
+        rttm_path path to the enriched rttm file
 
-    Returns:
-        List of dictionaries with keys:
-        - uri: File identifier
-        - start: Start time in seconds
-        - duration: Duration in seconds
-        - speaker: Speaker ID
-        - voice_type: Voice type label (or None if not present)
+    returns
+        list of dictionaries with keys:
+        - uri: file identifier
+        - start: start time in seconds
+        - duration: duration in seconds
+        - speaker: speaker id
+        - voice_type: voice type label or None if not present
     """
     rttm_path = Path(rttm_path)
     segments = []
@@ -144,11 +144,10 @@ def parse_enriched_rttm(
                 "voice_type": None,
             }
 
-            # Check for voice_type in the last field
+            # check for voice_type in the last field
             if len(parts) >= 10 and parts[9].startswith("voice_type="):
                 segment["voice_type"] = parts[9].split("=", 1)[1]
 
             segments.append(segment)
 
     return segments
-

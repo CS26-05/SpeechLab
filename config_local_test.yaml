@@ -1,0 +1,20 @@
+# locacl test configuration
+# run with: python -m speechlab_diarization.main --config config_local_test.yaml
+
+models:
+  pyannote_pipeline: "pyannote/speaker-diarization-3.1"
+  vtc_checkpoint: null
+
+huggingface:
+  token_env_var: "HF_TOKEN"
+
+runtime:
+  sample_rate: 16000
+  device: "cuda"  # will fallback to cpu if no GPU
+  max_duration_minutes: 60
+
+io:
+  # Point to your actual test data location
+  input_dir: "./test_input/en_US"
+  output_dir: "./test_output"
+

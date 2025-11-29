@@ -15,6 +15,6 @@ runtime:
 
 io:
   # Point to your actual test data location
-  input_dir: "./test_input/en_US"
+  input_dir: "./test_input"
   output_dir: "./test_output"
 

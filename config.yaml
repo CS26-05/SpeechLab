@@ -10,8 +10,8 @@
 
 models:
   # Pyannote speaker diarization model
-  # Uses the community version which requires HF token with accepted license
-  pyannote_pipeline: "pyannote/speaker-diarization-community-1"
+  # Uses version 3.1 which requires HF token with accepted license
+  pyannote_pipeline: "pyannote/speaker-diarization-3.1"
 
   # VTC 2.0 checkpoint path (optional)
   # Set to null to use default path inside container (/app/vtc_checkpoint)

@@ -21,8 +21,7 @@
 #
 
 # Base image: PyTorch with CUDA 12.1 support
-# Python 3.10, PyTorch 2.1.0, torchaudio included
-FROM pytorch/pytorch:2.1.0-cuda12.1-cudnn8-runtime
+FROM pytorch/pytorch:2.4.0-cuda12.1-cudnn9-runtime
 
 # Metadata
 LABEL maintainer="CS26-05 SpeechLab Team"
@@ -46,15 +45,19 @@ WORKDIR /app
 COPY pyproject.toml config.yaml README.md ./
 COPY speechlab_diarization/ ./speechlab_diarization/
 
+# Upgrade torch ecosystem together to ensure compatibility
+# PyTorch 2.4 + matching torchaudio + torchvision
+RUN pip install --no-cache-dir --upgrade \
+    torch==2.4.0 \
+    torchaudio==2.4.0 \
+    torchvision==0.19.0
+
 # Install pyannote.audio and dependencies
-# Pin to version compatible with speaker-diarization-community-1
 RUN pip install --no-cache-dir \
     "pyannote.audio>=3.1,<4.0" \
     "pyyaml>=6.0"
 
-# Install VTC 2.0 from GitHub
-# TODO: Pin to specific commit once VTC integration is complete
-# For now, install from main branch
+# Install VTC 2.0 from GitHub (optional - will use stub if fails)
 RUN pip install --no-cache-dir \
     "git+https://github.com/LAAC-LSCP/VTC.git" \
     || echo "VTC installation failed - will use stub predictions"
@@ -63,9 +66,11 @@ RUN pip install --no-cache-dir \
 RUN pip install --no-cache-dir -e .
 
 # Verify installations
+RUN python -c "import torch; print(f'PyTorch: {torch.__version__}, CUDA: {torch.cuda.is_available()}')"
+RUN python -c "import torchaudio; print(f'torchaudio: {torchaudio.__version__}')"
+RUN python -c "import torchvision; print(f'torchvision: {torchvision.__version__}')"
 RUN python -c "import pyannote.audio; print(f'pyannote.audio: {pyannote.audio.__version__}')"
 RUN python -c "import speechlab_diarization; print(f'speechlab_diarization: {speechlab_diarization.__version__}')"
-RUN python -c "import torch; print(f'PyTorch: {torch.__version__}, CUDA available: {torch.cuda.is_available()}')"
 
 # Try to verify VTC installation (may fail if not available)
 RUN python -c "from speechlab_diarization.vtc_adapter import VoiceTypeClassifier; \
@@ -85,4 +90,3 @@ ENV SPEECHLAB_CONFIG=/app/config.yaml
 
 # Default command
 CMD ["python", "-m", "speechlab_diarization.main"]
-

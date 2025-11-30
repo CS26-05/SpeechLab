@@ -1,8 +1,8 @@
 """
-pipeline orchestration for speaker diarization and voice type classification
+Pipeline orchestration for speaker diarization and voice-type classification.
 
-this module integrates pyannote diarization with vtc voice type classification
-processing audio files end to end and producing enriched rttm output
+This module integrates pyannote diarization with VTC voice-type classification,
+processing audio files end-to-end and producing enriched RTTM output.
 """
 
 from __future__ import annotations
@@ -18,29 +18,28 @@ import torch
 from .config import PipelineConfig
 from .pyannote_adapter import PyannoteDiarizer
 from .rttm_io import segment_key, write_enriched_rttm, write_plain_rttm
-from .vtc_adapter import VoiceTypeClassifier
+from .vtc_adapter import VoiceTypeClassifier, VTCSegment
 
 logger = logging.getLogger(__name__)
 
 
 class HFTokenError(Exception):
-    """raised when hugging face token is not available"""
-
+    """Raised when Hugging Face token is not available."""
     pass
 
 
 def _get_hf_token(config: PipelineConfig) -> str:
     """
-    retrieve hugging face token from environment variable
+    Retrieve Hugging Face token from environment variable.
 
-    args
-        config pipeline configuration containing the token env var name
+    Args:
+        config: Pipeline configuration containing the token env var name.
 
-    returns
-        the hugging face token value
+    Returns:
+        The Hugging Face token value.
 
-    raises
-        hftokenerror if the environment variable is not set
+    Raises:
+        HFTokenError: If the environment variable is not set.
     """
     token_env_var = config.huggingface.token_env_var
     token = os.environ.get(token_env_var)
@@ -56,20 +55,20 @@ def _get_hf_token(config: PipelineConfig) -> str:
 
 def _discover_audio_files(input_dir: Path) -> List[Path]:
     """
-    discover audio files in the input directory
+    Discover audio files in the input directory.
 
-    args
-        input_dir directory to search for audio files
+    Args:
+        input_dir: Directory to search for audio files.
 
-    returns
-        sorted list of audio file paths wav and flac
+    Returns:
+        Sorted list of audio file paths (WAV and FLAC).
     """
     audio_files = []
 
     for pattern in ["*.wav", "*.WAV", "*.flac", "*.FLAC"]:
         audio_files.extend(input_dir.glob(pattern))
 
-    # sort for deterministic processing order
+    # Sort for deterministic processing order
     return sorted(audio_files)
 
 
@@ -80,21 +79,21 @@ def _slice_segment(
     end: float,
 ) -> torch.Tensor:
     """
-    slice a segment from the waveform tensor
+    Slice a segment from the waveform tensor.
 
-    args:
-        waveform: full audio waveform, shape (1, num_samples)
-        sample_rate: sample rate of the waveform
-        start: segment start time in seconds
-        end: segment end time in seconds
+    Args:
+        waveform: Full audio waveform, shape (1, num_samples).
+        sample_rate: Sample rate of the waveform.
+        start: Segment start time in seconds.
+        end: Segment end time in seconds.
 
-    returns
-        sliced waveform tensor for the segment
+    Returns:
+        Sliced waveform tensor for the segment.
     """
     start_sample = int(start * sample_rate)
     end_sample = int(end * sample_rate)
 
-    # clamp to valid range
+    # Clamp to valid range
     start_sample = max(0, start_sample)
     end_sample = min(waveform.shape[-1], end_sample)
 
@@ -109,83 +108,94 @@ def _process_file(
     sample_rate: int,
 ) -> Dict:
     """
-    process a single audio file through diarization and classification
+    Process a single audio file through diarization and classification.
 
-    args
-        audio_path: path to the audio file
-        diarizer: pyannote diarization adapter
-        classifier: vtc voice type classifier
-        output_dir: directory to write output files
-        sample_rate: target sample rate (16000 Hz)
+    Args:
+        audio_path: Path to the audio file.
+        diarizer: Pyannote diarization adapter.
+        classifier: VTC voice-type classifier.
+        output_dir: Directory to write output files.
+        sample_rate: Target sample rate.
 
-    returns
-        dictionary containing processing results and statistics
+    Returns:
+        Dictionary containing processing results and statistics.
     """
     uri = audio_path.stem
     logger.info(f"Processing {audio_path} ...")
 
-    # step 1 run diarization
+    # Step 1: Run pyannote diarization
     annotation = diarizer.diarize_file(audio_path)
 
-    # step 2 load waveform for segment classification
-    waveform, sr = diarizer.get_waveform(audio_path)
+    # Step 2: Run VTC on the file (file-level inference)
+    vtc_available = False
+    vtc_segments: List[VTCSegment] = []
+    
+    if classifier.is_available:
+        logger.info(f"  Running VTC on {audio_path.name}...")
+        vtc_result = classifier.run_vtc_on_file(audio_path, output_dir)
+        
+        if vtc_result.success:
+            vtc_available = True
+            vtc_segments = vtc_result.segments
+            logger.info(f"  VTC found {len(vtc_segments)} segments")
+        else:
+            logger.warning(f"  VTC failed: {vtc_result.error}")
 
-    # step 3 classify each segment
+    # Step 3: Align pyannote segments with VTC segments
     voice_type_mapping: Dict[Tuple[float, float], str] = {}
     scores_data: List[Dict] = []
 
     for segment, track, speaker_label in annotation.itertracks(yield_label=True):
-        # slice segment from waveform
-        segment_waveform = _slice_segment(waveform, sr, segment.start, segment.end)
-
-        # skip very short segments less than 100ms
-        if segment_waveform.shape[-1] < int(0.1 * sr):
-            logger.debug(
-                f"Skipping short segment {segment.start:.3f}-{segment.end:.3f}"
+        seg_start = segment.start
+        seg_end = segment.end
+        
+        if vtc_available and vtc_segments:
+            # Use real VTC alignment
+            chosen_label, probs = classifier.align_with_pyannote(
+                seg_start, seg_end, vtc_segments
             )
-            probs = {"FEM": 0.0, "MAL": 0.0, "KCHI": 0.0, "OCH": 0.0}
-            primary_label = "UNK"
         else:
-            # predict voice type
-            probs = classifier.predict_segment(segment_waveform, sr)
-            primary_label = max(probs, key=probs.get)
+            # Fallback to stub predictions
+            probs = {label: 0.25 for label in classifier.labels}
+            chosen_label = "FEM"  # Default when no VTC
 
-        # store mapping for rttm
-        key = segment_key(segment.start, segment.end)
-        voice_type_mapping[key] = primary_label
+        # Store mapping for RTTM
+        key = segment_key(seg_start, seg_end)
+        voice_type_mapping[key] = chosen_label
 
-        # store full scores for json output
+        # Store full scores for JSON output
         scores_data.append(
             {
-                "start": round(segment.start, 3),
-                "end": round(segment.end, 3),
+                "start": round(seg_start, 3),
+                "end": round(seg_end, 3),
                 "speaker": speaker_label,
-                "voice_type": primary_label,
+                "voice_type": chosen_label,
                 "probabilities": {k: round(v, 4) for k, v in probs.items()},
             }
         )
 
-    # step 4 write outputs
+    # Step 4: Write outputs
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    # write enriched rttm
+    # Write enriched RTTM
     rttm_path = output_dir / f"{uri}.rttm"
     write_enriched_rttm(annotation, uri, rttm_path, voice_type_mapping)
     logger.info(f"  -> wrote {rttm_path}")
 
-    # write plain rttm as backup
+    # Write plain RTTM as backup
     plain_rttm_path = output_dir / f"{uri}_plain.rttm"
     write_plain_rttm(annotation, uri, plain_rttm_path)
 
-    # write vtc scores json
+    # Write VTC scores JSON
     scores_path = output_dir / f"{uri}_vtc_scores.json"
     with open(scores_path, "w", encoding="utf-8") as f:
         json.dump(
             {
                 "uri": uri,
                 "source_file": str(audio_path),
-                "sample_rate": sr,
-                "vtc_available": classifier.is_available,
+                "sample_rate": sample_rate,
+                "vtc_available": vtc_available,
+                "vtc_segments_count": len(vtc_segments),
                 "segments": scores_data,
             },
             f,
@@ -196,6 +206,8 @@ def _process_file(
     return {
         "uri": uri,
         "num_segments": len(scores_data),
+        "vtc_available": vtc_available,
+        "vtc_segments": len(vtc_segments),
         "rttm_path": str(rttm_path),
         "scores_path": str(scores_path),
     }
@@ -203,37 +215,37 @@ def _process_file(
 
 def run_pipeline(config: PipelineConfig) -> Dict:
     """
-    run the complete diarization and voice type classification pipeline
+    Run the complete diarization and voice-type classification pipeline.
 
-    this is the main entry point for processing audio files
+    This is the main entry point for processing audio files.
 
-    args
-        config pipeline configuration
+    Args:
+        config: Pipeline configuration.
 
-    returns
-        dictionary containing processing summary and results
+    Returns:
+        Dictionary containing processing summary and results.
 
-    raises
-        HFTokenError if hugging face token is not set
-        FileNotFoundError if input directory does not exist
+    Raises:
+        HFTokenError: If Hugging Face token is not set.
+        FileNotFoundError: If input directory does not exist.
     """
-    # setup logging
+    # Setup logging
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     )
 
-    # resolve hf token never log it
+    # Resolve HF token (never log it!)
     hf_token = _get_hf_token(config)
 
-    # validate input directory
+    # Validate input directory
     input_dir = Path(config.io.input_dir)
     if not input_dir.exists():
         raise FileNotFoundError(f"Input directory not found: {input_dir}")
 
     output_dir = Path(config.io.output_dir)
 
-    # discover audio files
+    # Discover audio files
     audio_files = _discover_audio_files(input_dir)
     if not audio_files:
         logger.warning(f"No audio files found in {input_dir}")
@@ -241,7 +253,7 @@ def run_pipeline(config: PipelineConfig) -> Dict:
 
     logger.info(f"Found {len(audio_files)} audio file(s) in {input_dir}")
 
-    # initialize adapters
+    # Initialize adapters
     logger.info("Initializing pyannote diarization pipeline...")
     diarizer = PyannoteDiarizer(
         model_id=config.models.pyannote_pipeline,
@@ -256,14 +268,18 @@ def run_pipeline(config: PipelineConfig) -> Dict:
         device=config.runtime.device,
     )
 
-    if not classifier.is_available:
+    if classifier.is_available:
+        logger.info("VTC 2.0 is available - will use real voice-type classification")
+    else:
         logger.warning(
             "VTC classifier not available - using placeholder predictions. "
             "Install VTC to enable actual voice-type classification."
         )
 
-    # process each file
+    # Process each file
     results = []
+    vtc_success_count = 0
+    
     for audio_path in audio_files:
         try:
             result = _process_file(
@@ -274,20 +290,24 @@ def run_pipeline(config: PipelineConfig) -> Dict:
                 sample_rate=config.runtime.sample_rate,
             )
             results.append(result)
+            if result.get("vtc_available"):
+                vtc_success_count += 1
         except Exception as e:
             logger.error(f"Failed to process {audio_path}: {e}")
             results.append({"uri": audio_path.stem, "error": str(e)})
 
-    # summary
+    # Summary
     successful = sum(1 for r in results if "error" not in r)
     logger.info(
         f"Done. Processed {successful}/{len(audio_files)} file(s). "
+        f"VTC succeeded on {vtc_success_count}/{successful}. "
         f"Output written to {output_dir}"
     )
 
     return {
         "processed": successful,
         "total": len(audio_files),
+        "vtc_success": vtc_success_count,
         "output_dir": str(output_dir),
         "vtc_available": classifier.is_available,
         "files": results,

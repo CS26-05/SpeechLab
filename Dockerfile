@@ -53,7 +53,9 @@ RUN pip install --no-cache-dir --upgrade \
     torchvision==0.19.0
 
 # Install pyannote.audio and dependencies
+# Pin huggingface_hub to version that supports use_auth_token (before deprecation)
 RUN pip install --no-cache-dir \
+    "huggingface_hub>=0.20,<0.25" \
     "pyannote.audio>=3.1,<4.0" \
     "pyyaml>=6.0"
 

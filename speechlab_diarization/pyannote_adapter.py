@@ -45,7 +45,7 @@ class PyannoteDiarizer:
         self.target_sample_rate = target_sample_rate
 
         # load the pyannote pipeline
-        self.pipeline = Pipeline.from_pretrained(model_id, token=hf_token)
+        self.pipeline = Pipeline.from_pretrained(model_id, use_auth_token=hf_token)
         self.pipeline.to(self.device)
 
     def _load_audio(self, audio_path: Path) -> Tuple[torch.Tensor, int]:

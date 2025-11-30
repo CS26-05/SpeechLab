@@ -1,0 +1,1256 @@
+{
+  "uri": "CD15_020517b",
+  "source_file": "/data/input/CD15_020517b.wav",
+  "sample_rate": 16000,
+  "vtc_available": false,
+  "segments": [
+    {
+      "start": 0.031,
+      "end": 1.533,
+      "speaker": "SPEAKER_03",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 2.562,
+      "end": 7.675,
+      "speaker": "SPEAKER_03",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 8.266,
+      "end": 9.413,
+      "speaker": "SPEAKER_03",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 11.438,
+      "end": 12.772,
+      "speaker": "SPEAKER_03",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 15.303,
+      "end": 20.5,
+      "speaker": "SPEAKER_03",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 20.973,
+      "end": 25.023,
+      "speaker": "SPEAKER_03",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 25.023,
+      "end": 25.715,
+      "speaker": "SPEAKER_01",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 25.715,
+      "end": 25.765,
+      "speaker": "SPEAKER_03",
+      "voice_type": "UNK",
+      "probabilities": {
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 0.0,
+        "OCH": 0.0
+      }
+    },
+    {
+      "start": 25.765,
+      "end": 25.782,
+      "speaker": "SPEAKER_01",
+      "voice_type": "UNK",
+      "probabilities": {
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 0.0,
+        "OCH": 0.0
+      }
+    },
+    {
+      "start": 25.782,
+      "end": 25.799,
+      "speaker": "SPEAKER_03",
+      "voice_type": "UNK",
+      "probabilities": {
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 0.0,
+        "OCH": 0.0
+      }
+    },
+    {
+      "start": 29.073,
+      "end": 29.849,
+      "speaker": "SPEAKER_01",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 30.558,
+      "end": 31.925,
+      "speaker": "SPEAKER_01",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 34.135,
+      "end": 35.182,
+      "speaker": "SPEAKER_01",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 35.975,
+      "end": 37.038,
+      "speaker": "SPEAKER_01",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 38.033,
+      "end": 44.075,
+      "speaker": "SPEAKER_01",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 38.624,
+      "end": 39.012,
+      "speaker": "SPEAKER_00",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 48.597,
+      "end": 49.036,
+      "speaker": "SPEAKER_01",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 49.93,
+      "end": 51.989,
+      "speaker": "SPEAKER_01",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 57.524,
+      "end": 58.503,
+      "speaker": "SPEAKER_02",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 64.24,
+      "end": 68.324,
+      "speaker": "SPEAKER_02",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 68.763,
+      "end": 70.602,
+      "speaker": "SPEAKER_02",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 70.67,
+      "end": 71.429,
+      "speaker": "SPEAKER_02",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 74.197,
+      "end": 77.42,
+      "speaker": "SPEAKER_02",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 80.457,
+      "end": 82.297,
+      "speaker": "SPEAKER_02",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 84.288,
+      "end": 85.132,
+      "speaker": "SPEAKER_00",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 85.604,
+      "end": 86.026,
+      "speaker": "SPEAKER_02",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 86.026,
+      "end": 91.898,
+      "speaker": "SPEAKER_01",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 96.337,
+      "end": 99.492,
+      "speaker": "SPEAKER_02",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 101.602,
+      "end": 102.344,
+      "speaker": "SPEAKER_02",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 104.943,
+      "end": 105.348,
+      "speaker": "SPEAKER_02",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 106.512,
+      "end": 107.052,
+      "speaker": "SPEAKER_02",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 107.339,
+      "end": 110.326,
+      "speaker": "SPEAKER_02",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 113.38,
+      "end": 113.633,
+      "speaker": "SPEAKER_02",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 125.193,
+      "end": 125.243,
+      "speaker": "SPEAKER_03",
+      "voice_type": "UNK",
+      "probabilities": {
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 0.0,
+        "OCH": 0.0
+      }
+    },
+    {
+      "start": 125.243,
+      "end": 125.75,
+      "speaker": "SPEAKER_02",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 125.75,
+      "end": 125.767,
+      "speaker": "SPEAKER_03",
+      "voice_type": "UNK",
+      "probabilities": {
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 0.0,
+        "OCH": 0.0
+      }
+    },
+    {
+      "start": 126.948,
+      "end": 127.555,
+      "speaker": "SPEAKER_02",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 128.197,
+      "end": 133.985,
+      "speaker": "SPEAKER_02",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 137.849,
+      "end": 139.604,
+      "speaker": "SPEAKER_03",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 140.347,
+      "end": 144.295,
+      "speaker": "SPEAKER_03",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 144.717,
+      "end": 148.632,
+      "speaker": "SPEAKER_03",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 148.649,
+      "end": 149.375,
+      "speaker": "SPEAKER_03",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 151.906,
+      "end": 153.965,
+      "speaker": "SPEAKER_03",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 153.965,
+      "end": 154.066,
+      "speaker": "SPEAKER_02",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 154.623,
+      "end": 154.775,
+      "speaker": "SPEAKER_03",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 154.775,
+      "end": 160.512,
+      "speaker": "SPEAKER_02",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 161.677,
+      "end": 162.25,
+      "speaker": "SPEAKER_02",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 164.309,
+      "end": 164.326,
+      "speaker": "SPEAKER_03",
+      "voice_type": "UNK",
+      "probabilities": {
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 0.0,
+        "OCH": 0.0
+      }
+    },
+    {
+      "start": 164.326,
+      "end": 164.967,
+      "speaker": "SPEAKER_02",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 164.967,
+      "end": 165.473,
+      "speaker": "SPEAKER_03",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 165.845,
+      "end": 165.862,
+      "speaker": "SPEAKER_02",
+      "voice_type": "UNK",
+      "probabilities": {
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 0.0,
+        "OCH": 0.0
+      }
+    },
+    {
+      "start": 165.862,
+      "end": 167.245,
+      "speaker": "SPEAKER_03",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 168.595,
+      "end": 169.473,
+      "speaker": "SPEAKER_03",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 171.11,
+      "end": 172.207,
+      "speaker": "SPEAKER_03",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 172.865,
+      "end": 173.303,
+      "speaker": "SPEAKER_03",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 174.097,
+      "end": 176.071,
+      "speaker": "SPEAKER_03",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 179.513,
+      "end": 181.167,
+      "speaker": "SPEAKER_03",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 181.336,
+      "end": 184.188,
+      "speaker": "SPEAKER_03",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 186.533,
+      "end": 188.002,
+      "speaker": "SPEAKER_03",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 189.149,
+      "end": 190.567,
+      "speaker": "SPEAKER_03",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 190.988,
+      "end": 192.558,
+      "speaker": "SPEAKER_03",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 193.216,
+      "end": 193.435,
+      "speaker": "SPEAKER_03",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 194.043,
+      "end": 197.57,
+      "speaker": "SPEAKER_03",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 198.464,
+      "end": 199.443,
+      "speaker": "SPEAKER_03",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 200.455,
+      "end": 201.029,
+      "speaker": "SPEAKER_03",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 201.029,
+      "end": 201.485,
+      "speaker": "SPEAKER_02",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 202.784,
+      "end": 203.729,
+      "speaker": "SPEAKER_02",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 203.965,
+      "end": 205.028,
+      "speaker": "SPEAKER_02",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 205.687,
+      "end": 209.146,
+      "speaker": "SPEAKER_02",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 210.867,
+      "end": 212.183,
+      "speaker": "SPEAKER_02",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 213.618,
+      "end": 213.635,
+      "speaker": "SPEAKER_02",
+      "voice_type": "UNK",
+      "probabilities": {
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 0.0,
+        "OCH": 0.0
+      }
+    },
+    {
+      "start": 213.635,
+      "end": 214.985,
+      "speaker": "SPEAKER_03",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 215.677,
+      "end": 216.925,
+      "speaker": "SPEAKER_03",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 221.245,
+      "end": 223.135,
+      "speaker": "SPEAKER_03",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 223.962,
+      "end": 224.924,
+      "speaker": "SPEAKER_03",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 224.975,
+      "end": 229.025,
+      "speaker": "SPEAKER_03",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 230.375,
+      "end": 230.982,
+      "speaker": "SPEAKER_03",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 231.218,
+      "end": 232.028,
+      "speaker": "SPEAKER_03",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 232.366,
+      "end": 233.716,
+      "speaker": "SPEAKER_03",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 234.779,
+      "end": 242.187,
+      "speaker": "SPEAKER_03",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 237.412,
+      "end": 237.648,
+      "speaker": "SPEAKER_00",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 244.313,
+      "end": 244.853,
+      "speaker": "SPEAKER_03",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 245.343,
+      "end": 246.187,
+      "speaker": "SPEAKER_03",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 247.132,
+      "end": 248.33,
+      "speaker": "SPEAKER_03",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 249.022,
+      "end": 249.089,
+      "speaker": "SPEAKER_03",
+      "voice_type": "UNK",
+      "probabilities": {
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 0.0,
+        "OCH": 0.0
+      }
+    },
+    {
+      "start": 249.089,
+      "end": 250.253,
+      "speaker": "SPEAKER_02",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 250.692,
+      "end": 250.709,
+      "speaker": "SPEAKER_03",
+      "voice_type": "UNK",
+      "probabilities": {
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 0.0,
+        "OCH": 0.0
+      }
+    },
+    {
+      "start": 250.709,
+      "end": 253.747,
+      "speaker": "SPEAKER_02",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 254.607,
+      "end": 254.945,
+      "speaker": "SPEAKER_02",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 255.721,
+      "end": 256.447,
+      "speaker": "SPEAKER_02",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 258.86,
+      "end": 259.619,
+      "speaker": "SPEAKER_02",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 259.973,
+      "end": 259.99,
+      "speaker": "SPEAKER_02",
+      "voice_type": "UNK",
+      "probabilities": {
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 0.0,
+        "OCH": 0.0
+      }
+    },
+    {
+      "start": 259.99,
+      "end": 260.243,
+      "speaker": "SPEAKER_00",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 260.868,
+      "end": 262.707,
+      "speaker": "SPEAKER_02",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 264.158,
+      "end": 265.711,
+      "speaker": "SPEAKER_02",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 266.15,
+      "end": 267.145,
+      "speaker": "SPEAKER_00",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 268.917,
+      "end": 269.558,
+      "speaker": "SPEAKER_00",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 269.761,
+      "end": 270.2,
+      "speaker": "SPEAKER_02",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 271.651,
+      "end": 273.203,
+      "speaker": "SPEAKER_03",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 273.507,
+      "end": 277.456,
+      "speaker": "SPEAKER_03",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 279.278,
+      "end": 289.403,
+      "speaker": "SPEAKER_03",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 290.551,
+      "end": 292.424,
+      "speaker": "SPEAKER_03",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 292.508,
+      "end": 296.457,
+      "speaker": "SPEAKER_03",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    },
+    {
+      "start": 297.115,
+      "end": 298.634,
+      "speaker": "SPEAKER_03",
+      "voice_type": "FEM",
+      "probabilities": {
+        "FEM": 0.25,
+        "MAL": 0.25,
+        "KCHI": 0.25,
+        "OCH": 0.25
+      }
+    }
+  ]
+}

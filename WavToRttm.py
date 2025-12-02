@@ -1,6 +1,18 @@
 #!/usr/bin/env python3
 
 # WARNING FROM SAM: this script has been refactored into the speechlab_diarization package
+# ^
+# ^
+# ^
+# ^
+# ^
+# ^
+# ^
+# ^
+# ^
+# ^
+# ^
+# ^
 
 from pathlib import Path
 

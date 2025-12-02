@@ -1,8 +1,8 @@
 """
-Backend-agnostic alignment of diarization and voice-type segments.
+backend-agnostic alignment of diarization and voice-type segments
 
-This module aligns pyannote speaker segments with voice-type segments
-from any backend, using time-overlap-based matching.
+this module aligns pyannote speaker segments with voice-type segments
+from any backend, using time-overlap-based matching
 """
 
 from __future__ import annotations
@@ -27,14 +27,14 @@ logger = logging.getLogger(__name__)
 @dataclass
 class AlignedSegment:
     """
-    A diarization segment with aligned voice-type information.
+    a diarization segment with aligned voice-type information
     
-    Attributes:
-        start: Segment start time in seconds.
-        end: Segment end time in seconds.
-        speaker: Speaker label from diarization.
-        voice_type: Aligned canonical voice-type label.
-        probabilities: Probability distribution over canonical labels.
+    attributes:
+        start: segment start time in seconds
+        end: segment end time in seconds
+        speaker: speaker label from diarization
+        voice_type: aligned canonical voice-type label
+        probabilities: probability distribution over canonical labels
     """
     start: float
     end: float
@@ -45,16 +45,16 @@ class AlignedSegment:
 
 def compute_overlap(seg1_start: float, seg1_end: float, seg2_start: float, seg2_end: float) -> float:
     """
-    Compute overlap duration between two segments.
+    compute overlap duration between two segments
     
-    Args:
-        seg1_start: First segment start.
-        seg1_end: First segment end.
-        seg2_start: Second segment start.
-        seg2_end: Second segment end.
+    args:
+        seg1_start: first segment start
+        seg1_end: first segment end
+        seg2_start: second segment start
+        seg2_end: second segment end
         
-    Returns:
-        Overlap duration in seconds (0 if no overlap).
+    returns:
+        overlap duration in seconds (0 if no overlap)
     """
     return max(0.0, min(seg1_end, seg2_end) - max(seg1_start, seg2_start))
 
@@ -65,22 +65,22 @@ def align_segments(
     include_none: bool = False,
 ) -> List[AlignedSegment]:
     """
-    Align diarization segments with voice-type segments.
+    align diarization segments with voice-type segments
     
-    For each diarization segment, finds the canonical label with the
-    largest total overlap time from voice-type segments.
+    for each diarization segment, finds the canonical label with the
+    largest total overlap time from voice-type segments
     
-    Args:
-        diarization_segments: List of (Segment, speaker_label) tuples.
-        voice_type_segments: List of VoiceTypeSegment from a backend.
-        include_none: Whether to include NONE/SPEECH segments in alignment.
+    args:
+        diarization_segments: list of (segment, speaker_label) tuples
+        voice_type_segments: list of voicetypesegment from a backend
+        include_none: whether to include none/speech segments in alignment
         
-    Returns:
-        List of AlignedSegment objects.
+    returns:
+        list of alignedsegment objects
     """
     aligned = []
     
-    # Filter out NONE segments if requested
+    # filter out none segments if requested
     vt_segments = voice_type_segments
     if not include_none:
         vt_segments = [s for s in voice_type_segments if s.canonical_label != LABEL_NONE]
@@ -89,10 +89,10 @@ def align_segments(
         p_start = pyannote_seg.start
         p_end = pyannote_seg.end
         
-        # Accumulate overlap per canonical label
+        # accumulate overlap per canonical label
         overlap_by_label: Dict[str, float] = {label: 0.0 for label in CANONICAL_LABELS}
         
-        # Accumulate weighted probabilities
+        # accumulate weighted probabilities
         weighted_probs: Dict[str, float] = {label: 0.0 for label in CANONICAL_LABELS}
         total_overlap = 0.0
         
@@ -100,29 +100,29 @@ def align_segments(
             overlap = compute_overlap(p_start, p_end, vt_seg.start, vt_seg.end)
             
             if overlap > 0:
-                # Accumulate overlap for this label
+                # accumulate overlap for this label
                 if vt_seg.canonical_label in CANONICAL_LABELS:
                     overlap_by_label[vt_seg.canonical_label] += overlap
                 
                 total_overlap += overlap
                 
-                # Accumulate weighted probabilities
+                # accumulate weighted probabilities
                 for label, prob in vt_seg.probabilities.items():
                     if label in weighted_probs:
                         weighted_probs[label] += prob * overlap
         
-        # Determine voice type and probabilities
+        # determine voice type and probabilities
         if total_overlap > 0:
-            # Choose label with largest accumulated overlap
+            # choose label with largest accumulated overlap
             voice_type = max(overlap_by_label, key=overlap_by_label.get)
             
-            # Normalize weighted probabilities
+            # normalize weighted probabilities
             probabilities = {
                 label: weighted_probs[label] / total_overlap
                 for label in CANONICAL_LABELS
             }
         else:
-            # No overlap - use fallback
+            # no overlap - use fallback
             voice_type = LABEL_NONE
             probabilities = get_uniform_probabilities()
             logger.debug(
@@ -142,16 +142,16 @@ def align_segments(
 
 def segment_key(start: float, end: float) -> Tuple[float, float]:
     """
-    Create a consistent key for segment identification.
+    create a consistent key for segment identification
     
-    Uses rounded values to avoid floating point comparison issues.
+    uses rounded values to avoid floating point comparison issues
     
-    Args:
-        start: Segment start time in seconds.
-        end: Segment end time in seconds.
+    args:
+        start: segment start time in seconds
+        end: segment end time in seconds
         
-    Returns:
-        Tuple of (rounded_start, rounded_end) with 3 decimal places.
+    returns:
+        tuple of (rounded_start, rounded_end) with 3 decimal places
     """
     return (round(start, 3), round(end, 3))
 
@@ -160,15 +160,15 @@ def create_voice_type_mapping(
     aligned_segments: List[AlignedSegment],
 ) -> Dict[Tuple[float, float], str]:
     """
-    Create a mapping from segment keys to voice-type labels.
+    create a mapping from segment keys to voice-type labels
     
-    This is used by the RTTM writer.
+    this is used by the rttm writer
     
-    Args:
-        aligned_segments: List of AlignedSegment objects.
+    args:
+        aligned_segments: list of alignedsegment objects
         
-    Returns:
-        Dictionary mapping (start, end) tuples to voice-type labels.
+    returns:
+        dictionary mapping (start, end) tuples to voice-type labels
     """
     return {
         segment_key(seg.start, seg.end): seg.voice_type

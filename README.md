@@ -5,7 +5,7 @@ to use you need to agree to these huggingface models:
 - [segmentation 3.0](https://huggingface.co/pyannote/segmentation-3.0)
 - [speaker diarization community 1](https://huggingface.co/pyannote/speaker-diarization-community-1)
 
-note: vtc2.0 is [currently broken](https://github.com/LAAC-LSCP/VTC/issues/4) because the model weights are in a github lfs and the quota is maxed so you cannot download it until its hosted elsewhere or the owner of the repo buys more quota. i left room for vtc2.0 integration in the future
+*note:* vtc2.0 is [currently broken](https://github.com/LAAC-LSCP/VTC/issues/4) because the model weights are in a github lfs and the quota is maxed so you cannot download it until its hosted elsewhere or the owner of the repo buys more quota. i left room for vtc2.0 integration in the future
 
 ### vtc -> backends/
 
@@ -67,6 +67,7 @@ echo "HF_TOKEN is now set!"
 
 we may need to change this later and instead use apptainer/docker secrets but for now this works
 
+*another note:* you will know if vtc is working on your outputs if in the json `vtc_available' is 'true', otherwise there are vtc issues
 
 ## labels
 

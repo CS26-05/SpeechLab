@@ -5,6 +5,8 @@ to use you need to agree to these huggingface models:
 - [segmentation 3.0](https://huggingface.co/pyannote/segmentation-3.0)
 - [speaker diarization community 1](https://huggingface.co/pyannote/speaker-diarization-community-1)
 
+for my linux system i developed on with a nvidia card, i figure this may be similar to what we will use on the hpc. i had to install the NVIDIA container toolkit for Docker to access the GPU, maybe this is also already installed since people are running jobs but we can ask jason
+
 *note:* vtc2.0 is [currently broken](https://github.com/LAAC-LSCP/VTC/issues/4) because the model weights are in a github lfs and the quota is maxed so you cannot download it until its hosted elsewhere or the owner of the repo buys more quota. i left room for vtc2.0 integration in the future
 
 ### vtc -> backends/

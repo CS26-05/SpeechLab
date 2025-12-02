@@ -17,10 +17,25 @@ import yaml
 
 @dataclass
 class ModelConfig:
-    """model configuration for diarization and voice type classification"""
+    """model configuration for diarization"""
 
-    pyannote_pipeline: str = "pyannote/speaker-diarization-community-1"
-    vtc_checkpoint: Optional[str] = None
+    pyannote_pipeline: str = "pyannote/speaker-diarization-3.1"
+
+
+@dataclass
+class VoiceTypeConfig:
+    """voice-type classification backend configuration"""
+    
+    # Backend name: "vtc1", "vtc2", or "stub"
+    backend: str = "vtc1"
+    
+    # VTC 1.0 specific settings
+    vtc1_root: Optional[str] = None  # Path to VTC 1.0 repo, defaults to /opt/vtc1
+    vtc1_conda_env: str = "vtc"  # Conda environment name for VTC 1.0
+    
+    # VTC 2.0 specific settings (future)
+    vtc2_root: Optional[str] = None  # Path to VTC 2.0 repo, defaults to /opt/vtc2
+    vtc2_checkpoint: Optional[str] = None
 
 
 @dataclass
@@ -52,6 +67,7 @@ class PipelineConfig:
     """complete pipeline configuration aggregating all config sections"""
 
     models: ModelConfig = field(default_factory=ModelConfig)
+    voice_type: VoiceTypeConfig = field(default_factory=VoiceTypeConfig)
     huggingface: HuggingFaceConfig = field(default_factory=HuggingFaceConfig)
     runtime: RuntimeConfig = field(default_factory=RuntimeConfig)
     io: IOConfig = field(default_factory=IOConfig)
@@ -60,6 +76,7 @@ class PipelineConfig:
 def _dict_to_config(data: dict) -> PipelineConfig:
     """convert a dictionary from yaml to pipelineconfig"""
     models_data = data.get("models", {})
+    vt_data = data.get("voice_type", {})
     hf_data = data.get("huggingface", {})
     runtime_data = data.get("runtime", {})
     io_data = data.get("io", {})
@@ -67,9 +84,15 @@ def _dict_to_config(data: dict) -> PipelineConfig:
     return PipelineConfig(
         models=ModelConfig(
             pyannote_pipeline=models_data.get(
-                "pyannote_pipeline", "pyannote/speaker-diarization-community-1"
+                "pyannote_pipeline", "pyannote/speaker-diarization-3.1"
             ),
-            vtc_checkpoint=models_data.get("vtc_checkpoint"),
+        ),
+        voice_type=VoiceTypeConfig(
+            backend=vt_data.get("backend", "vtc1"),
+            vtc1_root=vt_data.get("vtc1_root"),
+            vtc1_conda_env=vt_data.get("vtc1_conda_env", "vtc"),
+            vtc2_root=vt_data.get("vtc2_root"),
+            vtc2_checkpoint=vt_data.get("vtc2_checkpoint"),
         ),
         huggingface=HuggingFaceConfig(
             token_env_var=hf_data.get("token_env_var", "HF_TOKEN"),

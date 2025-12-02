@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "speechlab-diarization"
-version = "0.1.0"
-description = "Speaker diarization with voice-type classification using pyannote and VTC 2.0"
+version = "0.3.0"
+description = "Speaker diarization with voice-type classification using pyannote and VTC backends"
 readme = "README.md"
 license = {text = "MIT"}
 requires-python = ">=3.10"

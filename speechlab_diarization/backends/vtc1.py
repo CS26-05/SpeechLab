@@ -55,7 +55,7 @@ class VTC1Backend(VoiceTypeBackend):
         self._available: Optional[bool] = None
     
     def is_available(self) -> bool:
-    """check if vtc 1.0 environment is properly set up"""
+        """check if vtc 1.0 environment is properly set up"""
         if self._available is not None:
             return self._available
         

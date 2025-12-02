@@ -1,8 +1,8 @@
 """
-Pipeline orchestration for speaker diarization and voice-type classification.
+pipeline orchestration for speaker diarization and voice-type classification
 
-This module integrates pyannote diarization with voice-type classification backends,
-processing audio files end-to-end and producing enriched RTTM output.
+this module integrates pyannote diarization with voice-type classification backends,
+processing audio files end-to-end and producing enriched rttm output
 """
 
 from __future__ import annotations
@@ -27,22 +27,22 @@ logger = logging.getLogger(__name__)
 
 
 class HFTokenError(Exception):
-    """Raised when Hugging Face token is not available."""
+    """raised when hugging face token is not available"""
     pass
 
 
 def _get_hf_token(config: PipelineConfig) -> str:
     """
-    Retrieve Hugging Face token from environment variable.
+    retrieve hugging face token from environment variable
 
-    Args:
-        config: Pipeline configuration containing the token env var name.
+    args:
+        config: pipeline configuration containing the token env var name
 
-    Returns:
-        The Hugging Face token value.
+    returns:
+        the hugging face token value
 
-    Raises:
-        HFTokenError: If the environment variable is not set.
+    raises:
+        hftokenerror: if the environment variable is not set
     """
     token_env_var = config.huggingface.token_env_var
     token = os.environ.get(token_env_var)
@@ -58,36 +58,36 @@ def _get_hf_token(config: PipelineConfig) -> str:
 
 def _discover_audio_files(input_dir: Path) -> List[Path]:
     """
-    Discover audio files in the input directory.
+    discover audio files in the input directory
 
-    Args:
-        input_dir: Directory to search for audio files.
+    args:
+        input_dir: directory to search for audio files
 
-    Returns:
-        Sorted list of audio file paths (WAV and FLAC).
+    returns:
+        sorted list of audio file paths (wav and flac)
     """
     audio_files = []
 
     for pattern in ["*.wav", "*.WAV", "*.flac", "*.FLAC"]:
         audio_files.extend(input_dir.glob(pattern))
 
-    # Sort for deterministic processing order
+    # sort for deterministic processing order
     return sorted(audio_files)
 
 
 def _create_backend(config: PipelineConfig) -> VoiceTypeBackend:
     """
-    Create voice-type backend based on configuration.
+    create voice-type backend based on configuration
     
-    Args:
-        config: Pipeline configuration.
+    args:
+        config: pipeline configuration
         
-    Returns:
-        Initialized VoiceTypeBackend instance.
+    returns:
+        initialized voicetypebackend instance
     """
     backend_name = config.voice_type.backend
     
-    # Build backend-specific kwargs
+    # build backend-specific kwargs
     kwargs = {"device": config.runtime.device}
     
     if backend_name == "vtc1":
@@ -112,25 +112,25 @@ def _process_file(
     sample_rate: int,
 ) -> Dict:
     """
-    Process a single audio file through diarization and classification.
+    process a single audio file through diarization and classification
 
-    Args:
-        audio_path: Path to the audio file.
-        diarizer: Pyannote diarization adapter.
-        backend: Voice-type classification backend.
-        output_dir: Directory to write output files.
-        sample_rate: Target sample rate.
+    args:
+        audio_path: path to the audio file
+        diarizer: pyannote diarization adapter
+        backend: voice-type classification backend
+        output_dir: directory to write output files
+        sample_rate: target sample rate
 
-    Returns:
-        Dictionary containing processing results and statistics.
+    returns:
+        dictionary containing processing results and statistics
     """
     uri = audio_path.stem
     logger.info(f"Processing {audio_path} ...")
 
-    # Step 1: Run pyannote diarization
+    # step 1: run pyannote diarization
     annotation = diarizer.diarize_file(audio_path)
 
-    # Step 2: Run voice-type backend on the file
+    # step 2: run voice-type backend on the file
     vtc_available = False
     backend_result: BackendResult = BackendResult(uri=uri, segments=[], success=False)
     
@@ -146,17 +146,17 @@ def _process_file(
     else:
         logger.warning(f"  {backend.name} backend not available, using stub")
 
-    # Step 3: Extract diarization segments
+    # step 3: extract diarization segments
     diarization_segments: List[Tuple[Segment, str]] = [
         (segment, label)
         for segment, track, label in annotation.itertracks(yield_label=True)
     ]
 
-    # Step 4: Align diarization with voice-type segments
+    # step 4: align diarization with voice-type segments
     if vtc_available and backend_result.segments:
         aligned = align_segments(diarization_segments, backend_result.segments)
     else:
-        # Stub: no real alignment, use uniform probabilities
+        # stub: no real alignment, use uniform probabilities
         aligned = [
             AlignedSegment(
                 start=seg.start,
@@ -168,10 +168,10 @@ def _process_file(
             for seg, label in diarization_segments
         ]
 
-    # Step 5: Create voice-type mapping for RTTM
+    # step 5: create voice-type mapping for rttm
     voice_type_mapping = create_voice_type_mapping(aligned)
 
-    # Step 6: Prepare JSON scores data
+    # step 6: prepare json scores data
     scores_data = [
         {
             "start": round(seg.start, 3),
@@ -183,19 +183,19 @@ def _process_file(
         for seg in aligned
     ]
 
-    # Step 7: Write outputs
+    # step 7: write outputs
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    # Write enriched RTTM
+    # write enriched rttm
     rttm_path = output_dir / f"{uri}.rttm"
     write_enriched_rttm(annotation, uri, rttm_path, voice_type_mapping)
     logger.info(f"  -> wrote {rttm_path}")
 
-    # Write plain RTTM as backup
+    # write plain rttm as backup
     plain_rttm_path = output_dir / f"{uri}_plain.rttm"
     write_plain_rttm(annotation, uri, plain_rttm_path)
 
-    # Write VTC scores JSON
+    # write vtc scores json
     scores_path = output_dir / f"{uri}_vtc_scores.json"
     with open(scores_path, "w", encoding="utf-8") as f:
         json.dump(
@@ -227,37 +227,37 @@ def _process_file(
 
 def run_pipeline(config: PipelineConfig) -> Dict:
     """
-    Run the complete diarization and voice-type classification pipeline.
+    run the complete diarization and voice-type classification pipeline
 
-    This is the main entry point for processing audio files.
+    this is the main entry point for processing audio files
 
-    Args:
-        config: Pipeline configuration.
+    args:
+        config: pipeline configuration
 
-    Returns:
-        Dictionary containing processing summary and results.
+    returns:
+        dictionary containing processing summary and results
 
-    Raises:
-        HFTokenError: If Hugging Face token is not set.
-        FileNotFoundError: If input directory does not exist.
+    raises:
+        hftokenerror: if hugging face token is not set
+        filenotfounderror: if input directory does not exist
     """
-    # Setup logging
+    # setup logging
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     )
 
-    # Resolve HF token (never log it!)
+    # resolve hf token (never log it!)
     hf_token = _get_hf_token(config)
 
-    # Validate input directory
+    # validate input directory
     input_dir = Path(config.io.input_dir)
     if not input_dir.exists():
         raise FileNotFoundError(f"Input directory not found: {input_dir}")
 
     output_dir = Path(config.io.output_dir)
 
-    # Discover audio files
+    # discover audio files
     audio_files = _discover_audio_files(input_dir)
     if not audio_files:
         logger.warning(f"No audio files found in {input_dir}")
@@ -265,7 +265,7 @@ def run_pipeline(config: PipelineConfig) -> Dict:
 
     logger.info(f"Found {len(audio_files)} audio file(s) in {input_dir}")
 
-    # Initialize diarizer
+    # initialize diarizer
     logger.info("Initializing pyannote diarization pipeline...")
     diarizer = PyannoteDiarizer(
         model_id=config.models.pyannote_pipeline,
@@ -274,7 +274,7 @@ def run_pipeline(config: PipelineConfig) -> Dict:
         target_sample_rate=config.runtime.sample_rate,
     )
 
-    # Initialize voice-type backend
+    # initialize voice-type backend
     logger.info(f"Initializing voice-type backend: {config.voice_type.backend}...")
     backend = _create_backend(config)
 
@@ -286,7 +286,7 @@ def run_pipeline(config: PipelineConfig) -> Dict:
             "Check backend installation and configuration."
         )
 
-    # Process each file
+    # process each file
     results = []
     vtc_success_count = 0
     
@@ -306,7 +306,7 @@ def run_pipeline(config: PipelineConfig) -> Dict:
             logger.error(f"Failed to process {audio_path}: {e}")
             results.append({"uri": audio_path.stem, "error": str(e)})
 
-    # Summary
+    # summary
     successful = sum(1 for r in results if "error" not in r)
     logger.info(
         f"Done. Processed {successful}/{len(audio_files)} file(s). "

@@ -3,8 +3,8 @@
   "source_file": "/data/input/CD15_020517c.wav",
   "sample_rate": 16000,
   "backend": "vtc1",
-  "vtc_available": false,
-  "vtc_segments_count": 0,
+  "vtc_available": true,
+  "vtc_segments_count": 124,
   "canonical_labels": [
     "FEM",
     "MAL",
@@ -16,216 +16,216 @@
       "start": 0.031,
       "end": 1.027,
       "speaker": "SPEAKER_01",
-      "voice_type": "NONE",
+      "voice_type": "FEM",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 1.0,
+        "MAL": 0.0,
+        "KCHI": 0.0,
+        "OCH": 0.0
       }
     },
     {
       "start": 3.052,
       "end": 4.368,
       "speaker": "SPEAKER_01",
-      "voice_type": "NONE",
+      "voice_type": "FEM",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.7018,
+        "MAL": 0.0,
+        "KCHI": 0.2982,
+        "OCH": 0.0
       }
     },
     {
       "start": 9.245,
       "end": 9.262,
       "speaker": "SPEAKER_01",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 1.0,
+        "OCH": 0.0
       }
     },
     {
       "start": 9.262,
       "end": 11.624,
       "speaker": "SPEAKER_00",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 1.0,
+        "OCH": 0.0
       }
     },
     {
       "start": 16.13,
       "end": 20.956,
       "speaker": "SPEAKER_00",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.1227,
+        "MAL": 0.0,
+        "KCHI": 0.7268,
+        "OCH": 0.1505
       }
     },
     {
       "start": 19.268,
       "end": 19.758,
       "speaker": "SPEAKER_01",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.299,
+        "MAL": 0.0,
+        "KCHI": 0.6058,
+        "OCH": 0.0951
       }
     },
     {
       "start": 24.668,
       "end": 25.158,
       "speaker": "SPEAKER_00",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 0.5,
+        "OCH": 0.5
       }
     },
     {
       "start": 29.495,
       "end": 30.203,
       "speaker": "SPEAKER_00",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 1.0,
+        "OCH": 0.0
       }
     },
     {
       "start": 36.886,
       "end": 38.118,
       "speaker": "SPEAKER_00",
-      "voice_type": "NONE",
+      "voice_type": "OCH",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.2891,
+        "MAL": 0.0,
+        "KCHI": 0.0,
+        "OCH": 0.7109
       }
     },
     {
       "start": 38.742,
       "end": 40.632,
       "speaker": "SPEAKER_00",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 0.5677,
+        "OCH": 0.4323
       }
     },
     {
       "start": 61.253,
       "end": 63.363,
       "speaker": "SPEAKER_01",
-      "voice_type": "NONE",
+      "voice_type": "FEM",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.8508,
+        "MAL": 0.0,
+        "KCHI": 0.1492,
+        "OCH": 0.0
       }
     },
     {
       "start": 64.426,
       "end": 67.514,
       "speaker": "SPEAKER_01",
-      "voice_type": "NONE",
+      "voice_type": "FEM",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.5354,
+        "MAL": 0.0,
+        "KCHI": 0.3226,
+        "OCH": 0.142
       }
     },
     {
       "start": 67.97,
       "end": 68.797,
       "speaker": "SPEAKER_01",
-      "voice_type": "NONE",
+      "voice_type": "FEM",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.5,
+        "MAL": 0.5,
+        "KCHI": 0.0,
+        "OCH": 0.0
       }
     },
     {
       "start": 68.915,
       "end": 72.155,
       "speaker": "SPEAKER_01",
-      "voice_type": "NONE",
+      "voice_type": "FEM",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.5068,
+        "MAL": 0.0168,
+        "KCHI": 0.4764,
+        "OCH": 0.0
       }
     },
     {
       "start": 73.522,
       "end": 74.635,
       "speaker": "SPEAKER_00",
-      "voice_type": "NONE",
+      "voice_type": "OCH",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 0.4512,
+        "OCH": 0.5488
       }
     },
     {
       "start": 74.855,
       "end": 76.711,
       "speaker": "SPEAKER_01",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 0.9348,
+        "OCH": 0.0652
       }
     },
     {
       "start": 76.711,
       "end": 77.403,
       "speaker": "SPEAKER_00",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 0.8449,
+        "OCH": 0.1551
       }
     },
     {
       "start": 77.403,
       "end": 77.842,
       "speaker": "SPEAKER_01",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 1.0,
+        "OCH": 0.0
       }
     },
     {
@@ -256,84 +256,84 @@
       "start": 92.725,
       "end": 94.565,
       "speaker": "SPEAKER_01",
-      "voice_type": "NONE",
+      "voice_type": "FEM",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.8623,
+        "MAL": 0.0,
+        "KCHI": 0.1377,
+        "OCH": 0.0
       }
     },
     {
       "start": 95.003,
       "end": 95.915,
       "speaker": "SPEAKER_01",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.1073,
+        "MAL": 0.0,
+        "KCHI": 0.8927,
+        "OCH": 0.0
       }
     },
     {
       "start": 97.13,
       "end": 98.108,
       "speaker": "SPEAKER_01",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 0.7087,
+        "OCH": 0.2913
       }
     },
     {
       "start": 101.804,
       "end": 102.817,
       "speaker": "SPEAKER_01",
-      "voice_type": "NONE",
+      "voice_type": "OCH",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 0.0,
+        "OCH": 1.0
       }
     },
     {
       "start": 103.525,
       "end": 104.369,
       "speaker": "SPEAKER_01",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.2031,
+        "MAL": 0.0,
+        "KCHI": 0.7969,
+        "OCH": 0.0
       }
     },
     {
       "start": 106.293,
       "end": 108.2,
       "speaker": "SPEAKER_01",
-      "voice_type": "NONE",
+      "voice_type": "FEM",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.8302,
+        "MAL": 0.1698,
+        "KCHI": 0.0,
+        "OCH": 0.0
       }
     },
     {
       "start": 109.887,
       "end": 113.262,
       "speaker": "SPEAKER_01",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.0412,
+        "MAL": 0.0,
+        "KCHI": 0.9588,
+        "OCH": 0.0
       }
     },
     {
@@ -352,192 +352,192 @@
       "start": 114.646,
       "end": 114.713,
       "speaker": "SPEAKER_01",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 1.0,
+        "OCH": 0.0
       }
     },
     {
       "start": 114.713,
       "end": 115.895,
       "speaker": "SPEAKER_00",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 1.0,
+        "OCH": 0.0
       }
     },
     {
       "start": 117.869,
       "end": 120.012,
       "speaker": "SPEAKER_00",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.0729,
+        "MAL": 0.0,
+        "KCHI": 0.5582,
+        "OCH": 0.369
       }
     },
     {
       "start": 120.485,
       "end": 122.476,
       "speaker": "SPEAKER_00",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.1358,
+        "MAL": 0.0,
+        "KCHI": 0.8642,
+        "OCH": 0.0
       }
     },
     {
       "start": 123.522,
       "end": 123.893,
       "speaker": "SPEAKER_00",
-      "voice_type": "NONE",
+      "voice_type": "FEM",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 1.0,
+        "MAL": 0.0,
+        "KCHI": 0.0,
+        "OCH": 0.0
       }
     },
     {
       "start": 124.636,
       "end": 126.526,
       "speaker": "SPEAKER_00",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 1.0,
+        "OCH": 0.0
       }
     },
     {
       "start": 128.956,
       "end": 129.496,
       "speaker": "SPEAKER_00",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 1.0,
+        "OCH": 0.0
       }
     },
     {
       "start": 130.525,
       "end": 131.791,
       "speaker": "SPEAKER_00",
-      "voice_type": "NONE",
+      "voice_type": "FEM",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 1.0,
+        "MAL": 0.0,
+        "KCHI": 0.0,
+        "OCH": 0.0
       }
     },
     {
       "start": 134.508,
       "end": 135.031,
       "speaker": "SPEAKER_00",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 0.994,
+        "OCH": 0.006
       }
     },
     {
       "start": 135.031,
       "end": 135.048,
       "speaker": "SPEAKER_01",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 1.0,
+        "OCH": 0.0
       }
     },
     {
       "start": 135.048,
       "end": 135.183,
       "speaker": "SPEAKER_00",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 1.0,
+        "OCH": 0.0
       }
     },
     {
       "start": 139.435,
       "end": 141.933,
       "speaker": "SPEAKER_01",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.4598,
+        "MAL": 0.0,
+        "KCHI": 0.5402,
+        "OCH": 0.0
       }
     },
     {
       "start": 141.038,
       "end": 141.393,
       "speaker": "SPEAKER_00",
-      "voice_type": "NONE",
+      "voice_type": "FEM",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 1.0,
+        "MAL": 0.0,
+        "KCHI": 0.0,
+        "OCH": 0.0
       }
     },
     {
       "start": 142.979,
       "end": 147.063,
       "speaker": "SPEAKER_01",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.4109,
+        "MAL": 0.0,
+        "KCHI": 0.5891,
+        "OCH": 0.0
       }
     },
     {
       "start": 149.476,
       "end": 152.564,
       "speaker": "SPEAKER_01",
-      "voice_type": "NONE",
+      "voice_type": "FEM",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.4899,
+        "MAL": 0.0374,
+        "KCHI": 0.4727,
+        "OCH": 0.0
       }
     },
     {
       "start": 152.8,
       "end": 154.505,
       "speaker": "SPEAKER_01",
-      "voice_type": "NONE",
+      "voice_type": "FEM",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 1.0,
+        "MAL": 0.0,
+        "KCHI": 0.0,
+        "OCH": 0.0
       }
     },
     {
@@ -556,588 +556,588 @@
       "start": 158.335,
       "end": 159.77,
       "speaker": "SPEAKER_00",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 1.0,
+        "OCH": 0.0
       }
     },
     {
       "start": 160.428,
       "end": 160.782,
       "speaker": "SPEAKER_00",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 1.0,
+        "OCH": 0.0
       }
     },
     {
       "start": 161.66,
       "end": 162.622,
       "speaker": "SPEAKER_00",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 0.5781,
+        "OCH": 0.4219
       }
     },
     {
       "start": 165.406,
       "end": 166.165,
       "speaker": "SPEAKER_00",
-      "voice_type": "NONE",
+      "voice_type": "FEM",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 1.0,
+        "MAL": 0.0,
+        "KCHI": 0.0,
+        "OCH": 0.0
       }
     },
     {
       "start": 166.604,
       "end": 168.106,
       "speaker": "SPEAKER_00",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 1.0,
+        "OCH": 0.0
       }
     },
     {
       "start": 178.552,
       "end": 179.125,
       "speaker": "SPEAKER_00",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 1.0,
+        "OCH": 0.0
       }
     },
     {
       "start": 182.483,
       "end": 183.395,
       "speaker": "SPEAKER_01",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 1.0,
+        "OCH": 0.0
       }
     },
     {
       "start": 183.817,
       "end": 189.149,
       "speaker": "SPEAKER_01",
-      "voice_type": "NONE",
+      "voice_type": "FEM",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.5396,
+        "MAL": 0.0,
+        "KCHI": 0.4604,
+        "OCH": 0.0
       }
     },
     {
       "start": 190.01,
       "end": 190.212,
       "speaker": "SPEAKER_01",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 1.0,
+        "OCH": 0.0
       }
     },
     {
       "start": 190.364,
       "end": 191.849,
       "speaker": "SPEAKER_01",
-      "voice_type": "NONE",
+      "voice_type": "OCH",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 0.4184,
+        "OCH": 0.5816
       }
     },
     {
       "start": 193.857,
       "end": 193.891,
       "speaker": "SPEAKER_00",
-      "voice_type": "NONE",
+      "voice_type": "OCH",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 0.0,
+        "OCH": 1.0
       }
     },
     {
       "start": 194.617,
       "end": 194.65,
       "speaker": "SPEAKER_01",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 1.0,
+        "OCH": 0.0
       }
     },
     {
       "start": 194.65,
       "end": 194.819,
       "speaker": "SPEAKER_00",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 1.0,
+        "OCH": 0.0
       }
     },
     {
       "start": 194.819,
       "end": 195.038,
       "speaker": "SPEAKER_01",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 1.0,
+        "OCH": 0.0
       }
     },
     {
       "start": 195.038,
       "end": 196.338,
       "speaker": "SPEAKER_00",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 0.9103,
+        "OCH": 0.0897
       }
     },
     {
       "start": 197.519,
       "end": 198.363,
       "speaker": "SPEAKER_00",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 1.0,
+        "OCH": 0.0
       }
     },
     {
       "start": 199.898,
       "end": 200.945,
       "speaker": "SPEAKER_00",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 1.0,
+        "OCH": 0.0
       }
     },
     {
       "start": 213.584,
       "end": 214.951,
       "speaker": "SPEAKER_01",
-      "voice_type": "NONE",
+      "voice_type": "FEM",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 1.0,
+        "MAL": 0.0,
+        "KCHI": 0.0,
+        "OCH": 0.0
       }
     },
     {
       "start": 215.609,
       "end": 216.183,
       "speaker": "SPEAKER_01",
-      "voice_type": "NONE",
+      "voice_type": "FEM",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.5,
+        "MAL": 0.0,
+        "KCHI": 0.5,
+        "OCH": 0.0
       }
     },
     {
       "start": 216.655,
       "end": 217.735,
       "speaker": "SPEAKER_01",
-      "voice_type": "NONE",
+      "voice_type": "FEM",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 1.0,
+        "MAL": 0.0,
+        "KCHI": 0.0,
+        "OCH": 0.0
       }
     },
     {
       "start": 218.039,
       "end": 218.495,
       "speaker": "SPEAKER_01",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 1.0,
+        "OCH": 0.0
       }
     },
     {
       "start": 220.182,
       "end": 222.612,
       "speaker": "SPEAKER_01",
-      "voice_type": "NONE",
+      "voice_type": "FEM",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.7016,
+        "MAL": 0.0,
+        "KCHI": 0.2984,
+        "OCH": 0.0
       }
     },
     {
       "start": 224.283,
       "end": 224.907,
       "speaker": "SPEAKER_01",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 1.0,
+        "OCH": 0.0
       }
     },
     {
       "start": 225.295,
       "end": 227.658,
       "speaker": "SPEAKER_01",
-      "voice_type": "NONE",
+      "voice_type": "FEM",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.504,
+        "MAL": 0.0,
+        "KCHI": 0.496,
+        "OCH": 0.0
       }
     },
     {
       "start": 228.772,
       "end": 229.143,
       "speaker": "SPEAKER_01",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 1.0,
+        "OCH": 0.0
       }
     },
     {
       "start": 230.797,
       "end": 231.91,
       "speaker": "SPEAKER_01",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 1.0,
+        "OCH": 0.0
       }
     },
     {
       "start": 232.366,
       "end": 233.142,
       "speaker": "SPEAKER_01",
-      "voice_type": "NONE",
+      "voice_type": "FEM",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.821,
+        "MAL": 0.0,
+        "KCHI": 0.179,
+        "OCH": 0.0
       }
     },
     {
       "start": 233.497,
       "end": 235.775,
       "speaker": "SPEAKER_01",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.3394,
+        "MAL": 0.0,
+        "KCHI": 0.6606,
+        "OCH": 0.0
       }
     },
     {
       "start": 236.247,
       "end": 238.627,
       "speaker": "SPEAKER_01",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.333,
+        "MAL": 0.0,
+        "KCHI": 0.667,
+        "OCH": 0.0
       }
     },
     {
       "start": 239.47,
       "end": 240.432,
       "speaker": "SPEAKER_01",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 1.0,
+        "OCH": 0.0
       }
     },
     {
       "start": 240.938,
       "end": 241.512,
       "speaker": "SPEAKER_01",
-      "voice_type": "NONE",
+      "voice_type": "FEM",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 1.0,
+        "MAL": 0.0,
+        "KCHI": 0.0,
+        "OCH": 0.0
       }
     },
     {
       "start": 241.934,
       "end": 242.744,
       "speaker": "SPEAKER_00",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 1.0,
+        "OCH": 0.0
       }
     },
     {
       "start": 242.744,
       "end": 243.031,
       "speaker": "SPEAKER_01",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 1.0,
+        "OCH": 0.0
       }
     },
     {
       "start": 243.031,
       "end": 243.098,
       "speaker": "SPEAKER_00",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 1.0,
+        "OCH": 0.0
       }
     },
     {
       "start": 243.098,
       "end": 243.267,
       "speaker": "SPEAKER_01",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 1.0,
+        "OCH": 0.0
       }
     },
     {
       "start": 243.267,
       "end": 243.284,
       "speaker": "SPEAKER_00",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 1.0,
+        "OCH": 0.0
       }
     },
     {
       "start": 244.043,
       "end": 244.516,
       "speaker": "SPEAKER_00",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 1.0,
+        "OCH": 0.0
       }
     },
     {
       "start": 245.022,
       "end": 245.596,
       "speaker": "SPEAKER_00",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 1.0,
+        "OCH": 0.0
       }
     },
     {
       "start": 246.524,
       "end": 248.515,
       "speaker": "SPEAKER_00",
-      "voice_type": "NONE",
+      "voice_type": "OCH",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 0.436,
+        "OCH": 0.564
       }
     },
     {
       "start": 249.308,
       "end": 249.511,
       "speaker": "SPEAKER_00",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 1.0,
+        "OCH": 0.0
       }
     },
     {
       "start": 250.152,
       "end": 251.03,
       "speaker": "SPEAKER_00",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 1.0,
+        "OCH": 0.0
       }
     },
     {
       "start": 270.25,
       "end": 273.743,
       "speaker": "SPEAKER_01",
-      "voice_type": "NONE",
+      "voice_type": "FEM",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 1.0,
+        "MAL": 0.0,
+        "KCHI": 0.0,
+        "OCH": 0.0
       }
     },
     {
       "start": 274.925,
       "end": 275.836,
       "speaker": "SPEAKER_01",
-      "voice_type": "NONE",
+      "voice_type": "FEM",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 1.0,
+        "MAL": 0.0,
+        "KCHI": 0.0,
+        "OCH": 0.0
       }
     },
     {
       "start": 276.528,
       "end": 276.865,
       "speaker": "SPEAKER_01",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 1.0,
+        "OCH": 0.0
       }
     },
     {
       "start": 277.338,
       "end": 277.692,
       "speaker": "SPEAKER_01",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 1.0,
+        "OCH": 0.0
       }
     },
     {
       "start": 279.143,
       "end": 280.038,
       "speaker": "SPEAKER_01",
-      "voice_type": "NONE",
+      "voice_type": "FEM",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 1.0,
+        "MAL": 0.0,
+        "KCHI": 0.0,
+        "OCH": 0.0
       }
     },
     {
       "start": 280.038,
       "end": 280.713,
       "speaker": "SPEAKER_00",
-      "voice_type": "NONE",
+      "voice_type": "FEM",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.8113,
+        "MAL": 0.0,
+        "KCHI": 0.0,
+        "OCH": 0.1887
       }
     },
     {
       "start": 283.008,
       "end": 284.78,
       "speaker": "SPEAKER_00",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.3683,
+        "MAL": 0.0,
+        "KCHI": 0.6317,
+        "OCH": 0.0
       }
     },
     {
       "start": 287.26,
       "end": 288.037,
       "speaker": "SPEAKER_00",
-      "voice_type": "NONE",
+      "voice_type": "KCHI",
       "probabilities": {
-        "FEM": 0.25,
-        "MAL": 0.25,
-        "KCHI": 0.25,
-        "OCH": 0.25
+        "FEM": 0.0,
+        "MAL": 0.0,
+        "KCHI": 0.5008,
+        "OCH": 0.4992
       }
     }
   ]

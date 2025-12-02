@@ -1,48 +1,27 @@
-# SpeechLab Diarization Configuration
-# ====================================
-#
-# This file configures the speaker diarization and voice-type classification pipeline.
-#
-# IMPORTANT: The Hugging Face token is NEVER stored in this file.
-# Only the environment variable name is specified here.
-# Set the actual token via: export HF_TOKEN=your_token_here
-#
+# SpeechLab Diarization Pipeline Configuration
+# Default configuration for Docker container usage
 
 models:
-  # Pyannote speaker diarization model
-  # Uses version 3.1 which requires HF token with accepted license
   pyannote_pipeline: "pyannote/speaker-diarization-3.1"
 
-  # VTC 2.0 checkpoint path (optional)
-  # Set to null to use default path inside container (/app/vtc_checkpoint)
-  # Or specify a custom path to your VTC checkpoint
-  vtc_checkpoint: null
+voice_type:
+  # Backend: "vtc1" (VTC 1.0), "vtc2" (VTC 2.0), or "stub"
+  backend: "vtc1"
+  # VTC 1.0 settings (MarvinLvn/voice-type-classifier)
+  vtc1_root: "/opt/vtc1"
+  vtc1_conda_env: "vtc"
+  # VTC 2.0 settings (LAAC-LSCP/VTC) - for future use
+  vtc2_root: null
+  vtc2_checkpoint: null
 
 huggingface:
-  # Name of the environment variable containing the HF token
-  # The actual token value is read from os.environ[token_env_var]
-  # NEVER put the actual token in this file!
   token_env_var: "HF_TOKEN"
 
 runtime:
-  # Target sample rate for audio processing (Hz)
-  # Both pyannote and VTC expect 16kHz audio
   sample_rate: 16000
-
-  # Device for inference: "cuda" or "cpu"
-  # Will automatically fall back to CPU if CUDA is not available
   device: "cuda"
-
-  # Maximum audio duration in minutes (for sanity checks)
-  # Files longer than this will trigger a warning
   max_duration_minutes: 60
 
 io:
-  # Input directory containing audio files (WAV, FLAC)
-  # In Docker: mount your audio files to this path
   input_dir: "/data/input"
-
-  # Output directory for RTTM and scores files
-  # In Docker: mount a volume to this path to retrieve results
   output_dir: "/data/output"
-

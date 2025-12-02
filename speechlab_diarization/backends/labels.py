@@ -1,33 +1,32 @@
 """
-Canonical label normalization for voice-type classification.
+canonical label normalization for voice-type classification
 
-Provides consistent label mapping across different VTC backends.
+provides consistent label mapping across different vtc backends
 """
 
 from __future__ import annotations
 
 from typing import Dict, Optional
 
-# Canonical voice-type labels used throughout the pipeline
+# canonical voice-type labels used throughout the pipeline
 CANONICAL_LABELS = ["FEM", "MAL", "KCHI", "OCH"]
 
-# Special labels
-LABEL_NONE = "NONE"  # Untyped speech or unknown
-LABEL_SPEECH = "SPEECH"  # Generic speech (no subtype)
+# special labels
+LABEL_NONE = "NONE"  # untyped speech or unknown
+LABEL_SPEECH = "SPEECH"  # generic speech (no subtype)
 
-
-# VTC 1.0 label mappings (MarvinLvn/voice-type-classifier)
+# vtc 1.0 label mappings (marvinlvn/voice-type-classifier)
 VTC1_LABEL_MAP: Dict[str, str] = {
-    "FEM": "FEM",      # Female adult
-    "MAL": "MAL",      # Male adult
-    "KCHI": "KCHI",    # Key child
-    "CHI": "OCH",      # Child -> Other child
-    "OCH": "OCH",      # Other child
-    "SPEECH": LABEL_NONE,  # Generic speech -> None
+    "FEM": "FEM",      # female adult
+    "MAL": "MAL",      # male adult
+    "KCHI": "KCHI",    # key child
+    "CHI": "OCH",      # child -> other child
+    "OCH": "OCH",      # other child
+    "SPEECH": LABEL_NONE,  # generic speech -> none
 }
 
-# VTC 2.0 label mappings (LAAC-LSCP/VTC)
-# Labels map directly to canonical
+# vtc 2.0 label mappings (laac-lscp/vtc)
+# labels map directly to canonical (fem, mal, kchi, och)
 VTC2_LABEL_MAP: Dict[str, str] = {
     "FEM": "FEM",
     "MAL": "MAL",
@@ -38,14 +37,14 @@ VTC2_LABEL_MAP: Dict[str, str] = {
 
 def normalize_label(raw_label: str, backend: str = "vtc1") -> str:
     """
-    Normalize a raw label to canonical form.
+    normalize a raw label to canonical form
     
-    Args:
-        raw_label: The raw label from the VTC backend.
-        backend: The backend name ("vtc1" or "vtc2").
+    args
+        raw_label: the raw label from the vtc backend
+        backend: the backend name ("vtc1" or "vtc2")
         
-    Returns:
-        Canonical label (FEM, MAL, KCHI, OCH) or NONE if unmapped.
+    returns
+        canonical label (fem, mal, kchi, och) or none if unmapped
     """
     raw_label = raw_label.upper().strip()
     
@@ -54,7 +53,7 @@ def normalize_label(raw_label: str, backend: str = "vtc1") -> str:
     elif backend == "vtc2":
         return VTC2_LABEL_MAP.get(raw_label, LABEL_NONE)
     else:
-        # Unknown backend, try direct mapping
+        # unknown backend, try direct mapping
         if raw_label in CANONICAL_LABELS:
             return raw_label
         return LABEL_NONE
@@ -62,13 +61,13 @@ def normalize_label(raw_label: str, backend: str = "vtc1") -> str:
 
 def get_one_hot_probabilities(canonical_label: str) -> Dict[str, float]:
     """
-    Create a one-hot probability distribution for a canonical label.
+    create a one-hot probability distribution for a canonical label
     
-    Args:
-        canonical_label: The canonical label.
+    args
+        canonical_label: the canonical label
         
-    Returns:
-        Dictionary mapping each canonical label to probability.
+    returns
+        dictionary mapping each canonical label to probability
     """
     probs = {label: 0.0 for label in CANONICAL_LABELS}
     if canonical_label in CANONICAL_LABELS:
@@ -78,10 +77,10 @@ def get_one_hot_probabilities(canonical_label: str) -> Dict[str, float]:
 
 def get_uniform_probabilities() -> Dict[str, float]:
     """
-    Create a uniform probability distribution across canonical labels.
+    create a uniform probability distribution across canonical labels
     
-    Returns:
-        Dictionary with equal probability for each canonical label.
+    returns
+        dictionary with equal probability for each canonical label
     """
     n = len(CANONICAL_LABELS)
     return {label: 1.0 / n for label in CANONICAL_LABELS}

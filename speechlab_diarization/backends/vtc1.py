@@ -1,7 +1,7 @@
 """
-VTC 1.0 backend implementation.
+vtc 1.0 backend implementation
 
-Uses MarvinLvn/voice-type-classifier with isolated conda environment.
+uses marvinlvn/voice-type-classifier with isolated conda environment
 """
 
 from __future__ import annotations
@@ -25,11 +25,11 @@ logger = logging.getLogger(__name__)
 
 class VTC1Backend(VoiceTypeBackend):
     """
-    VTC 1.0 backend using MarvinLvn/voice-type-classifier.
+    vtc 1.0 backend using marvinlvn/voice-type-classifier
     
-    Runs in an isolated conda environment to avoid dependency conflicts.
-    Uses the apply.sh script which requires:
-    - conda environment with pyannote-audio 1.x CLI
+    runs in an isolated conda environment to avoid dependency conflicts
+    uses the apply.sh script which requires
+    - conda environment with pyannote-audio 1.x cli
     - sox for audio processing
     """
     
@@ -42,12 +42,12 @@ class VTC1Backend(VoiceTypeBackend):
         device: str = "cuda",
     ) -> None:
         """
-        Initialize VTC 1.0 backend.
+        initialize vtc 1.0 backend
         
-        Args:
-            vtc1_root: Path to VTC 1.0 repository. Defaults to /opt/vtc1.
-            conda_env: Name of the conda environment with VTC 1.0. Defaults to "pyannote".
-            device: Device to run on ("cuda" or "cpu").
+        args
+            vtc1_root: path to vtc 1.0 repository defaults to /opt/vtc1
+            conda_env: name of the conda environment with vtc 1.0 defaults to "pyannote"
+            device: device to run on ("cuda" or "cpu")
         """
         self.vtc1_root = Path(vtc1_root or os.environ.get("VTC1_ROOT", "/opt/vtc1"))
         self.conda_env = conda_env
@@ -55,32 +55,32 @@ class VTC1Backend(VoiceTypeBackend):
         self._available: Optional[bool] = None
     
     def is_available(self) -> bool:
-        """Check if VTC 1.0 environment is properly set up."""
+    """check if vtc 1.0 environment is properly set up"""
         if self._available is not None:
             return self._available
         
         try:
-            # Check VTC1 root exists
+            # check vtc1 root exists
             if not self.vtc1_root.exists():
                 logger.warning(f"VTC 1.0 root not found: {self.vtc1_root}")
                 self._available = False
                 return False
             
-            # Check apply.sh exists (VTC 1.0 uses bash script)
+            # check apply.sh exists (vtc 1.0 uses bash script)
             apply_script = self.vtc1_root / "apply.sh"
             if not apply_script.exists():
                 logger.warning(f"VTC 1.0 apply.sh not found: {apply_script}")
                 self._available = False
                 return False
             
-            # Check model directory exists
+            # check model directory exists
             model_dir = self.vtc1_root / "model" / "train"
             if not model_dir.exists():
                 logger.warning(f"VTC 1.0 model not found: {model_dir}")
                 self._available = False
                 return False
             
-            # Check conda environment exists and has pyannote-audio CLI
+            # check conda environment exists and has pyannote-audio cli
             result = subprocess.run(
                 ["conda", "run", "-n", self.conda_env, "pyannote-audio", "--version"],
                 capture_output=True,
@@ -91,7 +91,7 @@ class VTC1Backend(VoiceTypeBackend):
                 self._available = False
                 return False
             
-            # Check sox is available
+            # check sox is available
             result = subprocess.run(
                 ["sox", "--version"],
                 capture_output=True,
@@ -113,27 +113,27 @@ class VTC1Backend(VoiceTypeBackend):
     
     def _prepare_audio(self, audio_path: Path, output_dir: Path) -> Path:
         """
-        Prepare audio file for VTC 1.0 (16kHz mono WAV).
+        prepare audio file for vtc 1.0 (16khz mono wav)
         
-        Args:
-            audio_path: Original audio file path.
-            output_dir: Directory to write prepared audio.
+        args
+            audio_path: original audio file path
+            output_dir: directory to write prepared audio
             
-        Returns:
-            Path to prepared WAV file.
+        returns
+            path to prepared wav file
         """
         waveform, sample_rate = torchaudio.load(str(audio_path))
         
-        # Downmix to mono
+        # downmix to mono
         if waveform.shape[0] > 1:
             waveform = torch.mean(waveform, dim=0, keepdim=True)
         
-        # Resample to 16kHz
+        # resample to 16khz
         if sample_rate != 16000:
             resampler = torchaudio.transforms.Resample(sample_rate, 16000)
             waveform = resampler(waveform)
         
-        # Save as WAV
+        # save as wav
         output_path = output_dir / f"{audio_path.stem}.wav"
         torchaudio.save(str(output_path), waveform, 16000)
         
@@ -141,16 +141,16 @@ class VTC1Backend(VoiceTypeBackend):
     
     def _parse_rttm(self, rttm_path: Path) -> List[VoiceTypeSegment]:
         """
-        Parse VTC 1.0 RTTM output into segments.
+        parse vtc 1.0 rttm output into segments
         
-        VTC 1.0 RTTM format:
-        SPEAKER <file> 1 <start> <duration> <NA> <NA> <label> <NA> <NA>
+        vtc 1.0 rttm format
+        speaker <file> 1 <start> <duration> <na> <na> <label> <na> <na>
         
-        Args:
-            rttm_path: Path to RTTM file.
+        args
+            rttm_path: path to rttm file
             
-        Returns:
-            List of VoiceTypeSegment objects.
+        returns
+            list of voicetypesegment objects
         """
         segments = []
         
@@ -169,10 +169,10 @@ class VTC1Backend(VoiceTypeBackend):
                     duration = float(parts[4])
                     raw_label = parts[7]
                     
-                    # Normalize label
+                    # normalize label
                     canonical = normalize_label(raw_label, backend="vtc1")
                     
-                    # Skip NONE/SPEECH segments (untyped)
+                    # skip none/speech segments (untyped)
                     if canonical == LABEL_NONE:
                         continue
                     
@@ -184,7 +184,7 @@ class VTC1Backend(VoiceTypeBackend):
                         probabilities=get_one_hot_probabilities(canonical),
                     ))
             
-            # Sort by start time
+            # sort by start time
             segments.sort(key=lambda s: s.start)
             
         except Exception as e:
@@ -194,13 +194,13 @@ class VTC1Backend(VoiceTypeBackend):
     
     def run(self, audio_path: Path) -> BackendResult:
         """
-        Run VTC 1.0 on an audio file.
+        run vtc 1.0 on an audio file
         
-        Args:
-            audio_path: Path to audio file.
+        args
+            audio_path: path to audio file
             
-        Returns:
-            BackendResult with voice-type segments.
+        returns
+            backendresult with voice-type segments
         """
         uri = audio_path.stem
         
@@ -218,12 +218,12 @@ class VTC1Backend(VoiceTypeBackend):
                 input_dir = temp_path / "input"
                 input_dir.mkdir()
                 
-                # Prepare audio (16kHz mono WAV)
+                # prepare audio (16khz mono wav)
                 prepared_wav = self._prepare_audio(audio_path, input_dir)
                 logger.info(f"Running VTC 1.0 on {uri}...")
                 
-                # Run VTC 1.0 apply.sh
-                # Usage: ./apply.sh /path/to/folder (--device=gpu) (--batch=128)
+                # run vtc 1.0 apply.sh
+                # usage: ./apply.sh /path/to/folder (--device=gpu) (--batch=128)
                 device_flag = f"--device={'gpu' if self.device == 'cuda' else 'cpu'}"
                 
                 cmd = [
@@ -252,12 +252,12 @@ class VTC1Backend(VoiceTypeBackend):
                         error=result.stderr[:500] if result.stderr else "Unknown error",
                     )
                 
-                # VTC 1.0 outputs to output_voice_type_classifier/<basename>/
+                # vtc 1.0 outputs to output_voice_type_classifier/<basename>/
                 output_base = self.vtc1_root / "output_voice_type_classifier" / "input"
                 all_rttm = output_base / "all.rttm"
                 
                 if not all_rttm.exists():
-                    # Try looking for individual class RTTMs
+                    # try looking for individual class rttms
                     rttm_files = list(output_base.glob("*.rttm"))
                     if not rttm_files:
                         return BackendResult(
@@ -266,14 +266,14 @@ class VTC1Backend(VoiceTypeBackend):
                             success=False,
                             error=f"No RTTM output found at {output_base}",
                         )
-                    # Combine all RTTMs
+                    # combine all rttms
                     segments = []
                     for rttm_file in rttm_files:
                         segments.extend(self._parse_rttm(rttm_file))
                 else:
                     segments = self._parse_rttm(all_rttm)
                 
-                # Clean up VTC output directory
+                # clean up vtc output directory
                 if output_base.exists():
                     shutil.rmtree(output_base)
                 
@@ -302,5 +302,5 @@ class VTC1Backend(VoiceTypeBackend):
             )
 
 
-# Register the backend
+# register the backend
 register_backend("vtc1", VTC1Backend)

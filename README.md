@@ -19,7 +19,7 @@ so we are running two isolated environments in the same docker container, the ma
 the two environments communicate via files (audio in -> rttm out instead of python imports) so thats why vtc1.py uses subprocess to call conda
 
 - **`base.py`** - defines what a voice-type backend should look like. all backends inherit from this so we can swap them out easily ^
-- **`labels.py`** - handles the canonical labels (FEM, MAL, KCHI, OCH) and maps raw vtc outputs to these standard labels
+- **`labels.py`** - handles the canonical labels (FEM, MAL, KCHI, OCH) and maps raw vtc outputs to these standard labels, this is to normalize the label differences between vtc1 and vtc2 in the future (e.g. [OCH](https://github.com/MarvinLvn/voice-type-classifier) vs [CHI](https://github.com/LAAC-LSCP/VTC) or speech vs n/a)
 - **`vtc1.py`** - runs vtc 1.0 in a separate conda environment and parses its rttm output. talks to the apply.sh script via subprocess
 - **`__init__.py`** - exports the backend stuff so other modules can import it cleanly
 

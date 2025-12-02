@@ -1,7 +1,7 @@
 """
-Base classes for voice-type classification backends.
+base classes for voice-type classification backends
 
-Defines the interface that all VTC backends must implement.
+defines the interface that all vtc backends must implement
 """
 
 from __future__ import annotations
@@ -20,14 +20,14 @@ logger = logging.getLogger(__name__)
 @dataclass
 class VoiceTypeSegment:
     """
-    A voice-type segment with timing and classification.
+    a voice-type segment with timing and classification
     
-    Attributes:
-        start: Start time in seconds.
-        end: End time in seconds.
-        raw_label: Original label from the backend.
-        canonical_label: Normalized canonical label (FEM, MAL, KCHI, OCH, NONE).
-        probabilities: Optional probability distribution over canonical labels.
+    attributes:
+        start: start time in seconds
+        end: end time in seconds
+        raw_label: original label from the backend
+        canonical_label: normalized canonical label (fem, mal, kchi, och, none)
+        probabilities: optional probability distribution over canonical labels
     """
     start: float
     end: float
@@ -37,20 +37,20 @@ class VoiceTypeSegment:
     
     @property
     def duration(self) -> float:
-        """Segment duration in seconds."""
+        """segment duration in seconds"""
         return self.end - self.start
 
 
 @dataclass
 class BackendResult:
     """
-    Result of running a voice-type backend on an audio file.
+    result of running a voice-type backend on an audio file
     
-    Attributes:
-        uri: Audio file identifier (filename stem).
-        segments: List of voice-type segments.
-        success: Whether the backend ran successfully.
-        error: Error message if failed.
+    attributes:
+        uri: audio file identifier (filename stem)
+        segments: list of voice-type segments
+        success: whether the backend ran successfully
+        error: error message if failed
     """
     uri: str
     segments: List[VoiceTypeSegment]
@@ -60,64 +60,64 @@ class BackendResult:
 
 class VoiceTypeBackend(ABC):
     """
-    Abstract base class for voice-type classification backends.
+    abstract base class for voice-type classification backends
     
-    All backends must implement this interface to be used in the pipeline.
+    all backends must implement this interface to be used in the pipeline
     """
     
-    # Backend identifier (e.g., "vtc1", "vtc2")
+    # backend identifier (e.g., "vtc1", "vtc2")
     name: str = "base"
     
     @abstractmethod
     def is_available(self) -> bool:
         """
-        Check if the backend is properly installed and ready.
+        check if the backend is properly installed and ready
         
-        Returns:
-            True if backend can be used, False otherwise.
+        returns:
+            true if backend can be used, false otherwise
         """
         pass
     
     @abstractmethod
     def run(self, audio_path: Path) -> BackendResult:
         """
-        Run voice-type classification on an audio file.
+        run voice-type classification on an audio file
         
-        The audio is assumed to be or will be converted to 16kHz mono.
+        the audio is assumed to be or will be converted to 16khz mono
         
-        Args:
-            audio_path: Path to the audio file.
+        args:
+            audio_path: path to the audio file
             
-        Returns:
-            BackendResult with segments and status.
+        returns:
+            backendresult with segments and status
         """
         pass
     
     def get_label_set(self) -> List[str]:
         """
-        Get the canonical label set used by this backend.
+        get the canonical label set used by this backend
         
-        Returns:
-            List of canonical labels.
+        returns:
+            list of canonical labels
         """
         return CANONICAL_LABELS.copy()
 
 
 class StubBackend(VoiceTypeBackend):
     """
-    Stub backend that returns uniform probabilities.
+    stub backend that returns uniform probabilities
     
-    Used as fallback when no real backend is available.
+    used as fallback when no real backend is available
     """
     
     name = "stub"
     
     def is_available(self) -> bool:
-        """Stub is always available."""
+        """stub is always available"""
         return True
     
     def run(self, audio_path: Path) -> BackendResult:
-        """Return empty segments (diarization segments will get uniform probs)."""
+        """return empty segments (diarization segments will get uniform probs)"""
         return BackendResult(
             uri=audio_path.stem,
             segments=[],
@@ -125,7 +125,7 @@ class StubBackend(VoiceTypeBackend):
         )
 
 
-# Backend registry
+# backend registry
 _BACKENDS: Dict[str, type] = {
     "stub": StubBackend,
 }
@@ -133,28 +133,28 @@ _BACKENDS: Dict[str, type] = {
 
 def register_backend(name: str, backend_class: type) -> None:
     """
-    Register a backend class.
+    register a backend class
     
-    Args:
-        name: Backend identifier.
-        backend_class: The backend class (must inherit from VoiceTypeBackend).
+    args:
+        name: backend identifier
+        backend_class: the backend class (must inherit from voicetypebackend)
     """
     _BACKENDS[name] = backend_class
 
 
 def get_backend(name: str, **kwargs) -> VoiceTypeBackend:
     """
-    Get a backend instance by name.
+    get a backend instance by name
     
-    Args:
-        name: Backend identifier ("vtc1", "vtc2", "stub").
-        **kwargs: Additional arguments to pass to the backend constructor.
+    args:
+        name: backend identifier ("vtc1", "vtc2", "stub")
+        **kwargs: additional arguments to pass to the backend constructor
         
-    Returns:
-        Initialized backend instance.
+    returns:
+        initialized backend instance
         
-    Raises:
-        ValueError: If backend name is not registered.
+    raises:
+        valueerror: if backend name is not registered
     """
     if name not in _BACKENDS:
         available = ", ".join(_BACKENDS.keys())
@@ -165,10 +165,10 @@ def get_backend(name: str, **kwargs) -> VoiceTypeBackend:
 
 def list_backends() -> List[str]:
     """
-    List available backend names.
+    list available backend names
     
-    Returns:
-        List of registered backend identifiers.
+    returns:
+        list of registered backend identifiers
     """
     return list(_BACKENDS.keys())
 

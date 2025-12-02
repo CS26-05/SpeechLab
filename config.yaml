@@ -9,7 +9,7 @@ voice_type:
   backend: "vtc1"
   # VTC 1.0 settings (MarvinLvn/voice-type-classifier)
   vtc1_root: "/opt/vtc1"
-  vtc1_conda_env: "vtc"
+  vtc1_conda_env: "pyannote"
   # VTC 2.0 settings (LAAC-LSCP/VTC) - for future use
   vtc2_root: null
   vtc2_checkpoint: null

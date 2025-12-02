@@ -38,7 +38,7 @@ class VTC1Backend(VoiceTypeBackend):
     def __init__(
         self,
         vtc1_root: Optional[str] = None,
-        conda_env: str = "vtc",
+        conda_env: str = "pyannote",
         device: str = "cuda",
     ) -> None:
         """
@@ -46,7 +46,7 @@ class VTC1Backend(VoiceTypeBackend):
         
         Args:
             vtc1_root: Path to VTC 1.0 repository. Defaults to /opt/vtc1.
-            conda_env: Name of the conda environment with VTC 1.0. Defaults to "vtc".
+            conda_env: Name of the conda environment with VTC 1.0. Defaults to "pyannote".
             device: Device to run on ("cuda" or "cpu").
         """
         self.vtc1_root = Path(vtc1_root or os.environ.get("VTC1_ROOT", "/opt/vtc1"))

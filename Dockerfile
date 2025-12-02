@@ -52,17 +52,19 @@ RUN conda config --add channels pytorch
 # See: https://github.com/MarvinLvn/voice-type-classifier/blob/new_model/docs/installation.md
 RUN git clone --recurse-submodules https://github.com/MarvinLvn/voice-type-classifier.git /opt/vtc1
 
-# Create VTC 1.0 conda environment from vtc.yml
+# Create VTC 1.0 conda environment from vtc.yml (creates env named "pyannote")
 WORKDIR /opt/vtc1
 RUN conda env create -f vtc.yml
 
 # Install the pyannote-audio submodule in editable mode
-RUN conda run -n vtc pip install -e /opt/vtc1/pyannote-audio
+# Override invalid git-describe version (JSALT_v5+330.g85b84bc) with PEP 440 compliant version
+RUN sed -i 's/version=versioneer.get_version()/version="0.0.0"/' /opt/vtc1/pyannote-audio/setup.py && \
+    conda run -n pyannote pip install -e /opt/vtc1/pyannote-audio
 
 # Verify VTC 1.0 environment
-RUN conda run -n vtc python -c "import torch; print(f'VTC PyTorch: {torch.__version__}')"
-RUN conda run -n vtc python -c "import pyannote.audio; print('VTC 1.0 pyannote.audio OK')"
-RUN conda run -n vtc pyannote-audio --version
+RUN conda run -n pyannote python -c "import torch; print(f'VTC PyTorch: {torch.__version__}')"
+RUN conda run -n pyannote python -c "import pyannote.audio; print('VTC 1.0 pyannote.audio OK')"
+RUN conda run -n pyannote pyannote-audio --version
 RUN sox --version | head -1
 
 # Set working directory for main app

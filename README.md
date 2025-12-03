@@ -79,5 +79,24 @@ vtc classifies speech into:
 - **KCHI** - key child (the target child wearing the recorder)
 - **OCH** - other child
 
+### DER evaluation
+measures diarization error rate between reference RTTM (ground truth) and hypothesis RTTM (model output)
+DER accounts for missed speech, false alarm, and wrong speaker assigments
+create two folders:
+- `test_reference/` from running cha2rttm
+- `test_output` from running speechlab_diarization
+
+make sure the file names are matched
+
+once done run:
+```
+python3 evaluate_der.py
+
+```
+run the included test:
+```
+python3 -m unittest test_evaluate_der
+
+```
 
 ![monkey](thinking-monkey-720p-upscale-of-480p-original-with-v0-xclffl4k6rlf1.jpg)

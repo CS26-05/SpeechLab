@@ -78,6 +78,3 @@ vtc classifies speech into:
 - **MAL** - male adult
 - **KCHI** - key child (the target child wearing the recorder)
 - **OCH** - other child
-
-
-![monkey](thinking-monkey-720p-upscale-of-480p-original-with-v0-xclffl4k6rlf1.jpg)

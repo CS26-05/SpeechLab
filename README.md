@@ -3,7 +3,7 @@ the container files/the container are located in [`speechlab_diarization`](/spee
 
 to use you need to agree to these huggingface models:
 - [segmentation 3.0](https://huggingface.co/pyannote/segmentation-3.0)
-- [speaker diarization community 1](https://huggingface.co/pyannote/speaker-diarization-community-1)
+- [speaker-diarization-3.1](https://huggingface.co/pyannote/speaker-diarization-3.1)
 
 for my linux system i developed on with a nvidia card, i figure this may be similar to what we will use on the hpc. i had to install the NVIDIA container toolkit for Docker to access the GPU, maybe this is also already installed since people are running jobs but we can ask jason
 
@@ -78,3 +78,6 @@ vtc classifies speech into:
 - **MAL** - male adult
 - **KCHI** - key child (the target child wearing the recorder)
 - **OCH** - other child
+
+
+![monkey](thinking-monkey-720p-upscale-of-480p-original-with-v0-xclffl4k6rlf1.jpg)

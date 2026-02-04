@@ -25,11 +25,9 @@ from .rttm_io import write_enriched_rttm, write_plain_rttm
 
 logger = logging.getLogger(__name__)
 
-
 class HFTokenError(Exception):
     """raised when hugging face token is not available"""
     pass
-
 
 def _get_hf_token(config: PipelineConfig) -> str:
     """
@@ -54,7 +52,6 @@ def _get_hf_token(config: PipelineConfig) -> str:
         )
 
     return token
-
 
 def _discover_audio_files(input_dir: Path) -> List[Path]:
     """

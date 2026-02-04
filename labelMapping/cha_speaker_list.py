@@ -58,7 +58,7 @@ def main():
     out_dir = Path(args.out)
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    out_csv = out_dir / "cha_to_vtc2_speaker_map.csv"
+    out_csv = out_dir / "cha_to_vtc1_speaker_map.csv"
     out_jsonl = out_dir / "cha_speakers.jsonl"
 
     # speakers[code] = {"gender":..., "role":..., "files": set()}
@@ -111,7 +111,7 @@ def main():
     # Write CSV
     with out_csv.open("w", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
-        w.writerow(["cha_code", "gender", "role", "vtc2_label", "files"])
+        w.writerow(["cha_code", "gender", "role", "vtc_label", "files"])
         for code in sorted(speakers):
             w.writerow([
                 code,

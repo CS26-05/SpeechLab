@@ -33,3 +33,8 @@ setup_env.sh
 
 # Model / HF cache
 .cache/
+
+# Generated RTTM outputs
+test_reference/
+rttm_out/
+*.rttm

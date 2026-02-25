@@ -1,0 +1,168 @@
+@UTF8
+@PID:	11312/a-00002713-1
+@Begin
+@Languages:	eng
+@Participants:	CHI Target_Child, MOT Mother, UNK Unidentified
+@ID:	eng|VanDam-5minute|CHI||female|HI||Target_Child|||
+@ID:	eng|VanDam-5minute|MOT||female|||Mother|||
+@ID:	eng|VanDam-5minute|UNK|||||Unidentified|||
+@Media:	BN31_020108a, audio
+@Date:	02-MAR-2011
+@Comment:	start at 17684, 12:00
+*CHI:	&=sighs . 0_24506
+*MOT:	Natalie what are you doing ? 24506_29191
+%mor:	propn|Natalie pron|what-Int-S1 aux|be-Fin-Ind-Pres-S2 pron|you-Prs-Nom-S2 verb|do-Part-Pres-S ?
+%gra:	1|5|ROOT 2|5|OBJ 3|5|AUX 4|5|NSUBJ 5|1|PARATAXIS 6|1|PUNCT
+*MOT:	what are you doing ? 29191_30179
+%mor:	pron|what-Int-S1 aux|be-Fin-Ind-Pres-S2 pron|you-Prs-Nom-S2 verb|do-Part-Pres-S ?
+%gra:	1|4|OBJ 2|4|AUX 3|4|NSUBJ 4|4|ROOT 5|4|PUNCT
+*MOT:	&=gasps careful honey . 30179_36025
+%mor:	adj|careful-S1 noun|honey .
+%gra:	1|2|AMOD 2|2|ROOT 3|2|PUNCT
+*MOT:	don't bump your head . 36025_38368
+%mor:	aux|do-Fin-Imp-S~part|not verb|bump-Fin-Imp-S pron|your-Prs-Gen-S2 noun|head-Acc .
+%gra:	1|3|AUX 2|3|ADVMOD 3|5|ROOT 4|5|NMOD-POSS 5|3|OBJ 6|3|PUNCT
+*CHI:	&=laughs . 38368_41425
+*MOT:	you're strong &=laughs . 41425_47202
+%mor:	pron|you-Prs-Nom-S2~aux|be-Fin-Ind-Pres-S2 adj|strong-S1 .
+%gra:	1|3|NSUBJ 2|3|COP 3|3|ROOT 4|3|PUNCT
+*CHI:	yyy . 47202_55576
+%xpho:	ɛmʌ
+*CHI:	&=vocalizes . 55576_82869
+*CHI:	&=vocalizes lʌmo@b . 82869_93985
+%mor:	x|lʌmo .
+%gra:	1|1|FLAT 2|1|PUNCT
+*MOT:	the longer side . 93985_96644
+%mor:	det|the-Def-Art adj|long-Cmp-S1 noun|side .
+%gra:	1|3|DET 2|3|AMOD 3|3|ROOT 4|3|PUNCT
+*UNK:	we're out of the big ones . 96644_101079
+%mor:	pron|we-Prs-Nom-P1~aux|be-Fin-Ind-Pres-P1 adp|out adp|of det|the-Def-Art adj|big-S1 noun|one-Plur .
+%gra:	1|7|NSUBJ 2|7|COP 3|7|CASE 4|7|CASE 5|7|DET 6|7|AMOD 7|7|ROOT 8|7|PUNCT
+*MOT:	what ? 101079_102320
+%mor:	pron|what-Int-S1 ?
+%gra:	1|1|ROOT 2|1|PUNCT
+*UNK:	we're out of the big ones . 102320_103844
+%mor:	pron|we-Prs-Nom-P1~aux|be-Fin-Ind-Pres-P1 adp|out adp|of det|the-Def-Art adj|big-S1 noun|one-Plur .
+%gra:	1|7|NSUBJ 2|7|COP 3|7|CASE 4|7|CASE 5|7|DET 6|7|AMOD 7|7|ROOT 8|7|PUNCT
+*MOT:	okay . 103844_104863
+%mor:	intj|okay .
+%gra:	1|1|ROOT 2|1|PUNCT
+*MOT:	is there a new one on top maybe ? 104863_109456
+%mor:	verb|be-Fin-Ind-Pres-S3 pron|there-Int-S1 det|a-Ind-Art adj|new-S1 noun|one adp|on noun|top adv|maybe ?
+%gra:	1|8|ROOT 2|1|EXPL 3|5|DET 4|5|AMOD 5|1|NSUBJ 6|7|CASE 7|5|NMOD 8|1|ADVMOD 9|1|PUNCT
+*CHI:	har@b . 109456_110861
+%mor:	x|har .
+%gra:	1|1|FLAT 2|1|PUNCT
+*UNK:	&-uh there's xxx . 110861_112693
+%mor:	pron|there-Int-S1~verb|be-Fin-Ind-Pres-S3 .
+%gra:	1|2|EXPL 2|2|ROOT 3|2|PUNCT
+*CHI:	&=vocalizes . 112693_123965
+*MOT:	Natalie what are you doing ? 123965_129009
+%mor:	propn|Natalie pron|what-Int-S1 aux|be-Fin-Ind-Pres-S2 pron|you-Prs-Nom-S2 verb|do-Part-Pres-S ?
+%gra:	1|5|ROOT 2|5|OBJ 3|5|AUX 4|5|NSUBJ 5|1|PARATAXIS 6|1|PUNCT
+*MOT:	Natty are you pooping ? 129009_130727
+%mor:	propn|Natty aux|be-Fin-Ind-Pres-S2 pron|you-Prs-Nom-S2 verb|poop-Part-Pres-S ?
+%gra:	1|4|NSUBJ 2|4|COP 3|4|NSUBJ 4|4|ROOT 5|4|PUNCT
+*CHI:	ucky@f . 130727_132138
+%mor:	x|ucky .
+%gra:	1|1|FLAT 2|1|PUNCT
+*MOT:	is that ucky@f ? 132138_133106
+%mor:	aux|be-Fin-Ind-Pres-S3 det|that-Def-Dem-Sing x|ucky ?
+%gra:	1|3|COP 2|3|DET 3|3|FLAT 4|3|PUNCT
+*MOT:	you do not touch poopie ! 133106_142752
+%mor:	pron|you-Prs-Nom-S2 aux|do-Fin-Ind-Pres-S2 part|not verb|touch-Inf-S noun|poopie-Acc !
+%gra:	1|4|NSUBJ 2|4|AUX 3|4|ADVMOD 4|5|ROOT 5|4|OBJ 6|4|PUNCT
+*MOT:	that's bad ! 142752_144878
+%mor:	pron|that-Dem~aux|be-Fin-Ind-Pres-S3 adj|bad-S1 !
+%gra:	1|3|NSUBJ 2|3|COP 3|3|ROOT 4|3|PUNCT
+*MOT:	ucky@f ! 144878_150862
+%mor:	x|ucky !
+%gra:	1|1|FLAT 2|1|PUNCT
+*MOT:	bad Natty ! 150862_152898
+%mor:	adj|bad-S1 noun|natty !
+%gra:	1|2|AMOD 2|2|ROOT 3|2|PUNCT
+*MOT:	okay you can run and get me a diaper . 152898_158522
+%mor:	intj|okay pron|you-Prs-Nom-S2 aux|can-Fin-S verb|run-Inf-S cconj|and verb|get-Inf-S pron|I-Prs-Acc-S1 det|a-Ind-Art noun|diaper-Acc .
+%gra:	1|4|DISCOURSE 2|4|NSUBJ 3|4|AUX 4|9|ROOT 5|6|CC 6|4|CONJ 7|6|IOBJ 8|9|DET 9|6|OBJ 10|4|PUNCT
+*CHI:	&=blows_raspberry . 158522_162476
+*MOT:	don't touch ! 162476_163783
+%mor:	aux|do-Fin-Imp-S~part|not verb|touch-Fin-Imp-S !
+%gra:	1|3|AUX 2|3|ADVMOD 3|3|ROOT 4|3|PUNCT
+*CHI:	&=whines yyy . 163826_166236
+%xpho:	ardarm
+*MOT:	yeah I'm gonna [: going to] hold under your arm (be)cause you got poopy hands . 166236_169576
+%mor:	intj|yeah pron|I-Prs-Nom-S1~aux|be-Fin-Ind-Pres-S1 verb|go-Part-Pres-S part|to verb|hold-Inf-S adp|under pron|your-Prs-Gen-S2 noun|arm sconj|because pron|you-Prs-Nom-S2 verb|get-Fin-Ind-Past-S2-irr adj|poopy-S1 noun|hand-Plur-Acc .
+%gra:	1|4|DISCOURSE 2|4|NSUBJ 3|4|AUX 4|14|ROOT 5|6|MARK 6|4|XCOMP 7|9|CASE 8|9|NMOD-POSS 9|6|OBL 10|12|MARK 11|12|NSUBJ 12|6|ADVCL 13|14|AMOD 14|12|OBJ 15|4|PUNCT
+*CHI:	&=whines . 169576_171574
+*MOT:	uckies@f ! 171574_173000
+%mor:	x|uckies !
+%gra:	1|1|FLAT 2|1|PUNCT
+*CHI:	&=cries . 173000_176587
+*MOT:	okay . 176587_183292
+%mor:	intj|okay .
+%gra:	1|1|ROOT 2|1|PUNCT
+*MOT:	we don't touch poopies . 183292_185960
+%mor:	pron|we-Prs-Nom-P1 aux|do-Fin-Ind-Pres-P1~part|not verb|touch-Inf-S noun|poopy-Plur-Acc .
+%gra:	1|4|NSUBJ 2|4|AUX 3|4|ADVMOD 4|5|ROOT 5|4|OBJ 6|4|PUNCT
+*CHI:	&=whines . 185960_187421
+*MOT:	yeah ? 187421_188097
+%mor:	intj|yeah ?
+%gra:	1|1|ROOT 2|1|PUNCT
+*MOT:	xxx ? 188097_191218
+*CHI:	&=cries . 191218_194597
+*MOT:	Sissy doesn't touch her poopies . 194597_199364
+%mor:	propn|Sissy aux|do-Fin-Ind-Pres-S3~part|not verb|touch-Inf-S pron|her-Prs-Gen-S3 noun|poopy-Plur-Acc .
+%gra:	1|4|NSUBJ 2|4|AUX 3|4|ADVMOD 4|6|ROOT 5|6|NMOD-POSS 6|4|OBJ 7|4|PUNCT
+*CHI:	&=cries . 199364_200675
+*MOT:	Sissy doesn't touch her poopies . 200675_201535
+%mor:	propn|Sissy aux|do-Fin-Ind-Pres-S3~part|not verb|touch-Inf-S pron|her-Prs-Gen-S3 noun|poopy-Plur-Acc .
+%gra:	1|4|NSUBJ 2|4|AUX 3|4|ADVMOD 4|6|ROOT 5|6|NMOD-POSS 6|4|OBJ 7|4|PUNCT
+*CHI:	&=yells . 201535_206484
+*CHI:	yeah bʌrtʌr@b &=yells . 206484_208681
+%mor:	intj|yeah x|bʌrtʌr .
+%gra:	1|2|DISCOURSE 2|2|FLAT 3|2|PUNCT
+*CHI:	&=yells bʌwʌwʌ@b . 208681_212758
+%mor:	x|bʌwʌwʌ .
+%gra:	1|1|FLAT 2|1|PUNCT
+*MOT:	if you can go downstairs pop the trunk . 212758_215176
+%mor:	sconj|if pron|you-Prs-Nom-S2 aux|can-Fin-S verb|go-Inf-S adv|downstairs verb|pop-Inf-S det|the-Def-Art noun|trunk-Acc .
+%gra:	1|4|MARK 2|4|NSUBJ 3|4|AUX 4|6|ADVCL 5|4|ADVMOD 6|8|ROOT 7|8|DET 8|6|OBJ 9|6|PUNCT
+*CHI:	&=yells . 215176_216127
+*MOT:	and take like that huggies box with you . 216127_221234
+%mor:	cconj|and verb|take-Fin-Imp-S adp|like det|that-Def-Dem-Sing noun|huggy noun|box adp|with pron|you-Prs-Acc-S2 .
+%gra:	1|2|CC 2|8|ROOT 3|6|CASE 4|6|DET 5|6|COMPOUND 6|2|OBL 7|8|CASE 8|2|OBL 9|2|PUNCT
+*CHI:	&=yells . 221234_223869
+*CHI:	ʤʌrʤʌr@b &=yells bɪ@b &=sighs . 223869_227926
+%mor:	x|ʤʌrʤʌr x|bɪ .
+%gra:	1|2|FLAT 2|2|FLAT 3|2|PUNCT
+*MOT:	get the phone first . 227926_232543
+%mor:	verb|get-Fin-Imp-S det|the-Def-Art noun|phone-Acc adv|first .
+%gra:	1|4|ROOT 2|3|DET 3|1|OBJ 4|1|ADVMOD 5|1|PUNCT
+*CHI:	habumʌ@b . 232543_235514
+%mor:	x|habumʌ .
+%gra:	1|1|FLAT 2|1|PUNCT
+*CHI:	&=yells . 235514_241706
+*MOT:	are you getting the phone ? 241706_246632
+%mor:	aux|be-Fin-Ind-Pres-S2 pron|you-Prs-Nom-S2 verb|get-Part-Pres-S det|the-Def-Art noun|phone-Acc ?
+%gra:	1|3|AUX 2|3|NSUBJ 3|5|ROOT 4|5|DET 5|3|OBJ 6|3|PUNCT
+*MOT:	Andrea . 246632_248083
+%mor:	propn|Andrea .
+%gra:	1|1|ROOT 2|1|PUNCT
+*CHI:	&=vocalizes . 248083_259570
+*CHI:	&=groans . 259570_265518
+*CHI:	hʌrgʊgʊgʊ@b . 265518_268888
+%mor:	x|hʌrgʊgʊgʊ .
+%gra:	1|1|FLAT 2|1|PUNCT
+*CHI:	&=whines . 268888_276154
+*CHI:	hʌ@b Mama . 276154_279913
+%mor:	x|hʌ noun|mama .
+%gra:	1|2|FLAT 2|2|ROOT 3|2|PUNCT
+*MOT:	I'll have a lot to do in your room then xxx . 279913_283956
+%mor:	pron|I-Prs-Nom-S1~aux|will-Fin-S verb|have-Inf-S det|a-Ind-Art noun|lot-Acc part|to verb|do-Inf-S adp|in pron|your-Prs-Gen-S2 noun|room adv|then .
+%gra:	1|3|NSUBJ 2|3|AUX 3|11|ROOT 4|5|DET 5|3|OBJ 6|7|MARK 7|5|ACL 8|10|CASE 9|10|NMOD-POSS 10|7|OBL 11|3|ADVMOD 12|3|PUNCT
+*CHI:	&=whines . 283956_289546
+*MOT:	hey hey . 289546_293704
+%mor:	intj|hey intj|hey .
+%gra:	1|2|ROOT 2|1|DISCOURSE 3|1|PUNCT
+*CHI:	&=yells . 293704_299925
+@End

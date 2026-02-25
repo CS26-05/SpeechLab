@@ -17,5 +17,5 @@ runtime:
   max_duration_minutes: 60
 
 io:
-  input_dir: "data/input"
-  output_dir: "data/output"
+  input_dir: "/data/input"
+  output_dir: "/data/output"

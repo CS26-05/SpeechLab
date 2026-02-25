@@ -1,0 +1,284 @@
+@UTF8
+@PID:	11312/a-00002867-1
+@Begin
+@Languages:	eng
+@Participants:	CHI Target_Child, MOT Mother
+@ID:	eng|VanDam-5minute|CHI||male|HI||Target_Child|||
+@ID:	eng|VanDam-5minute|MOT||female|||Mother|||
+@Media:	AR31_021108a, audio
+@Date:	06-MAR-2010
+@Comment:	start at 9805, 10:30
+*CHI:	choo_choo train . 0_1180
+%mor:	noun|choochoo noun|train .
+%gra:	1|2|COMPOUND 2|2|ROOT 3|2|PUNCT
+*CHI:	choo_choo train go bye . 1180_4341
+%mor:	noun|choochoo noun|train verb|go-Fin-Imp-S intj|bye .
+%gra:	1|2|COMPOUND 2|3|NSUBJ 3|4|ROOT 4|3|OBJ 5|3|PUNCT
+*CHI:	&=yells hm . 4341_6515
+%mor:	intj|hm .
+%gra:	1|1|ROOT 2|1|PUNCT
+*CHI:	hm I no xxx choo_choo train . 6515_10964
+%mor:	intj|hm pron|I-Prs-Nom-S1 det|no-Def-Neg noun|choochoo noun|train .
+%gra:	1|5|DISCOURSE 2|5|NSUBJ 3|5|DET 4|5|COMPOUND 5|5|ROOT 6|5|PUNCT
+*CHI:	da_da_da_da_da@si . 10964_13078
+%mor:	x|dadadadada .
+%gra:	1|1|FLAT 2|1|PUNCT
+*CHI:	yyy yyy pee_pee . 13078_17652
+%mor:	noun|peepee .
+%gra:	1|1|ROOT 2|1|PUNCT
+%xpho:	d^ S^
+*CHI:	yyy . 17652_19251
+%xpho:	hi
+*MOT:	alright Ray let's go sit on the pee_pee pot . 19251_23792
+%mor:	intj|alright propn|Ray verb|let-Fin-Imp-S~pron|we-Prs-Acc-P1 verb|go-Inf-S verb|sit-Inf-S adp|on det|the-Def-Art noun|peepee noun|pot .
+%gra:	1|3|DISCOURSE 2|3|NSUBJ 3|10|ROOT 4|3|OBJ 5|3|XCOMP 6|5|XCOMP 7|10|CASE 8|10|DET 9|10|COMPOUND 10|6|OBL 11|3|PUNCT
+*MOT:	&=shivers . 23792_26619
+*CHI:	&=squeals . 26619_29645
+*MOT:	oh , pee_pee pot time . 29645_33213
+%mor:	intj|oh cm|cm noun|peepee noun|pot noun|time .
+%gra:	1|5|DISCOURSE 2|1|PUNCT 3|5|COMPOUND 4|5|COMPOUND 5|5|ROOT 6|5|PUNCT
+*CHI:	no [/] no . 33213_34097
+%mor:	intj|no .
+%gra:	1|1|ROOT 2|1|PUNCT
+*MOT:	yeah [/] yeah [/] yeah . 34097_35793
+%mor:	intj|yeah .
+%gra:	1|1|ROOT 2|1|PUNCT
+*CHI:	no [/] no [/] no . 35793_37805
+%mor:	intj|no .
+%gra:	1|1|ROOT 2|1|PUNCT
+*MOT:	yeah we gotta [: have to] sit on the pee_pee pot . 37805_39728
+%mor:	intj|yeah pron|we-Prs-Nom-P1 verb|have-Fin-Ind-Pres-P1 part|to verb|sit-Inf-S adp|on det|the-Def-Art noun|peepee noun|pot .
+%gra:	1|3|DISCOURSE 2|3|NSUBJ 3|9|ROOT 4|5|MARK 5|3|XCOMP 6|9|CASE 7|9|DET 8|9|COMPOUND 9|5|OBL 10|3|PUNCT
+*MOT:	oh nope +/. 39728_42060
+%mor:	intj|oh intj|nope +/.
+%gra:	1|2|DISCOURSE 2|2|ROOT 3|2|PUNCT
+*MOT:	ow you just hit me in the mouth . 42060_43480
+%mor:	intj|ow pron|you-Prs-Nom-S2 adv|just verb|hit-Fin-Ind-Past-S2-irr pron|I-Prs-Acc-S1 adp|in det|the-Def-Art noun|mouth .
+%gra:	1|4|DISCOURSE 2|4|NSUBJ 3|4|ADVMOD 4|8|ROOT 5|4|OBJ 6|8|CASE 7|8|DET 8|4|OBL 9|4|PUNCT
+*MOT:	you sit on the pee_pee pot . 43480_46581
+%mor:	pron|you-Prs-Nom-S2 verb|sit-Fin-Ind-Pres-S2 adp|on det|the-Def-Art noun|peepee noun|pot .
+%gra:	1|2|NSUBJ 2|6|ROOT 3|6|CASE 4|6|DET 5|6|COMPOUND 6|2|OBL 7|2|PUNCT
+*CHI:	&=cries . 46581_47423
+*MOT:	I know come on . 47423_48091
+%mor:	pron|I-Prs-Nom-S1 verb|know-Fin-Ind-Pres-S1 verb|come-Inf-S adp|on .
+%gra:	1|2|NSUBJ 2|4|ROOT 3|2|CCOMP 4|3|COMPOUND-PRT 5|2|PUNCT
+*CHI:	&=screams . 48091_49065
+*MOT:	oh . 49065_52846
+%mor:	intj|oh .
+%gra:	1|1|ROOT 2|1|PUNCT
+*MOT:	you pooped in your pants Ray . 52846_58031
+%mor:	pron|you-Prs-Nom-S2 verb|poop-Fin-Ind-Past-S2 adp|in pron|your-Prs-Gen-S2 noun|pants-Ptan propn|Ray .
+%gra:	1|2|NSUBJ 2|6|ROOT 3|2|COMPOUND-PRT 4|6|NMOD-POSS 5|2|OBL 6|2|OBL 7|2|PUNCT
+*MOT:	we didn't make it did we ? 58031_62920
+%mor:	pron|we-Prs-Nom-P1 aux|do-Fin-Ind-Past-P1-irr~part|not verb|make-Inf-S pron|it-Prs-Acc-S3 aux|do-Fin-Ind-Past-S3-irr pron|we-Prs-Nom-P1 ?
+%gra:	1|4|NSUBJ 2|4|AUX 3|4|ADVMOD 4|7|ROOT 5|6|NSUBJ 6|4|CCOMP 7|6|NSUBJ 8|4|PUNCT
+*CHI:	no go poo_poo pants . 62920_65791
+%mor:	det|no-Def-Neg verb|go-Fin-Imp-S noun|poopoo noun|pants-Ptan .
+%gra:	1|4|DET 2|4|AMOD 3|4|COMPOUND 4|4|ROOT 5|4|PUNCT
+*MOT:	yeah can you stay right +/. 65791_68557
+%mor:	intj|yeah aux|can-Fin-S pron|you-Prs-Nom-S2 verb|stay-Inf-S adj|right-S1 +/.
+%gra:	1|4|DISCOURSE 2|4|AUX 3|4|NSUBJ 4|5|ROOT 5|4|ADVMOD 6|4|PUNCT
+*CHI:	ah shoot . 68557_69608
+%mor:	intj|ah noun|shoot .
+%gra:	1|2|DISCOURSE 2|2|ROOT 3|2|PUNCT
+*MOT:	yeah ah shoot . 69608_70828
+%mor:	intj|yeah intj|ah verb|shoot-Fin-Imp-S .
+%gra:	1|3|DISCOURSE 2|3|DISCOURSE 3|3|ROOT 4|3|PUNCT
+*MOT:	Mama didn't get to you in time did she ? 70828_74592
+%mor:	noun|mama aux|do-Fin-Ind-Past-S3-irr~part|not verb|get-Inf-S adp|to pron|you-Prs-Acc-S2 adp|in noun|time aux|do-Fin-Ind-Past-S3-irr pron|she-Prs-Nom-S3 ?
+%gra:	1|4|NSUBJ 2|4|AUX 3|4|ADVMOD 4|10|ROOT 5|6|CASE 6|4|OBL 7|8|CASE 8|4|OBL 9|4|PARATAXIS 10|9|NSUBJ 11|4|PUNCT
+*CHI:	yeah . 74592_76507
+%mor:	intj|yeah .
+%gra:	1|1|ROOT 2|1|PUNCT
+*MOT:	what ? 76507_77804
+%mor:	pron|what-Int-S1 ?
+%gra:	1|1|ROOT 2|1|PUNCT
+*CHI:	too stinky . 77804_79943
+%mor:	adv|too adj|stinky-S1 .
+%gra:	1|2|ADVMOD 2|2|ROOT 3|2|PUNCT
+*MOT:	yeah you're too stinky . 79943_81379
+%mor:	intj|yeah pron|you-Prs-Nom-S2~aux|be-Fin-Ind-Pres-S2 adv|too adj|stinky-S1 .
+%gra:	1|5|DISCOURSE 2|5|NSUBJ 3|5|COP 4|5|ADVMOD 5|5|ROOT 6|5|PUNCT
+*MOT:	that was supposed to go in the pee_pee pot . 81379_84959
+%mor:	pron|that-Dem aux|be-Fin-Ind-Past-S3-irr verb|suppose-Part-Past-S part|to verb|go-Inf-S adp|in det|the-Def-Art noun|peepee noun|pot .
+%gra:	1|3|NSUBJ-PASS 2|3|AUX-PASS 3|9|ROOT 4|5|MARK 5|3|XCOMP 6|9|CASE 7|9|DET 8|9|COMPOUND 9|5|OBL 10|3|PUNCT
+*CHI:	oh no ! 84959_88638
+%mor:	intj|oh intj|no !
+%gra:	1|2|DISCOURSE 2|2|ROOT 3|2|PUNCT
+*MOT:	that too was supposed to go in the pot . 88638_92088
+%mor:	pron|that-Dem adv|too aux|be-Fin-Ind-Past-S3-irr verb|suppose-Part-Past-S part|to verb|go-Inf-S adp|in det|the-Def-Art noun|pot .
+%gra:	1|4|NSUBJ-PASS 2|4|ADVMOD 3|4|AUX-PASS 4|9|ROOT 5|6|MARK 6|4|XCOMP 7|9|CASE 8|9|DET 9|6|OBL 10|4|PUNCT
+*CHI:	oh no ! 92088_94496
+%mor:	intj|oh intj|no !
+%gra:	1|2|DISCOURSE 2|2|ROOT 3|2|PUNCT
+*MOT:	wasn't it ? 94496_95264
+%mor:	aux|be-Fin-Ind-Past-S3-irr~part|not pron|it-Prs-Nom-S3 ?
+%gra:	1|3|ROOT 2|1|ADVMOD 3|1|NSUBJ 4|1|PUNCT
+*CHI:	oh shoot . 95264_97401
+%mor:	intj|oh verb|shoot-Fin-Imp-S .
+%gra:	1|2|DISCOURSE 2|2|ROOT 3|2|PUNCT
+*MOT:	yeah yuck . 97401_98682
+%mor:	intj|yeah intj|yuck .
+%gra:	1|2|DISCOURSE 2|2|ROOT 3|2|PUNCT
+*CHI:	yuck it stink . 98682_100700
+%mor:	intj|yuck pron|it-Prs-Nom-S3 verb|stink-Fin-Ind-Pres-S3 .
+%gra:	1|3|DISCOURSE 2|3|NSUBJ 3|3|ROOT 4|3|PUNCT
+*MOT:	it +/. 100700_101740
+%mor:	pron|it-Prs-Acc-S3 +/.
+%gra:	1|1|ROOT 2|1|PUNCT
+*CHI:	ah shoot . 101740_102764
+%mor:	intj|ah noun|shoot .
+%gra:	1|2|DISCOURSE 2|2|ROOT 3|2|PUNCT
+*MOT:	pyoo@o . 102764_103982
+%mor:	x|pyoo .
+%gra:	1|1|FLAT 2|1|PUNCT
+*CHI:	ah shoot . 103982_107879
+%mor:	intj|ah noun|shoot .
+%gra:	1|2|DISCOURSE 2|2|ROOT 3|2|PUNCT
+*MOT:	yuck . 107879_114051
+%mor:	intj|yuck .
+%gra:	1|1|ROOT 2|1|PUNCT
+*CHI:	ah shoot . 114051_120265
+%mor:	intj|ah noun|shoot .
+%gra:	1|2|DISCOURSE 2|2|ROOT 3|2|PUNCT
+*MOT:	Ray you have to learn how to poop in the pot . 120265_126692
+%mor:	propn|Ray pron|you-Prs-Nom-S2 verb|have-Fin-Ind-Pres-S2 part|to verb|learn-Inf-S adv|how part|to verb|poop-Inf-S adp|in det|the-Def-Art noun|pot .
+%gra:	1|3|VOCATIVE 2|3|NSUBJ 3|11|ROOT 4|5|MARK 5|3|XCOMP 6|5|OBJ 7|8|MARK 8|6|ACL 9|11|CASE 10|11|DET 11|8|OBL 12|3|PUNCT
+*CHI:	yeah pee poo_poo pot . 126692_131372
+%mor:	intj|yeah noun|pee noun|poopoo noun|pot .
+%gra:	1|4|DISCOURSE 2|4|COMPOUND 3|4|COMPOUND 4|4|ROOT 5|4|PUNCT
+*CHI:	poo_poo pot . 131372_134762
+%mor:	noun|poopoo noun|pot .
+%gra:	1|2|COMPOUND 2|2|ROOT 3|2|PUNCT
+*MOT:	poo_poo pot . 134762_136795
+%mor:	noun|poopoo noun|pot .
+%gra:	1|2|COMPOUND 2|2|ROOT 3|2|PUNCT
+*CHI:	birbirbir@b b^rb^rb^r@b b^rb^rb^rs@b . 136795_161977
+%mor:	x|birbirbir x|brbrbr x|brbrbrs .
+%gra:	1|3|FLAT 2|3|FLAT 3|1|FLAT 4|1|PUNCT
+*CHI:	yyy yyy yyy &=squeals ! 161977_166961
+%xpho:	eI ha: baej^
+*MOT:	no screaming . 166961_168237
+%mor:	det|no-Def-Neg noun|scream-Ger .
+%gra:	1|2|DET 2|2|ROOT 3|2|PUNCT
+*CHI:	&=yells &=vocalizes . 168237_181090
+*MOT:	if you'd poop in the pot Mama wouldn't have to wipe your hiney . 181090_191070
+%mor:	sconj|if pron|you-Prs-Nom-S2~aux|would-Fin-S verb|poop-Inf-S adp|in det|the-Def-Art noun|pot noun|mama aux|would-Fin-S~part|not verb|have-Inf-S part|to verb|wipe-Inf-S pron|your-Prs-Gen-S2 noun|hiney-Acc .
+%gra:	1|4|MARK 2|4|NSUBJ 3|4|AUX 4|11|ADVCL 5|7|CASE 6|7|DET 7|4|OBL 8|11|NSUBJ 9|11|AUX 10|11|ADVMOD 11|15|ROOT 12|13|MARK 13|11|XCOMP 14|15|NMOD-POSS 15|13|OBJ 16|11|PUNCT
+*MOT:	xxx do it . 191070_192674
+%mor:	verb|do-Fin-Imp-S pron|it-Prs-Acc-S3 .
+%gra:	1|2|ROOT 2|1|OBJ 3|1|PUNCT
+*CHI:	&=groans . 192674_194856
+*MOT:	where were you supposed to poop ? 194856_199195
+%mor:	adv|where aux|be-Fin-Ind-Past-S2-irr pron|you-Prs-Nom-S2 verb|suppose-Part-Past-S part|to verb|poop-Inf-S ?
+%gra:	1|4|ADVMOD 2|4|AUX-PASS 3|4|NSUBJ-PASS 4|6|ROOT 5|6|MARK 6|4|XCOMP 7|4|PUNCT
+*MOT:	in the pot . 199195_200820
+%mor:	adp|in det|the-Def-Art noun|pot .
+%gra:	1|3|CASE 2|3|DET 3|3|ROOT 4|3|PUNCT
+*CHI:	yyy I poop yyy change me &=gurgles . 200820_206422
+%mor:	pron|I-Prs-Nom-S1 verb|poop-Fin-Ind-Pres-S1 verb|change-Inf-S pron|I-Prs-Acc-S1 .
+%gra:	1|2|NSUBJ 2|4|ROOT 3|2|XCOMP 4|3|OBJ 5|2|PUNCT
+%xpho:	z^n j^g^
+*CHI:	yeah &=mumbles yyy yyy . 206422_216185
+%mor:	intj|yeah .
+%gra:	1|1|ROOT 2|1|PUNCT
+%xpho:	je a tsu
+*CHI:	disusutam@b . 216185_225406
+%mor:	x|disusutam .
+%gra:	1|1|FLAT 2|1|PUNCT
+*MOT:	what are you doing with your tongue &=flaps_tongue ? 225406_228396
+%mor:	pron|what-Int-S1 aux|be-Fin-Ind-Pres-S2 pron|you-Prs-Nom-S2 verb|do-Part-Pres-S adp|with pron|your-Prs-Gen-S2 noun|tongue ?
+%gra:	1|4|OBJ 2|4|AUX 3|4|NSUBJ 4|7|ROOT 5|7|CASE 6|7|NMOD-POSS 7|4|OBL 8|4|PUNCT
+*CHI:	yeah gaesutsuye@b dehuduye@b ≠ngis@b . 228396_237116
+%mor:	intj|yeah x|gaesutsuye x|dehuduye x|ngis .
+%gra:	1|2|DISCOURSE 2|4|FLAT 3|4|FLAT 4|2|FLAT 5|2|PUNCT
+*MOT:	hm ? 237116_237611
+%mor:	intj|hm ?
+%gra:	1|1|ROOT 2|1|PUNCT
+*MOT:	&=laughs &=flaps_tongue . 237611_239994
+*CHI:	wrong pee_pee pot go in . 239994_243716
+%mor:	adj|wrong-S1 noun|peepee noun|pot verb|go-Fin-Imp-S adp|in .
+%gra:	1|3|AMOD 2|3|COMPOUND 3|4|NSUBJ 4|5|ROOT 5|4|COMPOUND-PRT 6|4|PUNCT
+*MOT:	you didn't pee_pee in +/. 243716_244922
+%mor:	pron|you-Prs-Nom-S2 aux|do-Fin-Ind-Past-S2-irr~part|not verb|peepee-Inf-S adp|in +/.
+%gra:	1|4|NSUBJ 2|4|AUX 3|4|ADVMOD 4|5|ROOT 5|4|COMPOUND-PRT 6|4|PUNCT
+*CHI:	yyy . 244922_245754
+%xpho:	gabimeIs^
+*MOT:	you didn't pee_pee in the pot ! 245754_247442
+%mor:	pron|you-Prs-Nom-S2 aux|do-Fin-Ind-Past-S2-irr~part|not verb|peepee-Inf-S adp|in det|the-Def-Art noun|pot !
+%gra:	1|4|NSUBJ 2|4|AUX 3|4|ADVMOD 4|7|ROOT 5|7|CASE 6|7|DET 7|4|OBL 8|4|PUNCT
+*CHI:	yyy pee_p(ee) +/. 247442_249287
+%mor:	noun|peepee +/.
+%gra:	1|1|ROOT 2|1|PUNCT
+%xpho:	tuz
+*MOT:	you pooped in your pants . 249287_250274
+%mor:	pron|you-Prs-Nom-S2 verb|poop-Fin-Ind-Past-S2 adp|in pron|your-Prs-Gen-S2 noun|pants-Ptan .
+%gra:	1|2|NSUBJ 2|5|ROOT 3|2|COMPOUND-PRT 4|5|NMOD-POSS 5|2|OBL 6|2|PUNCT
+*CHI:	yeah xxx . 250274_251588
+%mor:	intj|yeah .
+%gra:	1|1|ROOT 2|1|PUNCT
+*MOT:	that's not good . 251588_253505
+%mor:	pron|that-Dem~aux|be-Fin-Ind-Pres-S3 part|not adj|good-S1 .
+%gra:	1|4|NSUBJ 2|4|COP 3|4|ADVMOD 4|4|ROOT 5|4|PUNCT
+*CHI:	yeah Elmo poop yyy . 253505_255441
+%mor:	intj|yeah propn|Elmo noun|poop .
+%gra:	1|3|DISCOURSE 2|3|COMPOUND 3|3|ROOT 4|3|PUNCT
+*MOT:	yeah , that's Elmo . 255441_256810
+%mor:	intj|yeah cm|cm pron|that-Dem~aux|be-Fin-Ind-Pres-S3 propn|Elmo .
+%gra:	1|5|DISCOURSE 2|1|PUNCT 3|5|NSUBJ 4|5|COP 5|5|ROOT 6|5|PUNCT
+*CHI:	yeah it broken it yyy . 256810_261521
+%mor:	intj|yeah pron|it-Prs-Nom-S3 verb|break-Fin-Ind-Past-S3-irr pron|it-Prs-Acc-S3 .
+%gra:	1|3|DISCOURSE 2|3|NSUBJ 3|4|ROOT 4|3|OBJ 5|3|PUNCT
+%xpho:	dab^haI
+*MOT:	yeah Elmo's broken he's a sticker and he's broke . 261521_265786
+%mor:	intj|yeah propn|Elmo~aux|be-Fin-Ind-Pres-S3 verb|break-Part-Past-S-irr pron|he-Prs-Nom-S3~aux|be-Fin-Ind-Pres-S3 det|a-Ind-Art noun|sticker cconj|and pron|he-Prs-Nom-S3~aux|be-Fin-Ind-Pres-S3 verb|break-Part-Past-S-irr .
+%gra:	1|4|DISCOURSE 2|4|NSUBJ-PASS 3|4|AUX-PASS 4|12|ROOT 5|8|NSUBJ 6|8|COP 7|8|DET 8|4|CCOMP 9|12|CC 10|12|NSUBJ 11|12|AUX-PASS 12|8|CONJ 13|4|PUNCT
+*CHI:	it sticker it sticks . 265786_268329
+%mor:	pron|it-Prs-Nom-S3 noun|sticker pron|it-Prs-Nom-S3 verb|stick-Fin-Ind-Pres-S3 .
+%gra:	1|2|NSUBJ 2|4|ROOT 3|4|NSUBJ 4|2|PARATAXIS 5|2|PUNCT
+*CHI:	hm . 268329_270456
+%mor:	intj|hm .
+%gra:	1|1|ROOT 2|1|PUNCT
+*MOT:	alright feet . 270456_271457
+%mor:	intj|alright noun|foot-Plur .
+%gra:	1|2|DISCOURSE 2|2|ROOT 3|2|PUNCT
+*CHI:	yeah yyy . 271457_274924
+%mor:	intj|yeah .
+%gra:	1|1|ROOT 2|1|PUNCT
+%xpho:	kyup
+*CHI:	this is Elmo it broken yyy . 274924_280606
+%mor:	pron|this-Dem-S1 aux|be-Fin-Ind-Pres-S3 propn|Elmo pron|it-Prs-Nom-S3 verb|break-Fin-Ind-Past-S3-irr .
+%gra:	1|3|NSUBJ 2|3|COP 3|5|ROOT 4|5|NSUBJ 5|3|ACL-RELCL 6|3|PUNCT
+%xpho:	Si
+*MOT:	alright +/. 280606_282040
+%mor:	intj|alright +/.
+%gra:	1|1|ROOT 2|1|PUNCT
+*CHI:	yeah . 282040_282860
+%mor:	intj|yeah .
+%gra:	1|1|ROOT 2|1|PUNCT
+*CHI:	my leg &=yells this yyy . 282860_289488
+%mor:	pron|my-Prs-Gen-S1 noun|leg pron|this-Dem-S1 .
+%gra:	1|2|NMOD-POSS 2|3|COMPOUND 3|3|ROOT 4|3|PUNCT
+%xpho:	w^dEdu
+*CHI:	&=sighs . 289488_292220
+*MOT:	no . 292220_292728
+%mor:	intj|no .
+%gra:	1|1|ROOT 2|1|PUNCT
+*CHI:	yyy . 292728_295031
+%xpho:	j^ paI^ Su
+*CHI:	yeah , it +/. 295031_296831
+%mor:	intj|yeah cm|cm pron|it-Prs-Nom-S3 +/.
+%gra:	1|3|DISCOURSE 2|1|PUNCT 3|3|ROOT 4|3|PUNCT
+*MOT:	is that +/. 296831_297335
+%mor:	aux|be-Fin-Ind-Pres-S3 pron|that-Dem +/.
+%gra:	1|2|COP 2|2|ROOT 3|2|PUNCT
+*MOT:	that's Elmo . 297335_297846
+%mor:	pron|that-Dem~aux|be-Fin-Ind-Pres-S3 propn|Elmo .
+%gra:	1|3|NSUBJ 2|3|COP 3|3|ROOT 4|3|PUNCT
+*CHI:	it broken . 297846_299240
+%mor:	pron|it-Prs-Nom-S3 verb|break-Fin-Ind-Past-S3-irr .
+%gra:	1|2|NSUBJ 2|2|ROOT 3|2|PUNCT
+*MOT:	yep . 299240_299937
+%mor:	intj|yep .
+%gra:	1|1|ROOT 2|1|PUNCT
+@End

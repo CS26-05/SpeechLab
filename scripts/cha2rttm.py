@@ -75,7 +75,9 @@ def convert_file(
     speaker_mapping: Dict[str, str],
     use_comment_offset: bool = False,
 ) -> Path:
-    reader = pylangacq.read_chat(str(cha_path))
+    # Ignore %mor and %gra tiers to avoid alignment errors
+    reader = pylangacq.read_chat(str(cha_path), mor=False, gra=False, parallel=False)
+
     file_id = cha_path.stem
 
     offset_ms = 0
@@ -103,19 +105,11 @@ def convert_file(
 
         raw_spk = (utt.participant or "UNKNOWN").strip()
 
-        # ── Map CHA code to VTC label ────────────────────────────────────
         vtc_label = speaker_mapping.get(raw_spk)
-
-        if vtc_label is None:
-            # No mapping found — fall back to UNK so the line is still useful
-            vtc_label = "UNK"
-            skipped_labels.add(raw_spk)
-        elif vtc_label not in VALID_LABELS:
-            # Mapping exists but isn't a recognised label — also UNK
+        if vtc_label is None or vtc_label not in VALID_LABELS:
             vtc_label = "UNK"
             skipped_labels.add(raw_spk)
 
-        # SIL segments: keep them (they mark silence / non-speech)
         lines.append(rttm_line(file_id, start_s, dur_s, vtc_label))
 
     with out_path.open("w", encoding="utf-8") as f:

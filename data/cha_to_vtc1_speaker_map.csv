@@ -1,4 +1,4 @@
-cha_code,gender,role,vtc2_label,files
+cha_code,gender,role,vtc_label,files
 AUN,female,AUN,FEM,['RH29_020604c.cha']
 BAB,,Sibling,OCH,"['CJ41_020621a.cha', 'CJ41_020621b.cha']"
 BRO,,Brother,MAL,"['CI40_020407b.cha', 'CI40_020407c.cha']"

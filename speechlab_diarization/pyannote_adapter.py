@@ -44,8 +44,13 @@ class PyannoteDiarizer:
         self.device = torch.device(device if torch.cuda.is_available() else "cpu")
         self.target_sample_rate = target_sample_rate
 
-        # load the pyannote pipeline
-        self.pipeline = Pipeline.from_pretrained(model_id, use_auth_token=hf_token)
+        # load the pyannote pipeline (handle API differences between versions)
+        try:
+            self.pipeline = Pipeline.from_pretrained(model_id, use_auth_token=hf_token)
+        except TypeError:
+            # newer pyannote.audio versions use "token" instead of "use_auth_token"
+            self.pipeline = Pipeline.from_pretrained(model_id, token=hf_token)
+
         self.pipeline.to(self.device)
 
     def _load_audio(self, audio_path: Path) -> Tuple[torch.Tensor, int]:

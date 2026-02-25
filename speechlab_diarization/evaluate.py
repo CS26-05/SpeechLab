@@ -23,6 +23,8 @@ from pathlib import Path
 import argparse
 import json
 import re
+import matplotlib
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 from pyannote.core import Annotation, Segment
@@ -212,15 +214,20 @@ def main():
 
     # ── Single-file mode ─────────────────────────────────────────────────────
     elif args.ref and args.hyp and args.uri:
-        ref_path = Path(args.ref)
-        hyp_path = Path(args.hyp)
+            ref_path = Path(args.ref)
+            hyp_path = Path(args.hyp)
 
-        if not ref_path.exists():
-            raise FileNotFoundError(f"Reference RTTM not found: {ref_path}")
-        if not hyp_path.exists():
-            raise FileNotFoundError(f"Hypothesis file not found: {hyp_path}")
+            if not ref_path.exists():
+                raise FileNotFoundError(f"Reference RTTM not found: {ref_path}")
+            if not hyp_path.exists():
+                raise FileNotFoundError(f"Hypothesis file not found: {hyp_path}")
 
-        evaluate_pair(ref_path, hyp_path, uri=args.uri, plot=plot)
+            chart_dir = Path("segment_charts")
+            if plot:
+                chart_dir.mkdir(exist_ok=True)
+                print(f"Charts will be saved to: {chart_dir.resolve()}")
+
+            evaluate_pair(ref_path, hyp_path, uri=args.uri, plot=plot, chart_dir=chart_dir)
 
     else:
         raise ValueError(
@@ -269,9 +276,6 @@ def plot_diarization(reference: Annotation, hypothesis: Annotation, uri: str, sa
         plt.savefig(out_path, dpi=150)
         plt.close(fig)
         print(f"Chart saved: {out_path}")
-    else:
-        plt.show()
-
 
 if __name__ == "__main__":
     main()

@@ -73,32 +73,26 @@ def _discover_audio_files(input_dir: Path) -> List[Path]:
 
 
 def _create_backend(config: PipelineConfig) -> VoiceTypeBackend:
-    """
-    create voice-type backend based on configuration
-    
-    args:
-        config: pipeline configuration
-        
-    returns:
-        initialized voicetypebackend instance
-    """
     backend_name = config.voice_type.backend
-    
+
     # build backend-specific kwargs
-    kwargs = {"device": config.runtime.device}
-    
-    if backend_name == "vtc1":
+    kwargs = {}
+
+    # only pass device to backends that actually accept it
+    if backend_name in {"vtc1"}:
+        kwargs["device"] = config.runtime.device
         if config.voice_type.vtc1_root:
             kwargs["vtc1_root"] = config.voice_type.vtc1_root
         if config.voice_type.vtc1_conda_env:
             kwargs["conda_env"] = config.voice_type.vtc1_conda_env
-    
+
     try:
         return get_backend(backend_name, **kwargs)
-    except ValueError as e:
+    except (ValueError, TypeError) as e:
         logger.warning(f"Failed to create backend '{backend_name}': {e}")
         logger.warning("Falling back to stub backend")
-        return get_backend("stub")
+        return get_backend("stub")  # IMPORTANT: no kwargs
+
 
 
 def _process_file(

@@ -112,7 +112,7 @@ def find_pairs(ref_dir: Path, hyp_dir: Path):
     # Build prefix -> path maps
     def extract_prefix(p: Path) -> str:
         """Return everything before the first '_', or the stem if no '_'."""
-        return p.stem.split("_")[0]
+        return p.stem
 
     ref_map = {extract_prefix(p): p for p in ref_files if p.suffix.lower() in (".rttm",)}
     hyp_map = {extract_prefix(p): p for p in hyp_files if p.suffix.lower() in (".rttm", ".json")}

@@ -26,13 +26,16 @@ LABEL_NONE    = "NONE"   # unmatched / untyped segment inside pipeline
 LABEL_SPEECH  = "SPEECH" # generic speech with no subtype (VTC1 raw label)
 
 # VTC 1.0 label mappings (marvinlvn/voice-type-classifier)
+# Raw labels from apply.sh: FEM, MAL, KCHI, CHI  (one RTTM file per class)
+# "OC" is an alternate spelling written by some VTC 1.0 builds for other-child
 VTC1_LABEL_MAP: Dict[str, str] = {
     "FEM":    "FEM",
     "MAL":    "MAL",
-    "KCHI":   "KCHI",
-    "CHI":    "OCH",       # child → other child
-    "OCH":    "OCH",
-    "SPEECH": LABEL_NONE,  # generic speech → none
+    "KCHI":   "KCHI",      # key child
+    "CHI":    "OCH",       # VTC1 other-child → canonical OCH
+    "OC":     "OCH",       # alternate spelling in some VTC1 builds
+    "OCH":    "OCH",       # defensive: already canonical
+    "SPEECH": LABEL_NONE,  # untyped generic speech → dropped
 }
 
 # VTC 2.0 label mappings (laac-lscp/vtc)

@@ -9,6 +9,7 @@ from .labels import CANONICAL_LABELS, normalize_label
 
 # import backends to register them
 from . import vtc1  # noqa: F401 - registers vtc1backend
+from . import vtc2  # noqa: F401 - registers vtc2backend
 
 __all__ = [
     "VoiceTypeBackend",

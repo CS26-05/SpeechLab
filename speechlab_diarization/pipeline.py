@@ -85,7 +85,10 @@ def _create_backend(config: PipelineConfig) -> VoiceTypeBackend:
             kwargs["vtc1_root"] = config.voice_type.vtc1_root
         if config.voice_type.vtc1_conda_env:
             kwargs["conda_env"] = config.voice_type.vtc1_conda_env
-
+    elif backend_name == "vtc2":
+        kwargs["device"] = config.runtime.device
+        if config.voice_type.vtc2_root:
+            kwargs["vtc2_root"] = config.voice_type.vtc2_root
     try:
         return get_backend(backend_name, **kwargs)
     except (ValueError, TypeError) as e:

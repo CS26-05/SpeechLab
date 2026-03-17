@@ -1,4 +1,4 @@
-speaker diarization + voice type classification pipeline using pyannote and vtc 1.0.
+speaker diarization + voice type classification pipeline using pyannote and vtc 2.0.
 the container files/the container are located in [`speechlab_diarization`](/speechlab_diarization)
 
 to use you need to agree to these huggingface models:
@@ -7,23 +7,30 @@ to use you need to agree to these huggingface models:
 
 for my linux system i developed on with a nvidia card, i figure this may be similar to what we will use on the hpc. i had to install the NVIDIA container toolkit for Docker to access the GPU, maybe this is also already installed since people are running jobs but we can ask jason
 
-*note:* vtc2.0 is [currently broken](https://github.com/LAAC-LSCP/VTC/issues/4) because the model weights are in a github lfs and the quota is maxed so you cannot download it until its hosted elsewhere or the owner of the repo buys more quota. i left room for vtc2.0 integration in the future
+*note:* vtc 2.0 ([laac-lscp/vtc](https://github.com/LAAC-LSCP/VTC)) is now the active backend. vtc 1.0 (`vtc1.py`) is kept for reference but is no longer used by default. vtc 2.0 uses `uv` instead of conda and must be cloned to `/opt/vtc2` before building the container (see setup below).
+
+### setup vtc 2.0
+
+before building the docker/apptainer image, clone vtc 2.0 (requires `git-lfs` and `uv`):
+
+```bash
+brew install git-lfs && git lfs install
+curl -LsSf https://astral.sh/uv/install.sh | sh && source ~/.zshrc
+
+sudo mkdir -p /opt/vtc2 && sudo chown $USER /opt/vtc2
+git clone --recurse-submodules https://github.com/LAAC-LSCP/VTC.git /opt/vtc2
+cd /opt/vtc2 && uv sync
+```
 
 ### vtc -> backends/
 
-my fix to the compatability issue that we had before is using a conda environment, if you try to install both in the same enviroment pip/conda will fail because
-- pytorch 1.7.1 doesn't work with python 3.12
-- pyannote.audio 1.x api is completely different from 3.x
-- the old MKL versions conflict with newer torch
+the backend system lets us swap vtc versions without touching the pipeline. all backends follow the same interface defined in `base.py` and communicate via files (audio in -> rttm out) using subprocess, so there are no dependency conflicts between vtc and the main pyannote environment.
 
-so we are running two isolated environments in the same docker container, the main environment (python 3.12 running pyannote 3.1 diarizaiton + pipeline) and also the pyannote conda env (python 3.8 running vtc 1.0 via apply.sh which is the main inference script from the [vtc 1.0 repo](https://github.com/MarvinLvn/voice-type-classifier)) 
-
-the two environments communicate via files (audio in -> rttm out instead of python imports) so thats why vtc1.py uses subprocess to call conda
-
-- **`base.py`** - defines what a voice-type backend should look like. all backends inherit from this so we can swap them out easily ^
-- **`labels.py`** - handles the canonical labels (FEM, MAL, KCHI, OCH) and maps raw vtc outputs to these standard labels, this is to normalize the label differences between vtc1 and vtc2 in the future (e.g. [OCH](https://github.com/MarvinLvn/voice-type-classifier) vs [CHI](https://github.com/LAAC-LSCP/VTC) or speech vs n/a)
-- **`vtc1.py`** - runs vtc 1.0 in a separate conda environment and parses its rttm output. talks to the apply.sh script via subprocess
-- **`__init__.py`** - exports the backend stuff so other modules can import it cleanly
+- **`base.py`** - defines what a voice-type backend should look like. all backends inherit from this so we can swap them out easily
+- **`labels.py`** - handles the canonical labels (FEM, MAL, KCHI, OCH) and maps raw vtc outputs to these standard labels, normalizing differences between vtc1 and vtc2 (e.g. CHI vs OCH)
+- **`vtc1.py`** - legacy. runs vtc 1.0 via conda environment and `apply.sh`. kept for reference
+- **`vtc2.py`** - active. runs vtc 2.0 via `uv run scripts/infer.py`. no conda needed, outputs merged rttm to `<output>/rttm/<stem>.rttm`
+- **`__init__.py`** - imports both backends to register them so the pipeline can find them by name
 
 
 

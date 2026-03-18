@@ -103,6 +103,11 @@ class PyannoteDiarizer:
         # note waveform stays on cpu pipeline handles device transfer internally
         diarization = self.pipeline({"waveform": waveform, "sample_rate": sample_rate})
 
+        # pyannote.audio 3.3+ returns DiarizeOutput instead of Annotation directly
+        # extract the Annotation so the rest of the pipeline can call .itertracks()
+        if hasattr(diarization, "speaker_diarization"):
+            diarization = diarization.speaker_diarization
+
         return diarization
 
     def get_waveform(self, audio_path: Union[str, Path]) -> Tuple[torch.Tensor, int]:

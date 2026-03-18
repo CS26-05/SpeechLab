@@ -1,0 +1,100 @@
+Bootstrap: docker
+From: nvidia/cuda:12.1.0-runtime-ubuntu22.04
+
+%labels
+    maintainer "CS26-05 SpeechLab Team"
+    description "Speaker diarization with voice-type classification"
+    version "0.3.0"
+
+%environment
+    export DEBIAN_FRONTEND=noninteractive
+    export CONDA_DIR=/opt/conda
+    export PATH=$CONDA_DIR/bin:$PATH
+    export VTC1_ROOT=/opt/vtc1
+    export SPEECHLAB_CONFIG=/app/config.yaml
+
+%post
+    export DEBIAN_FRONTEND=noninteractive
+
+    apt-get update && apt-get install -y --no-install-recommends \
+        software-properties-common \
+    && add-apt-repository ppa:deadsnakes/ppa \
+    && apt-get update && apt-get install -y --no-install-recommends \
+        python3.12 \
+        python3.12-dev \
+        python3-pip \
+        ffmpeg \
+        libsndfile1 \
+        git \
+        wget \
+        bzip2 \
+        sox \
+        libsox-fmt-all \
+    && rm -rf /var/lib/apt/lists/*
+
+    ln -sf /usr/bin/python3.12 /usr/bin/python
+    ln -sf /usr/bin/python3.12 /usr/bin/python3
+    wget -q https://bootstrap.pypa.io/get-pip.py -O /tmp/get-pip.py
+    python3.12 /tmp/get-pip.py
+    rm /tmp/get-pip.py
+
+    CONDA_DIR=/opt/conda
+    wget -q https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh \
+        -O /tmp/miniforge.sh
+    bash /tmp/miniforge.sh -b -p $CONDA_DIR
+    rm /tmp/miniforge.sh
+    export PATH=$CONDA_DIR/bin:$PATH
+
+    conda config --add channels pytorch
+
+    git clone --recurse-submodules \
+        https://github.com/MarvinLvn/voice-type-classifier.git /opt/vtc1
+
+    cd /opt/vtc1
+    conda env create -f vtc.yml
+
+    sed -i 's/version=versioneer.get_version()/version="0.0.0"/' \
+        /opt/vtc1/pyannote-audio/setup.py
+    conda run -n pyannote pip install -e /opt/vtc1/pyannote-audio
+
+    conda run -n pyannote python -c \
+        "import torch; print(f'VTC PyTorch: {torch.__version__}')"
+    conda run -n pyannote python -c \
+        "import pyannote.audio; print('VTC 1.0 pyannote.audio OK')"
+    conda run -n pyannote pyannote-audio --version
+    sox --version | head -1
+
+    mkdir -p /app && cd /app
+
+    python3.12 -m pip install --no-cache-dir \
+        torch==2.5.1+cu121 \
+        torchvision==0.20.1+cu121 \
+        torchaudio==2.5.1+cu121 \
+        --index-url https://download.pytorch.org/whl/cu121
+
+    python3.12 -m pip install --no-cache-dir "huggingface_hub>=0.20,<0.25"
+
+    python3.12 -m pip install --no-cache-dir \
+        "pyannote.audio>=3.1,<4.0" \
+        "pyyaml>=6.0"
+
+    python3.12 -m pip install --no-cache-dir -e /app
+
+    python3.12 -c "import torch; print(f'PyTorch: {torch.__version__}, CUDA: {torch.cuda.is_available()}')"
+    python3.12 -c "import torchaudio; print(f'torchaudio: {torchaudio.__version__}')"
+    python3.12 -c "import pyannote.audio; print(f'pyannote.audio: {pyannote.audio.__version__}')"
+    python3.12 -c "import speechlab_diarization; print(f'speechlab_diarization: {speechlab_diarization.__version__}')"
+
+    mkdir -p /data/input /data/output
+
+%files
+    pyproject.toml        /app/pyproject.toml
+    config.yaml           /app/config.yaml
+    README.md             /app/README.md
+    speechlab_diarization /app/speechlab_diarization
+
+%runscript
+    exec python3.12 -m speechlab_diarization.main "$@"
+
+%startscript
+    exec python3.12 -m speechlab_diarization.main "$@"

@@ -19,6 +19,7 @@
 # use official python 3.12 image
 FROM python:3.12-slim
 
+
 # metadata
 LABEL maintainer="CS26-05 SpeechLab Team"
 LABEL description="Speaker diarization with voice-type classification"
@@ -40,10 +41,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # install miniforge (conda-forge-first, no tos required)
 ENV CONDA_DIR=/opt/conda
-RUN wget -q https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh -O /tmp/miniforge.sh && \
-    bash /tmp/miniforge.sh -b -p $CONDA_DIR && \
+
+RUN wget -q https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-aarch64.sh -O /tmp/miniforge.sh && \
+    bash /tmp/miniforge.sh -b -p /opt/conda && \
     rm /tmp/miniforge.sh
+
+# Add conda to PATH
 ENV PATH=$CONDA_DIR/bin:$PATH
+
 
 # add pytorch channel
 RUN conda config --add channels pytorch

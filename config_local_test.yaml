@@ -17,5 +17,5 @@ runtime:
   max_duration_minutes: 60
 
 io:
-  input_dir: "/Users/lananhhathi/Desktop/cs26_05/test_input"
-  output_dir: "/Users/lananhhathi/Desktop/cs26_05/hypo_files"
+  input_dir: "/Users/gracelee/Desktop/Speech-Lab/Speechlab/test_input"
+  output_dir: "/Users/gracelee/Desktop/Speech-Lab/Speechlab/hypo_files"

@@ -13,7 +13,7 @@ huggingface:
 
 runtime:
   sample_rate: 16000
-  device: "GPU"               # use "cpu" if no GPU
+  device: "cuda"               # use "cpu" if no GPU
   max_duration_minutes: 60
 
 io:

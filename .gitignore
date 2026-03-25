@@ -39,3 +39,11 @@ test_reference/
 rttm_out/
 *.rttm*.sif
 *.sif
+
+
+test_input/*
+test_output/*
+!test_input/.gitkeep
+!test_output/.gitkeep
+
+

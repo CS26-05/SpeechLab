@@ -3,6 +3,11 @@ evaluate.py
 
 Compute pyannote diarization metrics on hypothesis RTTM/JSON against reference RTTM.
 
+Copied from speechLab/main branch.
+Modified:
+  - Removed DiarizationPurityCoverageFMeasure import (not available in installed
+    pyannote.metrics version); F-measure is now computed manually as 2*P*C/(P+C).
+
 Usage (single file):
     python evaluate.py --ref ref.rttm --hyp hyp.rttm --uri audio_01
     python evaluate.py --ref ref.rttm --hyp hyp.json --uri audio_01
@@ -22,13 +27,19 @@ Requirements:
 from pathlib import Path
 import argparse
 import json
-import re
+import matplotlib
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 from pyannote.core import Annotation, Segment
 from pyannote.database.util import load_rttm
-from pyannote.metrics.diarization import DiarizationErrorRate, JaccardErrorRate
-from pyannote.metrics.segmentation import SegmentationPrecision, SegmentationRecall
+from pyannote.metrics.diarization import (
+    DiarizationErrorRate,
+    JaccardErrorRate,
+    DiarizationPurity,
+    DiarizationCoverage,
+)
+from pyannote.metrics.detection import DetectionErrorRate
 
 
 def vtc_json_to_annotation(vtc_json_path, uri):
@@ -61,37 +72,61 @@ def load_annotation(path: Path, uri: str) -> Annotation:
                 return list(all_ann.values())[0]
             raise ValueError(f"URI '{uri}' not found in {path}. Available URIs: {list(all_ann.keys())}")
         return all_ann[uri]
-
+    
+def annotation_to_detection(ann: Annotation) -> Annotation:
+    """Return a new Annotation where every segment is labelled 'speech'."""
+    det = Annotation(uri=ann.uri)
+    for segment, _, _ in ann.itertracks(yield_label=True):
+        det[segment] = "speech"
+    return det
 
 def compute_metrics(reference: Annotation, hypothesis: Annotation) -> dict:
     """Compute all pyannote metrics and return as a dict."""
     metrics = {
-        "DER":       DiarizationErrorRate(),
-        "JER":       JaccardErrorRate(),
-        "Precision": SegmentationPrecision(),
-        "Recall":    SegmentationRecall(),
+        "DER":      DiarizationErrorRate(),
+        "JER":      JaccardErrorRate(),
+        "Purity":   DiarizationPurity(),
+        "Coverage": DiarizationCoverage(),
     }
-    return {name: metric(reference, hypothesis) for name, metric in metrics.items()}
-
+    scores = {name: float(metric(reference, hypothesis)) for name, metric in metrics.items()}
+    p, c = scores["Purity"], scores["Coverage"]
+    scores["F-measure"] = (2 * p * c / (p + c)) if (p + c) > 0 else 0.0
+    
+    # Detection‑only metrics (VAD level)
+    ref_det = annotation_to_detection(reference)
+    hyp_det = annotation_to_detection(hypothesis)
+    det_er = DetectionErrorRate()(ref_det, hyp_det)
+    scores["DetER"] = float(det_er)
+    
+    return scores
 
 def evaluate_pair(ref_path: Path, hyp_path: Path, uri: str, plot: bool = True, chart_dir: Path = None):
-    """Evaluate a single reference/hypothesis pair and print results."""
     print(f"\n{'='*60}")
-    print(f"  URI      : {uri}")
-    print(f"  Reference: {ref_path}")
+    print(f"  URI       : {uri}")
+    print(f"  Reference : {ref_path}")
     print(f"  Hypothesis: {hyp_path}")
     print(f"{'='*60}")
 
-    reference  = load_annotation(ref_path,  uri)
-    hypothesis = load_annotation(hyp_path,  uri)
+    reference  = load_annotation(ref_path, uri)
+    hypothesis = load_annotation(hyp_path, uri)
 
     print(f"  Reference segments : {len(reference)}")
     print(f"  Hypothesis segments: {len(hypothesis)}")
 
     scores = compute_metrics(reference, hypothesis)
-    print("\n  Metrics:")
-    for name, score in scores.items():
-        print(f"    {name:12s}: {score:.4f}")
+
+    print("\n  Diarization:")
+    for name in ("DER", "JER"):
+        print(f"    {name:12s}: {scores[name]:.4f}")
+
+    print("\n  Purity / Coverage:")
+    for name in ("Purity", "Coverage", "F-measure"):
+        print(f"    {name:12s}: {scores[name]:.4f}")
+
+    print("\n  Detection (VAD-level):")
+    confusion = scores["DER"] - scores["DetER"]
+    print(f"    {'DetER':12s}: {scores['DetER']:.4f}  (missed + false alarm)")
+    print(f"    {'Confusion':12s}: {confusion:.4f}  (DER - DetER; pure speaker mislabelling)")
 
     if plot:
         plot_diarization(reference, hypothesis, uri, save_dir=chart_dir)
@@ -125,15 +160,13 @@ def find_pairs(ref_dir: Path, hyp_dir: Path):
             f"  Hypothesis prefixes: {sorted(hyp_map)}"
         )
 
-    pairs = [(ref_map[k], hyp_map[k], k) for k in common]
-
     # Warn about unmatched files
     for k in set(ref_map) - set(hyp_map):
         print(f"[WARNING] No hypothesis found for reference prefix '{k}' ({ref_map[k].name}), skipping.")
     for k in set(hyp_map) - set(ref_map):
         print(f"[WARNING] No reference found for hypothesis prefix '{k}' ({hyp_map[k].name}), skipping.")
 
-    return pairs
+    return [(ref_map[k], hyp_map[k], k) for k in common]
 
 
 def parse_args():
@@ -190,25 +223,21 @@ def main():
             all_scores[prefix] = scores
 
         # ── Summary table ────────────────────────────────────────────────
-        print(f"\n{'='*60}")
-        print("  SUMMARY")
-        print(f"{'='*60}")
         metric_names = list(next(iter(all_scores.values())).keys())
-        header = f"  {'File':<20}" + "".join(f"{m:>12}" for m in metric_names)
-        print(header)
-        print(f"  {'-'*18}" + "-"*12*len(metric_names))
+        print(f"\n{'='*60}\n  SUMMARY\n{'='*60}")
+        print(f"  {'File':<20}" + "".join(f"{m:>12}" for m in metric_names))
+        print(f"  {'-'*18}" + "-" * 12 * len(metric_names))
 
         totals = {m: 0.0 for m in metric_names}
         for prefix, scores in all_scores.items():
-            row = f"  {prefix:<20}" + "".join(f"{scores[m]:>12.4f}" for m in metric_names)
-            print(row)
+            print(f"  {prefix:<20}" + "".join(f"{scores[m]:>12.4f}" for m in metric_names))
             for m in metric_names:
                 totals[m] += scores[m]
 
         n = len(all_scores)
-        avg_row = f"  {'AVERAGE':<20}" + "".join(f"{totals[m]/n:>12.4f}" for m in metric_names)
-        print(f"  {'-'*18}" + "-"*12*len(metric_names))
-        print(avg_row)
+        print(f"  {'-'*18}" + "-" * 12 * len(metric_names))
+        print(f"  {'AVERAGE':<20}" + "".join(f"{totals[m]/n:>12.4f}" for m in metric_names))
+
 
     # ── Single-file mode ─────────────────────────────────────────────────────
     elif args.ref and args.hyp and args.uri:
@@ -220,7 +249,12 @@ def main():
         if not hyp_path.exists():
             raise FileNotFoundError(f"Hypothesis file not found: {hyp_path}")
 
-        evaluate_pair(ref_path, hyp_path, uri=args.uri, plot=plot)
+        chart_dir = Path("segment_charts")
+        if plot:
+            chart_dir.mkdir(exist_ok=True)
+            print(f"Charts will be saved to: {chart_dir.resolve()}")
+
+        evaluate_pair(ref_path, hyp_path, uri=args.uri, plot=plot, chart_dir=chart_dir)
 
     else:
         raise ValueError(
@@ -269,9 +303,6 @@ def plot_diarization(reference: Annotation, hypothesis: Annotation, uri: str, sa
         plt.savefig(out_path, dpi=150)
         plt.close(fig)
         print(f"Chart saved: {out_path}")
-    else:
-        plt.show()
-
 
 if __name__ == "__main__":
     main()

@@ -19,7 +19,6 @@ data/output/
 # DO commit these small reference files
 !data/cha_to_vtc1_speaker_map.csv
 !data/cha_speakers.jsonl
-!test_reference/*.rttm
 
 # SECRETS — never commit
 .env
@@ -35,6 +34,4 @@ setup_env.sh
 .cache/
 
 # Generated RTTM outputs
-test_reference/
 rttm_out/
-*.rttm

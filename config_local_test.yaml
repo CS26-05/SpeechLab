@@ -16,6 +16,9 @@ runtime:
   device: "mps"
   max_duration_minutes: 60
 
+# for apptainer purposes
 io:
-  input_dir: "/Users/gracelee/Desktop/Speech-Lab/Speechlab/test_input"
-  output_dir: "/Users/gracelee/Desktop/Speech-Lab/Speechlab/hypo_files"
+  input_dir: "/data/input"
+  output_dir: "/data/output"
+  # input_dir: "/Users/gracelee/Desktop/Speech-Lab/Speechlab/test_input"
+  # output_dir: "/Users/gracelee/Desktop/Speech-Lab/Speechlab/hypo_files"

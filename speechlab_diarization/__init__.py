@@ -4,6 +4,22 @@ speechlab diarization package
 integrates pyannote speaker diarization with voice-type classification backends
 """
 
+
+import torch
+import torch.serialization
+
+# Monkey-patch torch.load to default weights_only=False
+# Required because speechbrain checkpoints are incompatible with PyTorch 2.6 default
+_original_torch_load = torch.load
+
+def _patched_torch_load(*args, **kwargs):
+    if 'weights_only' not in kwargs:
+        kwargs['weights_only'] = False
+    return _original_torch_load(*args, **kwargs)
+
+torch.load = _patched_torch_load
+
+
 __version__ = "0.3.0"
 
 from .config import (
@@ -48,3 +64,4 @@ __all__ = [
     # Pipeline
     "run_pipeline",
 ]
+

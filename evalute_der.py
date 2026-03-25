@@ -6,8 +6,8 @@ from pyannote.core import Annotation, Segment
 from pyannote.metrics.diarization import DiarizationErrorRate
 
 # Folders that store the ground-truth RTTM files and the model output RTTM files.
-REFERENCE_DIR = Path("/SpeechLab/test_reference")
-HYPOTHESIS_DIR = Path("/SpeechLab/test_output")
+REFERENCE_DIR = Path("test_reference")
+HYPOTHESIS_DIR = Path("hypo_files")
 
 
 def load_rttm_manual(path: Path) -> Annotation:
@@ -31,6 +31,8 @@ def load_rttm_manual(path: Path) -> Annotation:
             # RTTM has many fields, but only need start, duration, and speaker ID.
             _, uri, _, start, dur, _, _, speaker, *_ = parts
 
+          
+
             start = float(start)
             dur = float(dur)
 
@@ -42,7 +44,9 @@ def load_rttm_manual(path: Path) -> Annotation:
 
 def main():
     # The DER metric object. Calling metric(ref, hyp) returns DER AND also accumulates results.
-    metric = DiarizationErrorRate()
+    # metric = DiarizationErrorRate()
+    # testings this
+    metric = DiarizationErrorRate(collar=0.25)
 
     print("\n==============================")
     print(" Evaluating Diarization Error ")

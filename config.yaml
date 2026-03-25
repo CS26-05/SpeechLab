@@ -9,11 +9,11 @@ voice_type:
   # vtc1_conda_env: "pyannote"
 
 huggingface:
-  token_env_var: "HF_TOKEN"    # export HF_TOKEN="hf_..." in your shell
+  token_env_var: "HF_TOKEN"    # export HF_TOKEN="hf_..." in shell
 
 runtime:
   sample_rate: 16000
-  device: "cuda"               # use "cpu" if no GPU
+  device: "GPU"               # use "cpu" if no GPU
   max_duration_minutes: 60
 
 io:

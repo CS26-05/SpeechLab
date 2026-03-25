@@ -30,20 +30,50 @@ TIME_MARK_RE = re.compile(r"\x15(\d+)_(\d+)\x15")
 MAIN_TIER_RE = re.compile(r"^\*([A-Za-z0-9_]+):")
 
 
-def load_speaker_mapping(csv_path: Path) -> Dict[str, str]:
+def load_speaker_mapping(csv_path: Path) -> Dict:
     """
-    Load CHA code → VTC label mapping from cha_to_vtc1_speaker_map.csv.
-    Column used: cha_code  →  vtc_label
+    Load CHA code → VTC label mapping from the CSV.
+
+    Supports two formats:
+      Global mapping (original):
+        cha_code, vtc_label
+        PAR,      FEM
+
+      Per-file override (new):
+        cha_code, vtc_label, filename
+        PAR,      FEM,       CW41_020701b.cha
+        PAR,      MAL,       FM07_020715a.cha
+        PAR,      OCH,       CK39_020510c.cha
+
+    Returns a dict with two keys:
+      "global"   → {cha_code: vtc_label}   (rows with no filename)
+      "override" → {filename_stem: {cha_code: vtc_label}}  (rows with filename)
+
+    Per-file overrides take priority over global mappings.
     Rows with empty vtc_label are skipped.
     """
-    mapping: Dict[str, str] = {}
+    global_map: Dict[str, str] = {}
+    override_map: Dict[str, Dict[str, str]] = {}
+
     with open(csv_path, newline="", encoding="utf-8") as f:
         for row in csv.DictReader(f):
-            code = (row.get("cha_code") or "").strip()
+            code  = (row.get("cha_code")  or "").strip()
             label = (row.get("vtc_label") or "").strip().upper()
-            if code and label:
-                mapping[code] = label
-    return mapping
+            fname = (row.get("filename")  or "").strip()
+
+            if not code or not label:
+                continue
+
+            if fname:
+                # per-file override — strip extension to get stem
+                stem = Path(fname).stem
+                if stem not in override_map:
+                    override_map[stem] = {}
+                override_map[stem][code] = label
+            else:
+                global_map[code] = label
+
+    return {"global": global_map, "override": override_map}
 
 
 def rttm_line(file_id: str, start_s: float, dur_s: float, spk: str, chan: int = 1) -> str:
@@ -163,7 +193,8 @@ def convert_file(
         start_s = round((s_ms + offset_ms) / 1000.0, 3)
         dur_s = round((e_ms - s_ms) / 1000.0, 3)
 
-        vtc_label = speaker_mapping.get(raw_spk)
+        file_overrides = speaker_mapping["override"].get(file_id, {})
+        vtc_label = file_overrides.get(raw_spk) or speaker_mapping["global"].get(raw_spk)
         if vtc_label is None or vtc_label not in VALID_LABELS:
             skipped_codes.add(raw_spk)
             vtc_label = "UNK"
@@ -209,7 +240,9 @@ def main():
     if not csv_path.exists():
         raise SystemExit(f"Mapping file not found: {csv_path}\nUse -m to specify the path.")
     speaker_mapping = load_speaker_mapping(csv_path)
-    print(f"Loaded {len(speaker_mapping)} speaker mappings from {csv_path}")
+    n_global = len(speaker_mapping["global"])
+    n_override = sum(len(v) for v in speaker_mapping["override"].values())
+    print(f"Loaded {n_global} global + {n_override} per-file override speaker mappings from {csv_path}")
 
     if in_path.is_dir():
         count = 0

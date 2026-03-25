@@ -37,4 +37,5 @@ setup_env.sh
 # Generated RTTM outputs
 test_reference/
 rttm_out/
-*.rttm
+*.rttm*.sif
+*.sif

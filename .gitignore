@@ -36,3 +36,8 @@ setup_env.sh
 # Generated RTTM outputs
 rttm_out/
 !test_input/*.wav
+
+
+# empty for testing
+test_output/*
+!test_output/.gitkeep

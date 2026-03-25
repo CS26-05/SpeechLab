@@ -1,0 +1,44 @@
+Bootstrap: docker
+From: python:3.13-slim
+
+%environment
+    export PATH="/root/.local/bin:$PATH"
+    export VTC2_ROOT=/opt/vtc2
+    export SPEECHLAB_CONFIG=/app/config.yaml
+    export DEBIAN_FRONTEND=noninteractive
+
+%post
+    # ---- system deps
+    apt-get update && apt-get install -y --no-install-recommends \
+        ffmpeg libsndfile1 git git-lfs curl ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+    git lfs install
+
+    # ---- uv
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+    export PATH="/root/.local/bin:$PATH"
+
+    # ---- VTC2
+    git clone --recurse-submodules https://github.com/LAAC-LSCP/VTC.git /opt/vtc2
+    cd /opt/vtc2 && uv sync --no-install-package torchcodec
+
+    # ---- CUDA PyTorch (pinned matching versions)
+    pip install --no-cache-dir \
+    torch==2.6.0 torchaudio==2.6.0 \
+    --index-url https://download.pytorch.org/whl/cu124
+    # ---- main dependencies
+    pip install --no-cache-dir \
+        "huggingface_hub>=0.20,<0.25" \
+        "pyannote.audio>=3.1,<4.0" \
+        "pyyaml>=6.0"
+
+    # ---- clone app
+    git clone -b apptainer-testing https://github.com/CS26-05/SpeechLab.git /app
+    cd /app && pip install --no-cache-dir -e .
+
+    # ---- data dirs
+    mkdir -p /data/input /data/output
+
+%runscript
+    python -m speechlab_diarization.main "$@"

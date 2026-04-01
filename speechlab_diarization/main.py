@@ -12,6 +12,9 @@ from __future__ import annotations
 
 import argparse
 import sys
+import torch
+from torch.torch_version import TorchVersion
+torch.serialization.add_safe_globals([TorchVersion])
 
 from .config import load_config
 from .pipeline import HFTokenError, run_pipeline

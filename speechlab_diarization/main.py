@@ -13,8 +13,14 @@ from __future__ import annotations
 import argparse
 import sys
 import torch
-from torch.torch_version import TorchVersion
-torch.serialization.add_safe_globals([TorchVersion])
+# PyTorch 2.6 changed torch.load to use weights_only=True by default, which
+# breaks pyannote/speechbrain checkpoints containing custom types. We patch
+# torch.load to default back to weights_only=False before any models load.
+_original_torch_load = torch.load
+def _patched_torch_load(*args, **kwargs):
+    kwargs.setdefault('weights_only', False)
+    return _original_torch_load(*args, **kwargs)
+torch.load = _patched_torch_load
 
 from .config import load_config
 from .pipeline import HFTokenError, run_pipeline

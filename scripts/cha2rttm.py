@@ -219,7 +219,7 @@ def main():
         description="Convert CHAT (.cha) to RTTM with VTC speaker labels (no pylangacq)."
     )
     ap.add_argument("input", help="A .cha file or a directory of .cha files")
-    ap.add_argument("-o", "--out", default="rttm_out", help="Output directory (default: rttm_out)")
+    ap.add_argument("-o", "--out", default="data/test_reference", help="Output directory (default: data/test_reference)")  # CHA-derived reference RTTMs go here
     ap.add_argument(
         "-m",
         "--mapping",

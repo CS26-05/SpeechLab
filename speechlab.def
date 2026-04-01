@@ -38,11 +38,11 @@ From: python:3.13-slim
         "pyyaml>=6.0"
 
     # ---- clone app
-    git clone -b apptainer-testing https://github.com/CS26-05/SpeechLab.git /app
+    git clone -b pipeline-ready https://github.com/CS26-05/SpeechLab.git /app
     cd /app && pip install --no-cache-dir -e .
 
     # ---- data dirs
-    mkdir -p /data/input /data/output
+    mkdir -p /data/test_input /data/test_output
 
 %runscript
     python -m speechlab_diarization.main "$@"

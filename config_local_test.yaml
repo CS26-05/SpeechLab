@@ -13,7 +13,7 @@ huggingface:
 
 runtime:
   sample_rate: 16000
-  device: "mps"
+  device: "cuda"
   max_duration_minutes: 60
 
 io:

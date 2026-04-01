@@ -29,7 +29,7 @@ From: python:3.13-slim
 
     # ---- CUDA PyTorch (pinned matching versions)
     pip install --no-cache-dir \
-    torch==2.6.0 torchaudio==2.6.0 \
+    torch==2.5.1 torchaudio==2.5.1 \
     --index-url https://download.pytorch.org/whl/cu124
     # ---- main dependencies
     pip install --no-cache-dir \

@@ -10,8 +10,14 @@ build/
 venv/
 
 # Audio & large data — don't commit
-data/input/
-data/output/
+data/test_input/*
+!data/test_input/.gitkeep
+data/test_output/*
+!data/test_output/.gitkeep
+data/cha/*
+!data/cha/.gitkeep
+data/test_reference/*
+!data/test_reference/.gitkeep 
 *.wav
 *.flac
 *.mp3
@@ -33,11 +39,14 @@ setup_env.sh
 # Model / HF cache
 .cache/
 
-# Generated RTTM outputs
-rttm_out/
-!test_input/*.wav
+# logs
+logs/
+*.log
+
+# apptainer
+*.sif
+
+# Generated outputs
+segment_charts/
 
 
-# empty for testing
-test_output/*
-!test_output/.gitkeep

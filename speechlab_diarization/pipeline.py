@@ -25,9 +25,11 @@ from .rttm_io import write_enriched_rttm, write_plain_rttm
 
 logger = logging.getLogger(__name__)
 
+
 class HFTokenError(Exception):
     """raised when hugging face token is not available"""
     pass
+
 
 def _get_hf_token(config: PipelineConfig) -> str:
     """
@@ -52,6 +54,7 @@ def _get_hf_token(config: PipelineConfig) -> str:
         )
 
     return token
+
 
 def _discover_audio_files(input_dir: Path) -> List[Path]:
     """
@@ -97,7 +100,6 @@ def _create_backend(config: PipelineConfig) -> VoiceTypeBackend:
         return get_backend("stub")  # IMPORTANT: no kwargs
 
 
-
 def _process_file(
     audio_path: Path,
     diarizer: PyannoteDiarizer,
@@ -127,11 +129,11 @@ def _process_file(
     # step 2: run voice-type backend on the file
     vtc_available = False
     backend_result: BackendResult = BackendResult(uri=uri, segments=[], success=False)
-    
+
     if backend.is_available():
         logger.info(f"  Running {backend.name} on {audio_path.name}...")
         backend_result = backend.run(audio_path)
-        
+
         if backend_result.success:
             vtc_available = True
             logger.info(f"  {backend.name} found {len(backend_result.segments)} segments")
@@ -243,6 +245,7 @@ def run_pipeline(config: PipelineConfig) -> Dict:
 
     # resolve hf token (never log it!)
     hf_token = _get_hf_token(config)
+    print("DEBUG: resolved HF token", flush=True)
 
     # validate input directory
     input_dir = Path(config.io.input_dir)
@@ -258,19 +261,25 @@ def run_pipeline(config: PipelineConfig) -> Dict:
         return {"processed": 0, "files": []}
 
     logger.info(f"Found {len(audio_files)} audio file(s) in {input_dir}")
+    print("DEBUG: discovered audio files", flush=True)
 
     # initialize diarizer
     logger.info("Initializing pyannote diarization pipeline...")
+    print("DEBUG: reached pipeline.py init point", flush=True)
+    print("DEBUG: about to create PyannoteDiarizer", flush=True)
     diarizer = PyannoteDiarizer(
         model_id=config.models.pyannote_pipeline,
         hf_token=hf_token,
         device=config.runtime.device,
         target_sample_rate=config.runtime.sample_rate,
     )
+    print("DEBUG: finished creating PyannoteDiarizer", flush=True)
 
     # initialize voice-type backend
     logger.info(f"Initializing voice-type backend: {config.voice_type.backend}...")
+    print("DEBUG: about to create backend", flush=True)
     backend = _create_backend(config)
+    print("DEBUG: finished creating backend", flush=True)
 
     if backend.is_available():
         logger.info(f"{backend.name} backend is available")
@@ -283,7 +292,7 @@ def run_pipeline(config: PipelineConfig) -> Dict:
     # process each file
     results = []
     vtc_success_count = 0
-    
+
     for audio_path in audio_files:
         try:
             result = _process_file(

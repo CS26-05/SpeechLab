@@ -3,16 +3,21 @@
 Extract speaker info from .cha files.
 
 Reads @ID lines to get speaker code, gender, and role.
+
 Aggregates data across files and writes:
-    - CSV (one row per gender/role combination)
+    - CSV (one row per exact code/gender/role match)
     - JSONL (full speaker info)
+
+Important:
+    Files are stored by exact speaker identity (code + gender + role),
+    so if the same CHA code appears with different roles in different files,
+    each output row only shows the files for that specific match.
 
 Usage:
     python cha_speaker_list.py INPUT_PATH [-o OUTPUT_DIR]
 
 Example:
     python cha_speaker_list.py data/test_input -o data/test_output
-    python3 scripts/cha_speaker_list.py /Users/lananhhathi/Desktop/project/cs26_05/cha_files -o data
 """
 import argparse
 import csv
@@ -97,37 +102,38 @@ def main():
                         parsed = parse_id_line(line)
                         if not parsed:
                             continue
-                        code, gender, role = parsed
 
-                        # if code not in speakers:
-                        #     speakers[code] = {"gender": gender, "role": role, "files": set()}
-                        # else:
-                        #     if speakers[code]["gender"] is None and gender is not None:
-                        #         speakers[code]["gender"] = gender
-                        #     if speakers[code]["role"] is None and role is not None:
-                        #         speakers[code]["role"] = role
+                        code, gender, role = parsed
+                        gender = gender or ""
+                        role = role or ""
 
                         if code not in speakers:
                             # store the values in set
-                            speakers[code] = {"genders": set(), "roles": set(), "files": set()}
-
-                        # always add to set (sets ignore duplicates automatically)
-                        if gender is not None:
-                            speakers[code]["genders"].add(gender)
-                            
-                        if role is not None:
-                            speakers[code]["roles"].add(role)
-
-                        speakers[code]["files"].add(cha_file.name)
+                            speakers[code] = {}
+                        
+                        key = (gender, role)
+                        if key not in speakers[code]:
+                            speakers[code][key] = set()
+                        speakers[code][key].add(cha_file.name)
 
         except OSError as e:
             print(f"WARNING: could not read {cha_file}: {e}")
 
-    # Create a comprehension dictionary storing conflicting roles or gender with the same speaker code
-    conflicts = {
-        code: data for code, data in speakers.items()
-        if len(data["roles"]) > 1 or len(data["genders"]) > 1
-    }
+    conflicts = {}
+    for code, combos in speakers.items():
+        genders = {gender for gender, _ in combos.keys() if gender}
+        roles = {role for _, role in combos.keys() if role}
+        if len(genders) > 1 or len(roles) > 1 or len(combos) > 1:
+            conflicts[code] = {
+                "genders": genders,
+                "roles": roles,
+                "files": {
+                    fname
+                    for files in combos.values()
+                    for fname in files
+                },
+            }
+
     
     if conflicts:
         print("\nWARNING: Ambiguous speaker code found:")
@@ -139,12 +145,13 @@ def main():
     # Write JSONL
     with out_jsonl.open("w", encoding="utf-8") as f:
         for code in sorted(speakers):
-            obj = {
-                "cha_code": code,
-                "genders": sorted(speakers[code]["genders"]),
-                "roles": sorted(speakers[code]["roles"]),
-                "files": sorted(speakers[code]["files"]),
-            }
+            for (gender, role), files in sorted(speakers[code].items()):
+                obj = {
+                    "cha_code": code,
+                    "gender": gender,
+                    "role": role,
+                    "files": sorted(files),
+                }
             f.write(json.dumps(obj) + "\n")
 
     # Write CSV
@@ -153,19 +160,18 @@ def main():
     with out_csv.open("w", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
         w.writerow(["cha_code", "gender", "role", "vtc_label", "files"])
-        for code in sorted(speakers):
-            genders = sorted(speakers[code]["genders"]) or [""]
-            roles = sorted(speakers[code]["roles"]) or [""]
-            files = sorted(speakers[code]["files"]) 
-            files_str = "|".join(files)
 
-            for role in roles:
-                for gender in genders:
-                    w.writerow([code, gender, role, "", files_str])
+        for code in sorted(speakers):
+            for (gender, role), files in sorted(speakers[code].items()): 
+                files_str = "|".join(sorted(files))
+                w.writerow([code, gender, role, "", files_str])
+    
+    total_rows = sum(len(combos) for combos in speakers.values())
 
     print(f"Scanned {file_count} CHA file(s). Found {len(speakers)} speaker code(s).")
-    print(f"Wrote:\n  {out_csv}\n  {out_jsonl}")
-
+    print(f"Wrote {total_rows} exact code/gender/role row(s):")
+    print(f"  {out_csv}")
+    print(f"  {out_jsonl}")
 
 if __name__ == "__main__":
     main()

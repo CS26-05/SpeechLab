@@ -26,11 +26,16 @@ class VTC2Backend(VoiceTypeBackend):
 
     def __init__(
             self,
-            vtc2_root: Optional[str] = None, 
+            vtc2_root: Optional[str] = None,
+            checkpoint: Optional[str] = None,
+            vtc_config: Optional[str] = None,
             device: str = "cuda"
-    ) -> None: 
+    ) -> None:
         import os
         self.vtc2_root = Path(vtc2_root or os.environ.get("VTC2_ROOT", "/opt/vtc2"))
+        # relative to vtc2_root; None = use infer.py's own defaults (safe for vtc20/vtc21)
+        self.checkpoint = checkpoint
+        self.vtc_config = vtc_config
         self.device = device if torch.cuda.is_available() else "cpu"
         self._available: Optional[bool] = None
 
@@ -127,6 +132,10 @@ class VTC2Backend(VoiceTypeBackend):
                     "--output", str(output_dir),
                     "--device", device_arg,
                 ]
+                if self.checkpoint:
+                    cmd += ["--checkpoint", str(self.vtc2_root / self.checkpoint)]
+                if self.vtc_config:
+                    cmd += ["--config", str(self.vtc2_root / self.vtc_config)]
 
                 result = subprocess.run(
                     cmd,

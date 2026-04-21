@@ -1,12 +1,12 @@
-# Local test configuration
-# Run with: python -m speechlab_diarization.main --config config_local_test.yaml
-
+# Local test config (no container). Adjust vtc2_root to your local install.
 models:
   pyannote_pipeline: "pyannote/speaker-diarization-3.1"
 
 voice_type:
   backend: "vtc2"
-  vtc2_root: "/opt/vtc2"
+  vtc2_root: "/opt/vtc21"
+  vtc2_checkpoint: "VTC-2/model/best.ckpt"
+  vtc2_config: "VTC-2/model/config.toml"
 
 huggingface:
   token_env_var: "HF_TOKEN"

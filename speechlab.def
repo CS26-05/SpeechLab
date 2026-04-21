@@ -63,7 +63,7 @@ From: python:3.13-slim
         "pyyaml>=6.0"
 
     # ======== clone app ========
-    git clone -b vtc-multi https://github.com/CS26-05/SpeechLab.git /app
+    git clone -b vtc-versioned https://github.com/CS26-05/SpeechLab.git /app
     cd /app && pip install --no-cache-dir -e .
 
     mkdir -p /data/input /data/output

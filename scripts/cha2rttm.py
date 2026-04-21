@@ -7,19 +7,20 @@ Speaker codes are mapped to VTC labels using cha_to_vtc2_speaker_map.csv.
 Run:
    python scripts/cha2rttm.py cha_files -m data/cha_to_vtc2_speaker_map_adjusted.csv -o test_reference
 
-Expected mapping CSV format (from speaker list script only):
-    cha_code,gender,role,vtc_label,files
+Expected mapping CSV format:
+    cha_code,gender,role,hearing_statuses,child_ids,vtc_label,files
+Only cha_code, vtc_label, and files are required for RTTM conversion.
+Extra metadata columns are allowed and safely ignored here.
 
 Example:
-    PAR,female,Mother,FEM,CW41_020701b.cha|CW41_020702a.cha
-    CHI,male,Target_Child,KCHI,CW41_020701b.cha
-    CHI,male,Playmate,OCH,FM07_020715a.cha
-    TV,,Media,MED,CW41_020701b.cha
+    PAR,female,Mother,,CW41,FEM,CW41_020701b.cha
+    CHI,male,Target_Child,HI|NH,CW41|AR31,KCHI,CW41_020701b.cha|AR31_021108a.cha
+    TV,,Media,,CW41,MED,CW41_020701b.cha
 
 Output labels:
   VTC labels:        FEM, MAL, KCHI, OCH
   CHA-only labels:   UNK     (unknown speaker identity)
-                     MED     (media / non-speech source)
+                     MED     (media speech source)
 """
 
 import argparse
@@ -42,6 +43,14 @@ def load_speaker_mapping(csv_path: Path) -> Dict[str, Dict[str, str]]:
     """
     Load per-file mapping from speaker list CSV.
 
+    Supports mapping CSVs with extra metadata columns, e.g.:
+        cha_code,gender,role,hearing_statuses,child_ids,vtc_label,files
+
+    Only these columns are required here:
+        - cha_code
+        - vtc_label
+        - files
+
     Returns:
         {
             file_stem: {
@@ -55,7 +64,8 @@ def load_speaker_mapping(csv_path: Path) -> Dict[str, Dict[str, str]]:
         reader = csv.DictReader(f)
 
         required_cols = {"cha_code", "vtc_label", "files"}
-        missing = required_cols - set(reader.fieldnames or [])
+        fieldnames = set(reader.fieldnames or [])
+        missing = required_cols - fieldnames
         if missing:
             raise SystemExit(
                 f"Mapping CSV missing required columns: {sorted(missing)}"
@@ -65,6 +75,10 @@ def load_speaker_mapping(csv_path: Path) -> Dict[str, Dict[str, str]]:
             code = (row.get("cha_code") or "").strip()
             label = (row.get("vtc_label") or "").strip().upper()
             files_field = (row.get("files") or "").strip()
+
+            # optional metadata columns: safe to ignore in cha2rttm
+            _child_ids = (row.get("child_ids") or "").strip()
+            _hearing_statuses = (row.get("hearing_statuses") or "").strip()
 
             if not code or not label or not files_field:
                 continue
@@ -80,8 +94,17 @@ def load_speaker_mapping(csv_path: Path) -> Dict[str, Dict[str, str]]:
                 if stem not in override_map:
                     override_map[stem] = {}
 
-                # last one wins if duplicate
-                override_map[stem][code] = label
+                existing = override_map[stem].get(code)
+
+                if existing is None:
+                    override_map[stem][code] = label
+                elif existing != label:
+                    print(
+                        f"[WARN] Conflicting mapping for file '{stem}', code '{code}': "
+                        f"'{existing}' vs '{label}'. Keeping last value."
+                    )
+                    override_map[stem][code] = label
+                # else: same mapping repeated, ignore silently
 
     return override_map
 
@@ -186,8 +209,12 @@ def convert_file(
 
         vtc_label = file_map.get(raw_spk)
 
-        if vtc_label not in VALID_LABELS:
+        if raw_spk not in file_map:
             skipped_codes.add(raw_spk)
+            vtc_label = "UNK"
+
+        elif vtc_label not in VALID_LABELS:
+            print(f"[WARN] {file_id}: invalid label '{vtc_label}' for speaker '{raw_spk}'")
             vtc_label = "UNK"
 
         lines_out.append(rttm_line(file_id, start_s, dur_s, vtc_label))
@@ -206,7 +233,12 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("input")
     ap.add_argument("-o", "--out", default="data/test_reference")
-    ap.add_argument("-m", "--mapping", default="cha_to_vtc2_speaker_map.csv")
+    ap.add_argument(
+        "-m",
+        "--mapping",
+        default="cha_to_vtc2_speaker_map_adjusted.csv",
+        help="CSV mapping file with columns including cha_code, vtc_label, and files"
+    )
     ap.add_argument("--use-comment-offset", action="store_true")
     args = ap.parse_args()
 
@@ -219,8 +251,11 @@ def main():
 
     speaker_mapping = load_speaker_mapping(csv_path)
 
-    total = sum(len(v) for v in speaker_mapping.values())
-    print(f"Loaded {total} per-file mappings")
+    num_files = len(speaker_mapping)
+    num_entries = sum(len(v) for v in speaker_mapping.values())
+
+    print(f"Loaded mapping for {num_files} file(s)")
+    print(f"Total speaker mappings: {num_entries}")
 
     if in_path.is_dir():
         count = 0

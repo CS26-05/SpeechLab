@@ -8,7 +8,6 @@ from __future__ import annotations
 
 import logging
 import os
-import shutil
 import subprocess
 import tempfile
 from pathlib import Path
@@ -239,10 +238,10 @@ class VTC1Backend(VoiceTypeBackend):
                     cmd,
                     capture_output=True,
                     text=True,
-                    cwd=str(self.vtc1_root),
+                    cwd=str(temp_path),  # writable temp dir; /opt/vtc10 is read-only in container
                     timeout=600,  # 10 minute timeout
                 )
-                
+
                 if result.returncode != 0:
                     logger.error(f"VTC 1.0 failed: {result.stderr}")
                     return BackendResult(
@@ -251,13 +250,12 @@ class VTC1Backend(VoiceTypeBackend):
                         success=False,
                         error=result.stderr[:500] if result.stderr else "Unknown error",
                     )
-                
-                # vtc 1.0 outputs to output_voice_type_classifier/<basename>/
-                output_base = self.vtc1_root / "output_voice_type_classifier" / "input"
+
+                # apply.sh writes output_voice_type_classifier/<folder_name>/ relative to cwd
+                output_base = temp_path / "output_voice_type_classifier" / input_dir.name
                 all_rttm = output_base / "all.rttm"
-                
+
                 if not all_rttm.exists():
-                    # try looking for individual class rttms
                     rttm_files = list(output_base.glob("*.rttm"))
                     if not rttm_files:
                         return BackendResult(
@@ -266,16 +264,12 @@ class VTC1Backend(VoiceTypeBackend):
                             success=False,
                             error=f"No RTTM output found at {output_base}",
                         )
-                    # combine all rttms
                     segments = []
                     for rttm_file in rttm_files:
                         segments.extend(self._parse_rttm(rttm_file))
                 else:
                     segments = self._parse_rttm(all_rttm)
-                
-                # clean up vtc output directory
-                if output_base.exists():
-                    shutil.rmtree(output_base)
+                # output_base is inside temp_path — cleaned up automatically
                 
                 logger.info(f"VTC 1.0 found {len(segments)} segments for {uri}")
                 

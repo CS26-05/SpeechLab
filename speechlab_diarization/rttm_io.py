@@ -8,8 +8,8 @@ RTTM format (10 fields, space-separated):
 
 Two distinct RTTM label vocabularies exist in this project:
   Pipeline / hypothesis RTTMs:  FEM, MAL, KCHI, OCH  (VTC output only)
-  CHA reference RTTMs:          FEM, MAL, KCHI, OCH, UNK, SIL
-    UNK and SIL come from CHA transcript mapping — NOT from the VTC classifier.
+  CHA reference RTTMs:          FEM, MAL, KCHI, OCH, UNK, MED
+    UNK and MED come from CHA transcript mapping — NOT from the VTC classifier.
 """
 
 from __future__ import annotations

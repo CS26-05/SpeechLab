@@ -1,0 +1,19 @@
+models:
+  pyannote_pipeline: "pyannote/speaker-diarization-3.1"
+
+voice_type:
+  backend: "vtc1"
+  vtc1_root: "/opt/vtc10"
+  vtc1_conda_env: "pyannote"
+
+huggingface:
+  token_env_var: "HF_TOKEN"
+
+runtime:
+  sample_rate: 16000
+  device: "cuda"
+  max_duration_minutes: 60
+
+io:
+  input_dir: "/data/input"
+  output_dir: "/data/output"

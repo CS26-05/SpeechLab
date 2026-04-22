@@ -6,6 +6,9 @@ voice_type:
   vtc2_root: "/opt/vtc15"
   vtc2_checkpoint: "model/best.ckpt"
   vtc2_config: "model/config.yml"
+  vtc2_no_device: true
+  vtc2_ckpt_arg: "--ckpt"
+  vtc2_config_arg: "-c"
 
 huggingface:
   token_env_var: "HF_TOKEN"

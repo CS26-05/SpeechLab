@@ -64,13 +64,14 @@ import numpy as np
 
 LABELS = ["KCHI", "FEM", "MAL", "OCH"]
 
-# Published F1 scores from LAAC-LSCP VTC paper (Table 1, normal-hearing heldout set)
+# Published F1 scores — source: Charlot et al. (2025) arXiv:2509.15001v2
+# Table 3: hold-out set, BabyTrain-2025 fine-tuned models
+# Column order in paper: KCHI, OCH, MAL, FEM
 PUBLISHED = {
-    "vtc1.0": {"KCHI": 68.2, "OCH": 30.5, "MAL": 41.2, "FEM": 63.7},
-    "vtc1.5": {"KCHI": 68.4, "OCH": 20.6, "MAL": 56.7, "FEM": 68.9},
-    "vtc2.0": {"KCHI": 71.8, "OCH": 51.4, "MAL": 60.3, "FEM": 74.8},
-    "vtc2.1": {"KCHI": 67.1, "OCH": 56.1, "MAL": 68.8, "FEM": 75.5},
-    "Human":  {"KCHI": 79.7, "OCH": 60.4, "MAL": 67.6, "FEM": 71.5},
+    "vtc1.0": {"KCHI": 68.2, "OCH": 30.5, "MAL": 41.2, "FEM": 63.7},  # PyanNet-VTC, Table 3
+    "vtc2.0": {"KCHI": 68.4, "OCH": 20.6, "MAL": 56.7, "FEM": 68.9},  # Whisper-VTC, Table 3
+    "vtc2.1": {"KCHI": 70.0, "OCH": 50.9, "MAL": 65.1, "FEM": 74.3},  # BabyHuBERT-VTC best, Table 3
+    "Human":  {"KCHI": 79.7, "OCH": 60.4, "MAL": 67.6, "FEM": 71.5},  # Second human annotator, Table 3
 }
 
 
@@ -152,17 +153,17 @@ def plot_vs_published(rows: list[dict], model_name: str, out_dir: Path):
     fig, ax = plt.subplots(figsize=(10, 5))
     offsets = [-1.5, -0.5, 0.5, 1.5]
     data = [
-        (published, "Published (NH heldout)", "#95a5a6"),
-        (your_all,  "Your results — all",     "#2ecc71"),
-        (your_hi,   "Your results — HI",      "#e74c3c"),
-        (your_nh,   "Your results — NH",      "#3498db"),
+        (published, "Published — daylong heldout [2]", "#95a5a6"),
+        (your_all,  "VanDam corpus — All",             "#2ecc71"),
+        (your_hi,   "VanDam corpus — HI",              "#e74c3c"),
+        (your_nh,   "VanDam corpus — NH",              "#3498db"),
     ]
     for offset, (vals, lbl, color) in zip(offsets, data):
         ax.bar(x + offset * width, vals, width, label=lbl, color=color, alpha=0.85, edgecolor="white")
 
     ax.set_xlabel("Speaker Class")
     ax.set_ylabel("F1 Score (%)")
-    ax.set_title(f"{model_name} — Your results vs Published benchmark")
+    ax.set_title(f"{model_name} — VanDam Corpus vs Published Benchmark [2]")
     ax.set_xticks(x)
     ax.set_xticklabels(LABELS)
     ax.legend(fontsize=8)
@@ -243,6 +244,65 @@ def plot_delta_hi_nh(csv_map: dict[str, list[dict]], out_dir: Path):
     print(f"Saved: {out_path}")
 
 
+def _group_metric_mean(rows: list[dict], metric: str, group: str | None) -> float:
+    subset = [r for r in rows if r.get("group") == group] if group else rows
+    vals = []
+    for r in subset:
+        try:
+            v = float(r[metric])
+            if not (v != v):  # skip NaN
+                vals.append(v * 100)
+        except (KeyError, ValueError):
+            pass
+    return sum(vals) / len(vals) if vals else 0.0
+
+
+def plot_der_comparison(csv_map: dict[str, list[dict]], out_dir: Path):
+    """
+    Three-way grouped bar chart: DER and DetER for HI / NH / All,
+    comparing pyannote-only vs VTC 2.0 vs VTC 2.1.
+    """
+    metrics = ["DER", "DetER"]
+    groups = [("HI", "#e74c3c"), ("NH", "#3498db"), ("All", "#2ecc71")]
+    model_names = list(csv_map.keys())
+    n_models = len(model_names)
+
+    fig, axes = plt.subplots(1, 2, figsize=(13, 5), sharey=False)
+
+    for ax, metric in zip(axes, metrics):
+        x = np.arange(len(groups))
+        width = 0.7 / n_models
+        colors = plt.cm.tab10(np.linspace(0, 1, n_models))
+
+        for i, model_name in enumerate(model_names):
+            rows = csv_map[model_name]
+            means = [
+                _group_metric_mean(rows, metric, g if g != "All" else None)
+                for g, _ in groups
+            ]
+            offset = (i - n_models / 2 + 0.5) * width
+            ax.bar(x + offset, means, width, label=model_name,
+                   color=colors[i], alpha=0.85, edgecolor="white")
+
+        ax.set_xticks(x)
+        ax.set_xticklabels([g for g, _ in groups])
+        ax.set_xlabel("Group")
+        ax.set_ylabel(f"{metric} (%)")
+        ax.set_title(metric)
+        ax.legend(fontsize=8)
+        ax.grid(True, axis="y", alpha=0.3)
+
+    fig.suptitle(
+        "Diarization & Detection Error Rate\npyannote-audio → VTC 2.0 → VTC 2.1",
+        fontsize=12,
+    )
+    plt.tight_layout()
+    out_path = out_dir / "der_three_way.png"
+    plt.savefig(out_path, dpi=150)
+    plt.close(fig)
+    print(f"Saved: {out_path}")
+
+
 def parse_args():
     parser = argparse.ArgumentParser(description="Visualize evaluate.py CSV output.")
     parser.add_argument(
@@ -272,16 +332,25 @@ def main():
         nh_count = sum(1 for r in rows if r.get("group") == "NH")
         print(f"Loaded {len(rows)} rows for {model_name} (HI={hi_count}, NH={nh_count})")
 
-    # Per-model plots
+    # Per-model plots (skip pyannote — no meaningful per-class F1)
     for model_name, rows in csv_map.items():
+        if model_name == "pyannote":
+            continue
         plot_f1_by_group(rows, model_name, out_dir)
         plot_vs_published(rows, model_name, out_dir)
 
-    # Multi-model comparison
-    if len(csv_map) > 1:
+    # Multi-model F1 comparison (exclude pyannote which has NaN F1)
+    vtc_map = {k: v for k, v in csv_map.items() if k != "pyannote"}
+    if len(vtc_map) > 1:
         for grp in ("HI", "NH", None):
-            plot_multi_model(csv_map, grp, out_dir)
-        plot_delta_hi_nh(csv_map, out_dir)
+            plot_multi_model(vtc_map, grp, out_dir)
+        plot_delta_hi_nh(vtc_map, out_dir)
+
+    # DER / DetER three-way comparison (all models including pyannote)
+    der_map = {k: v for k, v in csv_map.items()
+               if any("DER" in r for r in v[:1])}
+    if len(der_map) >= 2:
+        plot_der_comparison(der_map, out_dir)
 
     print(f"\nAll plots saved to: {out_dir.resolve()}")
 

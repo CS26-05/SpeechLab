@@ -1,0 +1,2 @@
+uri,child_id,group,DER,JER,Purity,Coverage,F-measure,DetER,IER,IER_miss,IER_FA,IER_confusion,F1_KCHI,P_KCHI,R_KCHI,F1_FEM,P_FEM,R_FEM,F1_MAL,P_MAL,R_MAL,F1_OCH,P_OCH,R_OCH,AvgF1
+AR31_021108a,AR31,unknown,0.5307,0.5539,0.8845,0.4819,0.6239,0.4581,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan

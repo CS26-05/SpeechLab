@@ -170,7 +170,8 @@ def load_hi_children(mapping_csv: Path) -> set:
     hi = set()
     with open(mapping_csv, newline="", encoding="utf-8") as f:
         for row in csv.DictReader(f):
-            if "HI" in (row.get("hearing_statuses") or ""):
+            statuses = {s.strip() for s in (row.get("hearing_statuses") or "").split("|")}
+            if "HI" in statuses:
                 for fname in (row.get("files") or "").split("|"):
                     cid = Path(fname).stem[:4]
                     if cid:
@@ -239,6 +240,38 @@ def compute_metrics(reference: Annotation, hypothesis: Annotation) -> dict:
     # Per-class F1
     scores.update(compute_per_class_f1(ref_f, hyp_f))
 
+    return scores
+
+
+def compute_diarization_metrics(reference: Annotation, hypothesis: Annotation) -> dict:
+    """DER, DetER, Purity, Coverage — label-agnostic, for pyannote-only plain RTTM."""
+    scores = {}
+    for name, metric in {
+        "DER":      DiarizationErrorRate(),
+        "JER":      JaccardErrorRate(),
+        "Purity":   DiarizationPurity(),
+        "Coverage": DiarizationCoverage(),
+    }.items():
+        scores[name] = round(float(metric(reference, hypothesis)), 4)
+
+    p, c = scores["Purity"], scores["Coverage"]
+    scores["F-measure"] = round((2 * p * c / (p + c)) if (p + c) > 0 else 0.0, 4)
+
+    ref_det = annotation_to_detection(reference)
+    hyp_det = annotation_to_detection(hypothesis)
+    scores["DetER"] = round(float(DetectionErrorRate()(ref_det, hyp_det)), 4)
+
+    # IER and per-class F1 require matching speaker labels — not applicable here
+    nan = float("nan")
+    for col in [
+        "IER", "IER_miss", "IER_FA", "IER_confusion",
+        "F1_KCHI", "P_KCHI", "R_KCHI",
+        "F1_FEM",  "P_FEM",  "R_FEM",
+        "F1_MAL",  "P_MAL",  "R_MAL",
+        "F1_OCH",  "P_OCH",  "R_OCH",
+        "AvgF1",
+    ]:
+        scores[col] = nan
     return scores
 
 
@@ -434,6 +467,14 @@ def parse_args():
     folder = parser.add_argument_group("Folder-batch mode")
     folder.add_argument("--ref_dir", help="Folder containing reference RTTM files")
     folder.add_argument("--hyp_dir", help="Folder containing hypothesis RTTM/JSON files")
+    folder.add_argument(
+        "--plain_dir",
+        help="Folder of pyannote plain RTTM files (*_plain.rttm) for diarization-only evaluation"
+    )
+    folder.add_argument(
+        "--plain_out_csv",
+        help="Write pyannote-only diarization metrics to this CSV path"
+    )
 
     parser.add_argument("--mapping_csv",
                         help="cha_to_vtc2_speaker_map.csv for HI/NH child lookup")
@@ -495,6 +536,41 @@ def main():
 
         if args.out_csv:
             write_csv(Path(args.out_csv), all_scores)
+
+        # ── pyannote-only evaluation ──────────────────────────────────────────
+        if args.plain_dir:
+            plain_dir = Path(args.plain_dir)
+            if not plain_dir.is_dir():
+                print(f"[WARNING] --plain_dir is not a directory: {plain_dir}")
+            else:
+                # build ref_map from ref_dir (same keys used above in find_pairs)
+                ref_map = {p.stem: p for p in ref_dir.iterdir()
+                           if p.suffix.lower() == ".rttm"}
+
+                # plain RTTM files may be named <uri>_plain.rttm — strip the suffix
+                plain_map = {}
+                for p in plain_dir.iterdir():
+                    if p.suffix.lower() != ".rttm":
+                        continue
+                    stem = p.stem
+                    key = stem[: -len("_plain")] if stem.endswith("_plain") else stem
+                    plain_map[key] = p
+
+                common_plain = sorted(set(ref_map) & set(plain_map))
+                print(f"\nPyannote-only evaluation: {len(common_plain)} matching pair(s).")
+                plain_scores: dict = {}
+                for uri in common_plain:
+                    ref_ann = load_annotation(ref_map[uri], uri)
+                    hyp_ann = load_annotation(plain_map[uri], uri)
+                    scores = compute_diarization_metrics(ref_ann, hyp_ann)
+                    scores["group"] = get_group(uri)
+                    plain_scores[uri] = scores
+                    print(f"  {uri}  DER={scores['DER']:.4f}  DetER={scores['DetER']:.4f}")
+
+                if args.plain_out_csv:
+                    write_csv(Path(args.plain_out_csv), plain_scores)
+                else:
+                    print("[NOTE] Pass --plain_out_csv to save pyannote-only results.")
 
     # ── Single-file mode ─────────────────────────────────────────────────────
     elif args.ref and args.hyp and args.uri:

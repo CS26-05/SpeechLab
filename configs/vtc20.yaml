@@ -4,8 +4,8 @@ models:
 voice_type:
   backend: "vtc2"
   vtc2_root: "/opt/vtc20"
-  vtc2_checkpoint: "VTC-2.0/model/best.ckpt"
-  vtc2_config: "VTC-2.0/model/config.yml"
+  vtc2_checkpoint: "model/best.ckpt"
+  vtc2_config: "model/config.yml"
 
 huggingface:
   token_env_var: "HF_TOKEN"

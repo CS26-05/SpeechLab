@@ -38,6 +38,8 @@ class VoiceTypeConfig:
     vtc2_checkpoint: Optional[str] = None  # relative path within vtc2_root; None = infer.py default
     vtc2_config: Optional[str] = None      # relative path within vtc2_root; None = infer.py default
     vtc2_no_device: bool = False
+    vtc2_ckpt_arg: str = "--checkpoint"
+    vtc2_config_arg: str = "--config"
 
 
 @dataclass
@@ -97,6 +99,8 @@ def _dict_to_config(data: dict) -> PipelineConfig:
             vtc2_checkpoint=vt_data.get("vtc2_checkpoint"),
             vtc2_config=vt_data.get("vtc2_config"),
             vtc2_no_device=vt_data.get("vtc2_no_device", False),
+            vtc2_ckpt_arg=vt_data.get("vtc2_ckpt_arg", "--checkpoint"),
+            vtc2_config_arg=vt_data.get("vtc2_config_arg", "--config"),
         ),
         huggingface=HuggingFaceConfig(
             token_env_var=hf_data.get("token_env_var", "HF_TOKEN"),

@@ -31,6 +31,8 @@ class VTC2Backend(VoiceTypeBackend):
             vtc_config: Optional[str] = None,
             device: str = "cuda",
             no_device: bool = False,
+            ckpt_arg: str = "--checkpoint",
+            config_arg: str = "--config",
     ) -> None:
         import os
         self.vtc2_root = Path(vtc2_root or os.environ.get("VTC2_ROOT", "/opt/vtc2"))
@@ -38,6 +40,8 @@ class VTC2Backend(VoiceTypeBackend):
         self.vtc_config = vtc_config
         self.device = device if torch.cuda.is_available() else "cpu"
         self.no_device = no_device
+        self.ckpt_arg = ckpt_arg
+        self.config_arg = config_arg
         self._available: Optional[bool] = None
 
     def is_available(self) -> bool:
@@ -135,9 +139,9 @@ class VTC2Backend(VoiceTypeBackend):
                     device_arg = "cuda" if self.device == "cuda" else "cpu"
                     cmd += ["--device", device_arg]
                 if self.checkpoint:
-                    cmd += ["--checkpoint", str(self.vtc2_root / self.checkpoint)]
+                    cmd += [self.ckpt_arg, str(self.vtc2_root / self.checkpoint)]
                 if self.vtc_config:
-                    cmd += ["--config", str(self.vtc2_root / self.vtc_config)]
+                    cmd += [self.config_arg, str(self.vtc2_root / self.vtc_config)]
 
                 result = subprocess.run(
                     cmd,

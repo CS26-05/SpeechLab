@@ -150,7 +150,7 @@ class VTC2Backend(VoiceTypeBackend):
                 if result.returncode != 0:
                     logger.error(f"VTC 2.0 failed: {result.stderr}")
                     return BackendResult(uri=uri, segments=[], success=False,
-                                         error=result.stderr[:500] or "Unknown error")
+                                         error=result.stderr[-1000:] or "Unknown error")
                 # VTC 2.0 writes <stem>.rttm into --output dir
                 rttm_path = output_dir / "rttm" / f"{uri}.rttm"
                 if not rttm_path.exists():

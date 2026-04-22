@@ -96,6 +96,8 @@ def _create_backend(config: PipelineConfig) -> VoiceTypeBackend:
             kwargs["checkpoint"] = config.voice_type.vtc2_checkpoint
         if config.voice_type.vtc2_config:
             kwargs["vtc_config"] = config.voice_type.vtc2_config
+        if config.voice_type.vtc2_no_device:
+            kwargs["no_device"] = True
     try:
         return get_backend(backend_name, **kwargs)
     except (ValueError, TypeError) as e:

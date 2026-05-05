@@ -28,8 +28,8 @@ the backend system lets us swap vtc versions without touching the pipeline. all 
 
 - **`base.py`** - defines what a voice-type backend should look like. all backends inherit from this so we can swap them out easily
 - **`labels.py`** - handles the canonical labels (FEM, MAL, KCHI, OCH) and maps raw vtc outputs to these standard labels, normalizing differences between vtc1 and vtc2 (e.g. CHI vs OCH)
-- **`vtc1.py`** - legacy. runs vtc 1.0 via conda environment and `apply.sh`. kept for reference
-- **`vtc2.py`** - active. runs vtc 2.0 via `uv run scripts/infer.py`. no conda needed, outputs merged rttm to `<output>/rttm/<stem>.rttm`
+- **`vtc1.py`** - vtc 1.0 backend via conda + `apply.sh`. present in container but not currently supported
+- **`vtc2.py`** - active. runs vtc 2.0 and vtc 2.1 via `uv run scripts/infer.py`. select the version via config (`vtc2_root: /opt/vtc20` or `/opt/vtc21`)
 - **`__init__.py`** - imports both backends to register them so the pipeline can find them by name
 
 
@@ -44,19 +44,19 @@ the backend system lets us swap vtc versions without touching the pipeline. all 
 - **`main.py`** - entry point, parses args and starts the pipeline
 
 
-### ouputs
+### outputs
 when you run the pipeline you get three files per audio:
 
 - **`filename_plain.rttm`** - standard rttm from pyannote, just speaker segments with no voice type info. useful for me testing or if you only care about who spoke when
 - **`filename.rttm`** - enriched rttm with `voice_type=FEM` or whatever label at the end of each line. this is the main output combining diarization + vtc
 - **`filename_vtc_scores.json`** - full details including probability scores for each voice type, metadata about whether vtc ran successfully, segment counts, etc. good for analysis or debugging
 
-### quick start
+### quick start (docker)
 
 ```bash
 docker build -t speechlab-diarization .
 
-source setup_env.sh  # sets HF_TOKEN
+source setup_env.sh  # exports HF_TOKEN
 
 docker run --rm --gpus all \
   -e HF_TOKEN=$HF_TOKEN \
@@ -65,18 +65,111 @@ docker run --rm --gpus all \
   speechlab-diarization
 ```
 
-heres what my `setup_env.sh` file looks like:
+*note:* you will know vtc is working if `vtc_available` is `true` in the output json, otherwise there are vtc issues
+
+---
+
+### apptainer (hpc)
+
+**build the container**
+
+building takes ~15–20 minutes the first time (downloads all vtc versions):
+
+```bash
+apptainer build speechlab.sif speechlab.def
 ```
+
+if you don't have root, use `--fakeroot`:
+```bash
+apptainer build --fakeroot speechlab.sif speechlab.def
+```
+
+**set your HuggingFace token**
+
+```bash
+export HF_TOKEN="your_token_here"
+```
+
+**run the pipeline**
+
+place your `.wav` files in an input directory, then run:
+
+```bash
+apptainer run --nv \
+  --bind /path/to/your/audio:/data/input \
+  --bind /path/to/output:/data/output \
+  --env HF_TOKEN=$HF_TOKEN \
+  speechlab.sif
+```
+
+- `--nv` enables GPU passthrough (required — models need CUDA)
+- `/data/input` and `/data/output` are the fixed paths inside the container
+- outputs are written to your bound output directory
+
+**switch vtc version**
+
+the container ships with all four vtc versions. default is vtc 2.1. pass `--config` to select a version:
+
+```bash
+# vtc 2.1 (default)
+apptainer run --nv \
+  --bind /path/to/audio:/data/input \
+  --bind /path/to/output:/data/output \
+  --env HF_TOKEN=$HF_TOKEN \
+  speechlab.sif --config /app/configs/vtc21.yaml
+
+# vtc 2.0
+apptainer run --nv \
+  --bind /path/to/audio:/data/input \
+  --bind /path/to/output:/data/output \
+  --env HF_TOKEN=$HF_TOKEN \
+  speechlab.sif --config /app/configs/vtc20.yaml
+```
+
+available configs inside the container:
+
+| Config | Version | Status |
+|--------|---------|--------|
+| `/app/configs/vtc21.yaml` | VTC 2.1 — BabyHuBERT encoder (latest) | working |
+| `/app/configs/vtc20.yaml` | VTC 2.0 — Whisper encoder | working |
+| `/app/configs/vtc15.yaml` | VTC 1.5 — Whisper encoder (IS-25) | not currently supported |
+| `/app/configs/vtc10.yaml` | VTC 1.0 — legacy conda backend | not currently supported |
+
+**run evaluation inside the container**
+
+```bash
+apptainer exec --nv \
+  --bind /path/to/reference:/data/reference \
+  --bind /path/to/output:/data/output \
+  --bind /path/to/results:/data/results \
+  speechlab.sif \
+  python speechlab_diarization/evaluate.py \
+    --ref_dir /data/reference \
+    --hyp_dir /data/output \
+    --out_csv /data/results/results.csv \
+    --no_plot
+```
+
+**run on slurm**
+
+example sbatch script for the SEAS H100 cluster:
+
+```bash
 #!/bin/bash
+#SBATCH --job-name=speechlab
+#SBATCH --gres=gpu:1
+#SBATCH --mem=32G
+#SBATCH --time=04:00:00
+#SBATCH --output=speechlab_%j.log
 
-export HF_TOKEN=""
+export HF_TOKEN="your_token_here"
 
-echo "HF_TOKEN is now set!"
+apptainer run --nv \
+  --bind /path/to/audio:/data/input \
+  --bind /path/to/output:/data/output \
+  --env HF_TOKEN=$HF_TOKEN \
+  speechlab.sif
 ```
-
-we may need to change this later and instead use apptainer/docker secrets but for now this works
-
-*another note:* you will know if vtc is working on your outputs if in the json `vtc_available' is 'true', otherwise there are vtc issues
 
 ## labels
 
@@ -88,7 +181,7 @@ vtc classifies speech into:
 
 ### DER evaluation
 measures diarization error rate between reference RTTM (ground truth) and hypothesis RTTM (model output)
-DER accounts for missed speech, false alarm, and wrong speaker assigments
+DER accounts for missed speech, false alarm, and wrong speaker assignments
 create two folders:
 - `test_reference/` from running cha2rttm
 - `test_output` from running speechlab_diarization
@@ -96,14 +189,21 @@ create two folders:
 make sure the file names are matched
 
 once done run:
-```
-python3 evaluate_der.py
-
-```
-run the included test:
-```
-python3 -m unittest test_evaluate_der
-
+```bash
+python speechlab_diarization/evaluate.py \
+    --ref_dir test_reference/ \
+    --hyp_dir test_output/ \
+    --out_csv results.csv \
+    --no_plot
 ```
 
-![monkey](thinking-monkey-720p-upscale-of-480p-original-with-v0-xclffl4k6rlf1.jpg)
+### running tests
+
+install dev dependencies then run the full suite:
+```bash
+source .venv/bin/activate
+pip install pytest pytest-cov
+python -m pytest tests/ -v
+```
+
+the test suite covers label normalization, segment overlap and alignment, rttm i/o round-trips, per-class f1 computation, and cha timestamp parsing (121 tests total).

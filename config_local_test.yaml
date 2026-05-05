@@ -1,15 +1,12 @@
-# Local test configuration
-# Run with: python -m speechlab_diarization.main --config config_local_test.yaml
-
+# Local test config (no container). Adjust vtc2_root to your local install.
 models:
   pyannote_pipeline: "pyannote/speaker-diarization-3.1"
 
 voice_type:
-  # Use stub backend for local testing without VTC installed
-  backend: "stub"
-  # Or set to "vtc1" if you have VTC 1.0 installed locally
-  # vtc1_root: "/path/to/voice-type-classifier"
-  # vtc1_conda_env: "vtc"
+  backend: "vtc2"
+  vtc2_root: "/opt/vtc21"
+  vtc2_checkpoint: "VTC-2/model/best.ckpt"
+  vtc2_config: "VTC-2/model/config.toml"
 
 huggingface:
   token_env_var: "HF_TOKEN"
@@ -20,5 +17,5 @@ runtime:
   max_duration_minutes: 60
 
 io:
-  input_dir: "./test_input"
-  output_dir: "./test_output"
+  input_dir: "/data/test_input"
+  output_dir: "/data/test_output"

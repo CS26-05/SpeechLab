@@ -1,108 +1,124 @@
 # SpeechLab Diarization Docker Image
-# ===================================
-#
+# =================================
 # Includes:
-# - Pyannote speaker diarization (main environment)
-# - VTC 1.0 voice-type classification (isolated conda environment)
+# - Pyannote speaker diarization (main Python env, Python 3.12)
+# - VTC 1.0 voice-type classification (isolated conda env named "pyannote")
 #
-# USAGE (Local with Docker):
-#   docker build -t speechlab-diarization .
-#   docker run --rm --gpus all \
-#     -e HF_TOKEN=your_huggingface_token \
-#     -v /path/to/input:/data/input \
-#     -v /path/to/output:/data/output \
-#     speechlab-diarization
+# IMPORTANT: never bake HF_TOKEN into the image. Always pass it at runtime:
+#   -e HF_TOKEN=...
 #
-# IMPORTANT: NEVER bake HF_TOKEN into the image. always pass via -e flag.
-#
+# NOTES:
+# - macOS Docker does NOT support NVIDIA GPU passthrough. This image uses CPU PyTorch.
+# - If you want CUDA acceleration, build/run on Linux + NVIDIA and adjust torch install.
 
-# use official python 3.12 image
-FROM python:3.12-slim
+# FROM python:3.12-slim
+FROM python:3.13-slim
 
-# metadata
 LABEL maintainer="CS26-05 SpeechLab Team"
 LABEL description="Speaker diarization with voice-type classification"
 LABEL version="0.3.0"
 
-# prevent interactive prompts
 ENV DEBIAN_FRONTEND=noninteractive
+# ENV CONDA_DIR=/opt/conda
 
-# install system dependencies (including sox for vtc 1.0)
+# # ---- system deps
+# RUN apt-get update && apt-get install -y --no-install-recommends \
+#     ffmpeg \
+#     libsndfile1 \
+#     git \
+#     wget \
+#     bzip2 \
+#     sox \
+#     libsox-fmt-all \
+#     ca-certificates \
+#     && rm -rf /var/lib/apt/lists/*
+
+# # ---- Miniforge (arch-aware)
+# # TARGETARCH is provided by BuildKit (arm64/amd64)
+# ARG TARGETARCH
+# RUN if [ "$TARGETARCH" = "arm64" ]; then MF_ARCH="aarch64"; else MF_ARCH="x86_64"; fi && \
+#     echo "Installing Miniforge for arch=${MF_ARCH}" && \
+#     wget -q "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-${MF_ARCH}.sh" -O /tmp/miniforge.sh && \
+#     bash /tmp/miniforge.sh -b -p "$CONDA_DIR" && \
+#     rm /tmp/miniforge.sh && \
+#     /opt/conda/bin/conda --version
+
+# # IMPORTANT:
+# # Do NOT put conda first in PATH globally.
+# # We only call conda explicitly for the VTC env.
+# # This keeps the main app using Python 3.12 from the base image.
+
+# # add pytorch channel (for vtc env yaml if it uses conda pytorch)
+# RUN /opt/conda/bin/conda config --add channels pytorch
+
+# # ---- VTC1
+# RUN git clone --recurse-submodules https://github.com/MarvinLvn/voice-type-classifier.git /opt/vtc1
+
+# WORKDIR /opt/vtc1
+# RUN /opt/conda/bin/conda env create -f vtc.yml
+
+# # pyannote-audio submodule install (editable) inside the VTC env
+# # patch non-PEP440 git-describe version to avoid install errors
+# RUN sed -i 's/version=versioneer.get_version()/version="0.0.0"/g' /opt/vtc1/pyannote-audio/setup.py && \
+#     /opt/conda/bin/conda run -n pyannote pip install -e /opt/vtc1/pyannote-audio
+
+# # sanity checks for VTC env
+# RUN /opt/conda/bin/conda run -n pyannote python -c "import torch; print('VTC env torch:', torch.__version__)"
+# RUN /opt/conda/bin/conda run -n pyannote python -c "import pyannote.audio; print('VTC env pyannote.audio OK')"
+# RUN sox --version | head -1
+
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ffmpeg \
     libsndfile1 \
     git \
-    wget \
-    bzip2 \
-    sox \
-    libsox-fmt-all \
+    git-lfs \
+    curl \
+    ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
-# install miniforge (conda-forge-first, no tos required)
-ENV CONDA_DIR=/opt/conda
-RUN wget -q https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh -O /tmp/miniforge.sh && \
-    bash /tmp/miniforge.sh -b -p $CONDA_DIR && \
-    rm /tmp/miniforge.sh
-ENV PATH=$CONDA_DIR/bin:$PATH
+RUN git lfs install
 
-# add pytorch channel
-RUN conda config --add channels pytorch
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+ENV PATH="/root/.local/bin:$PATH"
 
-# clone vtc 1.0 repository with submodules (critical for pyannote-audio)
-# see: https://github.com/MarvinLvn/voice-type-classifier/blob/new_model/docs/installation.md
-RUN git clone --recurse-submodules https://github.com/MarvinLvn/voice-type-classifier.git /opt/vtc1
+RUN git clone --recurse-submodules https://github.com/LAAC-LSCP/VTC.git /opt/vtc2
+WORKDIR /opt/vtc2
+RUN uv sync
 
-# create vtc 1.0 conda environment from vtc.yml (creates env named "pyannote")
-WORKDIR /opt/vtc1
-RUN conda env create -f vtc.yml
-
-# install the pyannote-audio submodule in editable mode
-# override invalid git-describe version (jsalt_v5+330.g85b84bc) with pep 440 compliant version
-RUN sed -i 's/version=versioneer.get_version()/version="0.0.0"/' /opt/vtc1/pyannote-audio/setup.py && \
-    conda run -n pyannote pip install -e /opt/vtc1/pyannote-audio
-
-# verify vtc 1.0 environment
-RUN conda run -n pyannote python -c "import torch; print(f'VTC PyTorch: {torch.__version__}')"
-RUN conda run -n pyannote python -c "import pyannote.audio; print('VTC 1.0 pyannote.audio OK')"
-RUN conda run -n pyannote pyannote-audio --version
-RUN sox --version | head -1
-
-# set working directory for main app
+# ---- main app
 WORKDIR /app
 
-# install pytorch with cuda 12.1 support for main environment
+# CPU PyTorch (works on Mac Docker + Linux CPU)
 RUN pip install --no-cache-dir \
-    torch \
-    torchvision \
-    torchaudio \
-    --index-url https://download.pytorch.org/whl/cu121
+    torch torchaudio \
+    --index-url https://download.pytorch.org/whl/cpu
 
-# install huggingface_hub with compatible version for pyannote
-RUN pip install --no-cache-dir "huggingface_hub>=0.20,<0.25"
-
-# install pyannote.audio and dependencies for main environment
+# HuggingFace hub + pyannote.audio
 RUN pip install --no-cache-dir \
+    "huggingface_hub>=0.20,<0.25" \
     "pyannote.audio>=3.1,<4.0" \
     "pyyaml>=6.0"
 
-# copy project files
+# copy project
 COPY pyproject.toml config.yaml README.md ./
 COPY speechlab_diarization/ ./speechlab_diarization/
 
-# install the speechlab_diarization package
+# install package (main env, Python 3.12)
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel
 RUN pip install --no-cache-dir -e .
 
-# verify main environment installations
-RUN python -c "import torch; print(f'PyTorch: {torch.__version__}, CUDA: {torch.cuda.is_available()}')"
-RUN python -c "import torchaudio; print(f'torchaudio: {torchaudio.__version__}')"
-RUN python -c "import pyannote.audio; print(f'pyannote.audio: {pyannote.audio.__version__}')"
-RUN python -c "import speechlab_diarization; print(f'speechlab_diarization: {speechlab_diarization.__version__}')"
+# verify main env
+RUN python -c "import sys; print('Main python:', sys.version)"
+RUN python -c "import torch; print('Main env torch:', torch.__version__)"
+RUN python -c "import pyannote.audio; print('Main env pyannote.audio:', pyannote.audio.__version__)"
+RUN python -c "import speechlab_diarization; print('speechlab_diarization import OK')"
 
-# set environment variables
-ENV VTC1_ROOT=/opt/vtc1
+# runtime env vars
+# ENV VTC1_ROOT=/opt/vtc1
+ENV VTC2_ROOT=/opt/vtc2
 ENV SPEECHLAB_CONFIG=/app/config.yaml
 
-# create data directories
+# data dirs
 RUN mkdir -p /data/input /data/output
 
 # default command

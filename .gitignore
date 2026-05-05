@@ -1,23 +1,52 @@
-# Environment and secrets - NEVER commit these
-.env
-.env.*
-*.secret
-setup_env.sh
-
 # Python
 __pycache__/
 *.py[cod]
-*$py.class
 *.egg-info/
 dist/
 build/
-*.egg
 
-# IDE
+# Virtual environments
+.venv/
+venv/
+
+# Audio & large data — don't commit
+data/test_input/*
+!data/test_input/.gitkeep
+data/test_output/*
+!data/test_output/.gitkeep
+data/cha/*
+!data/cha/.gitkeep
+data/test_reference/*
+!data/test_reference/.gitkeep 
+*.wav
+*.flac
+*.mp3
+
+# DO commit these small reference files
+!data/cha_to_vtc1_speaker_map.csv
+!data/cha_speakers.jsonl
+
+# SECRETS — never commit
+.env
+setup_env.sh
+
+# IDE / OS
 .vscode/
 .idea/
-
-# OS
 .DS_Store
-Thumbs.db
+*.swp
+
+# Model / HF cache
+.cache/
+
+# logs
+logs/
+*.log
+
+# apptainer
+*.sif
+
+# Generated outputs
+segment_charts/
+
 

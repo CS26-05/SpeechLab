@@ -2,29 +2,57 @@
 rttm file utilities
 
 provides functions for writing standard and enriched rttm files
-enriched rttm includes voice type labels from vtc classification
+
+RTTM format (10 fields, space-separated):
+  SPEAKER <uri> 1 <start> <duration> <NA> <NA> <label> <NA> <NA>
+
+Two distinct RTTM label vocabularies exist in this project:
+  Pipeline / hypothesis RTTMs:  FEM, MAL, KCHI, OCH  (VTC output only)
+  CHA reference RTTMs:          FEM, MAL, KCHI, OCH, UNK, MED
+    UNK and MED come from CHA transcript mapping — NOT from the VTC classifier.
 """
 
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Dict, Tuple, Union
+from typing import Dict, List, Tuple, Union
 
 from pyannote.core import Annotation
+
+# The only labels the VTC pipeline ever writes into hypothesis RTTMs
+VTC_RTTM_LABELS = {"FEM", "MAL", "KCHI", "OCH"}
+
+# Mapping from internal pipeline labels → valid VTC RTTM labels
+# NONE means no VTC segment overlapped — we keep it as NONE so it is
+# clearly distinguishable from a real classification rather than silently
+# converting it to something it isn't.
+_CANONICAL_TO_RTTM = {
+    "FEM":  "FEM",
+    "MAL":  "MAL",
+    "KCHI": "KCHI",
+    "OCH":  "OCH",
+    "NONE": "NONE",   # no VTC match — written as NONE, not faked as UNK
+}
+
+
+def _safe_label(label: str) -> str:
+    """
+    Convert an internal pipeline label to a valid VTC RTTM label.
+
+    Falls back to 'NONE' for anything unrecognised — this is intentional.
+    NONE in a hypothesis RTTM means the VTC classifier had no match for
+    that segment. It should NOT be silently relabelled as UNK (which is a
+    CHA transcript label meaning unknown speaker identity).
+    """
+    upper = (label or "").strip().upper()
+    return _CANONICAL_TO_RTTM.get(upper, "NONE")
 
 
 def segment_key(start: float, end: float) -> Tuple[float, float]:
     """
-    create a consistent key for segment identification
+    Create a consistent key for segment identification.
 
-    uses rounded values to avoid floating point comparison issues
-
-    args
-        start segment start time in seconds
-        end segment end time in seconds
-
-    returns
-        tuple of rounded_start rounded_end with 3 decimal places
+    Uses rounded values to avoid floating-point comparison issues.
     """
     return (round(start, 3), round(end, 3))
 
@@ -35,22 +63,17 @@ def write_plain_rttm(
     output_path: Union[str, Path],
 ) -> None:
     """
-    write a standard rttm file from a pyannote annotation
+    Write a standard RTTM file from a pyannote Annotation.
 
-    uses pyannotes built in rttm writer
+    The speaker field contains the original pyannote speaker label
+    (e.g. SPEAKER_00).
 
-    rrtm format:
-    SPEAKER <uri> 1 <start> <duration> <NA> <NA> <speaker_id> <NA> <NA>
-
-    args
-        annotation: pyannote annotation object containing speaker segments
-        uri: unique resource identifier (typically the filename stem)
-        output_path: path to write the rttm file
+    RTTM format:
+      SPEAKER <uri> 1 <start> <duration> <NA> <NA> <speaker_id> <NA> <NA>
     """
     output_path = Path(output_path)
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
-    # set the uri on the annotation
     annotation.uri = uri
 
     with open(output_path, "w", encoding="utf-8") as f:
@@ -64,40 +87,33 @@ def write_enriched_rttm(
     voice_type_mapping: Dict[Tuple[float, float], str],
 ) -> None:
     """
-    write an enriched rttm file with voice type labels
+    Write an enriched RTTM where the speaker field is the VTC voice-type label.
 
-    extends the standard rttm format by appending voice_type=<label> to each line
+    Valid output labels: FEM, MAL, KCHI, OCH  (VTC pipeline labels)
+    NONE is written when no VTC segment overlapped — it is intentionally
+    distinct from UNK (which is a CHA transcript label, not a VTC label).
 
-    enriched RTTM format:
-    SPEAKER <uri> 1 <start> <duration> <NA> <NA> <speaker_id> <NA> voice_type=<label>
+    RTTM format (exactly 10 fields):
+      SPEAKER <uri> 1 <start> <duration> <NA> <NA> <vtc_label> <NA> <NA>
 
-    args
-        annotation: pyannote annotation object containing speaker segments
-        uri: unique resource identifier (typically the filename stem)
-        output_path: path to write the rttm file
-        voice_type_mapping: dictionary mapping (start, end) tuples to voice-type labels
-            keys should be created using segment_key() for consistency
+    Example:
+      SPEAKER CD15_020517b 1 0.000 22.069 <NA> <NA> KCHI <NA> <NA>
     """
     output_path = Path(output_path)
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
-    lines = []
+    lines: List[str] = []
 
-    for segment, track, label in annotation.itertracks(yield_label=True):
-        start = segment.start
-        duration = segment.duration
-        speaker_id = label
+    for segment, _track, _label in annotation.itertracks(yield_label=True):
+        start    = float(segment.start)
+        duration = float(segment.duration)
 
-        # look up voice type using segment key
-        key = segment_key(segment.start, segment.end)
-        voice_type = voice_type_mapping.get(key, "UNK")
+        key        = segment_key(segment.start, segment.end)
+        raw_label  = voice_type_mapping.get(key, "NONE")
+        vtc_label  = _safe_label(raw_label)
 
-        # rttm format with voice_type extension
-        # SPEAKER <file> <channel> <start> <duration> <NA> <NA> <speaker> <NA> <extra>
-        line = (
-            f"SPEAKER {uri} 1 {start:.3f} {duration:.3f} "
-            f"<NA> <NA> {speaker_id} <NA> voice_type={voice_type}"
-        )
+        line = (f"SPEAKER {uri} 1 {start:.3f} {duration:.3f} "
+                f"<NA> <NA> {vtc_label} <NA> <NA>")
         lines.append(line)
 
     with open(output_path, "w", encoding="utf-8") as f:
@@ -106,48 +122,29 @@ def write_enriched_rttm(
             f.write("\n")
 
 
-def parse_enriched_rttm(
-    rttm_path: Union[str, Path],
-) -> list[dict]:
+def parse_enriched_rttm(rttm_path: Union[str, Path]) -> List[dict]:
     """
-    parse an enriched rttm file
+    Parse an enriched RTTM file (speaker field = VTC label).
 
-    args
-        rttm_path path to the enriched rttm file
-
-    returns
-        list of dictionaries with keys:
-        - uri: file identifier
-        - start: start time in seconds
-        - duration: duration in seconds
-        - speaker: speaker id
-        - voice_type: voice type label or None if not present
+    Returns a list of dicts with keys:
+      uri, start (float), duration (float), voice_type (str)
     """
     rttm_path = Path(rttm_path)
-    segments = []
+    segments: List[dict] = []
 
     with open(rttm_path, "r", encoding="utf-8") as f:
         for line in f:
             line = line.strip()
             if not line or not line.startswith("SPEAKER"):
                 continue
-
             parts = line.split()
             if len(parts) < 8:
                 continue
-
-            segment = {
-                "uri": parts[1],
-                "start": float(parts[3]),
-                "duration": float(parts[4]),
-                "speaker": parts[7],
-                "voice_type": None,
-            }
-
-            # check for voice_type in the last field
-            if len(parts) >= 10 and parts[9].startswith("voice_type="):
-                segment["voice_type"] = parts[9].split("=", 1)[1]
-
-            segments.append(segment)
+            segments.append({
+                "uri":        parts[1],
+                "start":      float(parts[3]),
+                "duration":   float(parts[4]),
+                "voice_type": parts[7],
+            })
 
     return segments

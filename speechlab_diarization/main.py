@@ -10,6 +10,16 @@ the hf_token environment variable must be set with a valid hugging face token
 
 from __future__ import annotations
 
+# PyTorch 2.6 changed torch.load to use weights_only=True by default, which
+# breaks pyannote/speechbrain checkpoints containing custom types. We patch
+# torch.load to default back to weights_only=False before any models load.
+import torch
+_original_torch_load = torch.load
+def _patched_torch_load(*args, **kwargs):
+    kwargs.setdefault('weights_only', False)
+    return _original_torch_load(*args, **kwargs)
+torch.load = _patched_torch_load
+
 import argparse
 import sys
 

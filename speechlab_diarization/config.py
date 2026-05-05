@@ -30,12 +30,16 @@ class VoiceTypeConfig:
     backend: str = "vtc1"
     
     # VTC 1.0 specific settings
-    vtc1_root: Optional[str] = None  # Path to VTC 1.0 repo, defaults to /opt/vtc1
-    vtc1_conda_env: str = "vtc"  # Conda environment name for VTC 1.0
-    
-    # VTC 2.0 specific settings (future)
-    vtc2_root: Optional[str] = None  # Path to VTC 2.0 repo, defaults to /opt/vtc2
-    vtc2_checkpoint: Optional[str] = None
+    vtc1_root: Optional[str] = None
+    vtc1_conda_env: str = "pyannote"  # conda env created by vtc.yml in marvinlvn repo
+
+    # VTC 1.5 / 2.0 / 2.1 (uv-based, LAAC-LSCP repos)
+    vtc2_root: Optional[str] = None
+    vtc2_checkpoint: Optional[str] = None  # relative path within vtc2_root; None = infer.py default
+    vtc2_config: Optional[str] = None      # relative path within vtc2_root; None = infer.py default
+    vtc2_no_device: bool = False
+    vtc2_ckpt_arg: str = "--checkpoint"
+    vtc2_config_arg: str = "--config"
 
 
 @dataclass
@@ -90,9 +94,13 @@ def _dict_to_config(data: dict) -> PipelineConfig:
         voice_type=VoiceTypeConfig(
             backend=vt_data.get("backend", "vtc1"),
             vtc1_root=vt_data.get("vtc1_root"),
-            vtc1_conda_env=vt_data.get("vtc1_conda_env", "vtc"),
+            vtc1_conda_env=vt_data.get("vtc1_conda_env", "pyannote"),
             vtc2_root=vt_data.get("vtc2_root"),
             vtc2_checkpoint=vt_data.get("vtc2_checkpoint"),
+            vtc2_config=vt_data.get("vtc2_config"),
+            vtc2_no_device=vt_data.get("vtc2_no_device", False),
+            vtc2_ckpt_arg=vt_data.get("vtc2_ckpt_arg", "--checkpoint"),
+            vtc2_config_arg=vt_data.get("vtc2_config_arg", "--config"),
         ),
         huggingface=HuggingFaceConfig(
             token_env_var=hf_data.get("token_env_var", "HF_TOKEN"),

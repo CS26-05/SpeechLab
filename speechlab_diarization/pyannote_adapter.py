@@ -35,44 +35,60 @@ class PyannoteDiarizer:
         initialize the pyannote diarization pipeline
 
         args
-            model_id: hugging face model identifier (e.g. "pyannote/speaker-diarization-community-1")
-            hf_token: hugging face authentication token (read from environment never logged)
+            model_id: hugging face model identifier
+            hf_token: hugging face authentication token
             device: device to run inference on (cuda or cpu)
-            target_sample_rate: target sample rate for audio processing (16000 Hz)
+            target_sample_rate: target sample rate
         """
         self.model_id = model_id
         self.device = torch.device(device if torch.cuda.is_available() else "cpu")
         self.target_sample_rate = target_sample_rate
 
-        # load the pyannote pipeline
-        self.pipeline = Pipeline.from_pretrained(model_id, use_auth_token=hf_token)
+        print("DEBUG: entering PyannoteDiarizer.__init__", flush=True)
+        print(f"DEBUG: model_id={model_id}", flush=True)
+        print(f"DEBUG: hf_token exists={bool(hf_token)}", flush=True)
+        print(f"DEBUG: requested device={device}", flush=True)
+        print(f"DEBUG: resolved device={self.device}", flush=True)
+
+        # load pipeline
+        try:
+            print("DEBUG: before Pipeline.from_pretrained(use_auth_token)", flush=True)
+            self.pipeline = Pipeline.from_pretrained(
+                model_id,
+                use_auth_token=hf_token,
+            )
+            print("DEBUG: after Pipeline.from_pretrained(use_auth_token)", flush=True)
+        except TypeError:
+            print("DEBUG: fallback to token=...", flush=True)
+            print("DEBUG: before Pipeline.from_pretrained(token)", flush=True)
+            self.pipeline = Pipeline.from_pretrained(
+                model_id,
+                token=hf_token,
+            )
+            print("DEBUG: after Pipeline.from_pretrained(token)", flush=True)
+
+        print(f"DEBUG: before pipeline.to({self.device})", flush=True)
         self.pipeline.to(self.device)
+        print("DEBUG: after pipeline.to(device)", flush=True)
 
     def _load_audio(self, audio_path: Path) -> Tuple[torch.Tensor, int]:
         """
         load and preprocess audio file
-
-        - loads audio using torchaudio
-        - downmixes to mono if multi channel
-        - resamples to target sample rate if needed
-
-        args:
-            audio_path path to the audio file
-
-        returns
-            tuple of (waveform tensor, sample rate) 
-            waveform shape is (1, num_samples) - single channel
         """
+        print(f"DEBUG: loading audio {audio_path}", flush=True)
+
         waveform, sample_rate = torchaudio.load(str(audio_path))
 
-        # downmix to mono if stereo or multi channel
+        # downmix to mono
         if waveform.shape[0] > 1:
             waveform = torch.mean(waveform, dim=0, keepdim=True)
 
-        # resample if needed
+        # resample
         if sample_rate != self.target_sample_rate:
+            print("DEBUG: resampling audio", flush=True)
             resampler = torchaudio.transforms.Resample(
-                orig_freq=sample_rate, new_freq=self.target_sample_rate
+                orig_freq=sample_rate,
+                new_freq=self.target_sample_rate,
             )
             waveform = resampler(waveform)
             sample_rate = self.target_sample_rate
@@ -81,35 +97,24 @@ class PyannoteDiarizer:
 
     def diarize_file(self, audio_path: Union[str, Path]) -> Annotation:
         """
-        perform speaker diarization on a single audio file
-
-        args
-            audio_path path to the audio file (wav, flac, etc.)
-
-        returns
-            pyannote annotation object containing speaker segments
+        perform speaker diarization
         """
         audio_path = Path(audio_path)
 
-        # load and preprocess audio
+        print(f"DEBUG: diarizing file {audio_path}", flush=True)
+
         waveform, sample_rate = self._load_audio(audio_path)
 
-        # run diarization pipeline
-        # note waveform stays on cpu pipeline handles device transfer internally
-        diarization = self.pipeline({"waveform": waveform, "sample_rate": sample_rate})
+        print("DEBUG: before pipeline inference", flush=True)
+        diarization = self.pipeline(
+            {"waveform": waveform, "sample_rate": sample_rate}
+        )
+        print("DEBUG: after pipeline inference", flush=True)
+
+        if hasattr(diarization, "speaker_diarization"):
+            diarization = diarization.speaker_diarization
 
         return diarization
 
     def get_waveform(self, audio_path: Union[str, Path]) -> Tuple[torch.Tensor, int]:
-        """
-        get preprocessed waveform for an audio file
-
-        useful for passing to vtc classifier after diarization
-
-        args:
-            audio_path path to the audio file
-
-        returns
-            tuple of (waveform tensor, sample rate)
-        """
         return self._load_audio(Path(audio_path))

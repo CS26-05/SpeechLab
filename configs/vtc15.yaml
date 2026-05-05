@@ -1,13 +1,14 @@
-# SpeechLab Diarization Pipeline Configuration
-# Default: VTC 2.1 (latest). Override at runtime with --config /app/configs/vtcXX.yaml
 models:
   pyannote_pipeline: "pyannote/speaker-diarization-3.1"
 
 voice_type:
   backend: "vtc2"
-  vtc2_root: "/opt/vtc21"
-  vtc2_checkpoint: "VTC-2/model/best.ckpt"
-  vtc2_config: "VTC-2/model/config.toml"
+  vtc2_root: "/opt/vtc15"
+  vtc2_checkpoint: "model/best.ckpt"
+  vtc2_config: "model/config.yml"
+  vtc2_no_device: true
+  vtc2_ckpt_arg: "--ckpt"
+  vtc2_config_arg: "-c"
 
 huggingface:
   token_env_var: "HF_TOKEN"

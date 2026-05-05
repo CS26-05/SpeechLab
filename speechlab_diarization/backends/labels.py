@@ -1,59 +1,65 @@
 """
 canonical label normalization for voice-type classification
 
-provides consistent label mapping across different vtc backends
+provides consistent label mapping across different VTC backends
+
+VTC pipeline output labels:     FEM, MAL, KCHI, OCH
+CHA reference RTTM labels:      FEM, MAL, KCHI, OCH, UNK, SIL
+  UNK and SIL come from the CHA transcript mapping CSV only —
+  they are NOT produced by the VTC classifier.
 """
 
 from __future__ import annotations
 
 from typing import Dict, Optional
 
-# canonical voice-type labels used throughout the pipeline
+# Labels the VTC pipeline produces — the four voice types
 CANONICAL_LABELS = ["FEM", "MAL", "KCHI", "OCH"]
 
-# special labels
-LABEL_NONE = "NONE"  # untyped speech or unknown
-LABEL_SPEECH = "SPEECH"  # generic speech (no subtype)
+# Labels valid in CHA-derived reference RTTMs (superset)
+# UNK = unknown speaker in transcript (MAN, PAR, PAR1-4, UNK codes)
+# SIL = silence / non-speech media (ELE, TEL, TOY codes)
+CHA_RTTM_LABELS = ["FEM", "MAL", "KCHI", "OCH", "UNK", "SIL"]
 
-# vtc 1.0 label mappings (marvinlvn/voice-type-classifier)
+# Special labels — internal pipeline use only, must NOT appear in RTTM output
+LABEL_NONE    = "NONE"   # unmatched / untyped segment inside pipeline
+LABEL_SPEECH  = "SPEECH" # generic speech with no subtype (VTC1 raw label)
+
+# VTC 1.0 label mappings (marvinlvn/voice-type-classifier)
+# Raw labels from apply.sh: FEM, MAL, KCHI, CHI  (one RTTM file per class)
+# "OC" is an alternate spelling written by some VTC 1.0 builds for other-child
 VTC1_LABEL_MAP: Dict[str, str] = {
-    "FEM": "FEM",      # female adult
-    "MAL": "MAL",      # male adult
-    "KCHI": "KCHI",    # key child
-    "CHI": "OCH",      # child -> other child
-    "OCH": "OCH",      # other child
-    "SPEECH": LABEL_NONE,  # generic speech -> none
+    "FEM":    "FEM",
+    "MAL":    "MAL",
+    "KCHI":   "KCHI",      # key child
+    "CHI":    "OCH",       # VTC1 other-child → canonical OCH
+    "OC":     "OCH",       # alternate spelling in some VTC1 builds
+    "OCH":    "OCH",       # defensive: already canonical
+    "SPEECH": LABEL_NONE,  # untyped generic speech → dropped
 }
 
-# vtc 2.0 label mappings (laac-lscp/vtc)
-# labels map directly to canonical (fem, mal, kchi, och)
+# VTC 2.0 label mappings (laac-lscp/vtc)
 VTC2_LABEL_MAP: Dict[str, str] = {
-    "FEM": "FEM",
-    "MAL": "MAL",
+    "FEM":  "FEM",
+    "MAL":  "MAL",
     "KCHI": "KCHI",
-    "OCH": "OCH",
+    "OCH":  "OCH",
 }
 
 
 def normalize_label(raw_label: str, backend: str = "vtc1") -> str:
     """
-    normalize a raw label to canonical form
-    
-    args
-        raw_label: the raw label from the vtc backend
-        backend: the backend name ("vtc1" or "vtc2")
-        
-    returns
-        canonical label (fem, mal, kchi, och) or none if unmapped
+    Normalize a raw backend label to canonical form.
+
+    Returns one of CANONICAL_LABELS or LABEL_NONE if unmapped.
     """
     raw_label = raw_label.upper().strip()
-    
+
     if backend == "vtc1":
         return VTC1_LABEL_MAP.get(raw_label, LABEL_NONE)
     elif backend == "vtc2":
         return VTC2_LABEL_MAP.get(raw_label, LABEL_NONE)
     else:
-        # unknown backend, try direct mapping
         if raw_label in CANONICAL_LABELS:
             return raw_label
         return LABEL_NONE
@@ -61,13 +67,8 @@ def normalize_label(raw_label: str, backend: str = "vtc1") -> str:
 
 def get_one_hot_probabilities(canonical_label: str) -> Dict[str, float]:
     """
-    create a one-hot probability distribution for a canonical label
-    
-    args
-        canonical_label: the canonical label
-        
-    returns
-        dictionary mapping each canonical label to probability
+    Create a one-hot probability distribution for a canonical label.
+    Only uses the four main CANONICAL_LABELS (UNK/SIL have no probability mass).
     """
     probs = {label: 0.0 for label in CANONICAL_LABELS}
     if canonical_label in CANONICAL_LABELS:
@@ -77,11 +78,7 @@ def get_one_hot_probabilities(canonical_label: str) -> Dict[str, float]:
 
 def get_uniform_probabilities() -> Dict[str, float]:
     """
-    create a uniform probability distribution across canonical labels
-    
-    returns
-        dictionary with equal probability for each canonical label
+    Create a uniform probability distribution across the four canonical labels.
     """
     n = len(CANONICAL_LABELS)
     return {label: 1.0 / n for label in CANONICAL_LABELS}
-

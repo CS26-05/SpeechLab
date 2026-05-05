@@ -76,32 +76,38 @@ def _discover_audio_files(input_dir: Path) -> List[Path]:
 
 
 def _create_backend(config: PipelineConfig) -> VoiceTypeBackend:
-    """
-    create voice-type backend based on configuration
-    
-    args:
-        config: pipeline configuration
-        
-    returns:
-        initialized voicetypebackend instance
-    """
     backend_name = config.voice_type.backend
-    
+
     # build backend-specific kwargs
-    kwargs = {"device": config.runtime.device}
-    
-    if backend_name == "vtc1":
+    kwargs = {}
+
+    # only pass device to backends that actually accept it
+    if backend_name in {"vtc1"}:
+        kwargs["device"] = config.runtime.device
         if config.voice_type.vtc1_root:
             kwargs["vtc1_root"] = config.voice_type.vtc1_root
         if config.voice_type.vtc1_conda_env:
             kwargs["conda_env"] = config.voice_type.vtc1_conda_env
-    
+    elif backend_name == "vtc2":
+        kwargs["device"] = config.runtime.device
+        if config.voice_type.vtc2_root:
+            kwargs["vtc2_root"] = config.voice_type.vtc2_root
+        if config.voice_type.vtc2_checkpoint:
+            kwargs["checkpoint"] = config.voice_type.vtc2_checkpoint
+        if config.voice_type.vtc2_config:
+            kwargs["vtc_config"] = config.voice_type.vtc2_config
+        if config.voice_type.vtc2_no_device:
+            kwargs["no_device"] = True
+        if config.voice_type.vtc2_ckpt_arg != "--checkpoint":
+            kwargs["ckpt_arg"] = config.voice_type.vtc2_ckpt_arg
+        if config.voice_type.vtc2_config_arg != "--config":
+            kwargs["config_arg"] = config.voice_type.vtc2_config_arg
     try:
         return get_backend(backend_name, **kwargs)
-    except ValueError as e:
+    except (ValueError, TypeError) as e:
         logger.warning(f"Failed to create backend '{backend_name}': {e}")
         logger.warning("Falling back to stub backend")
-        return get_backend("stub")
+        return get_backend("stub")  # IMPORTANT: no kwargs
 
 
 def _process_file(
@@ -133,11 +139,11 @@ def _process_file(
     # step 2: run voice-type backend on the file
     vtc_available = False
     backend_result: BackendResult = BackendResult(uri=uri, segments=[], success=False)
-    
+
     if backend.is_available():
         logger.info(f"  Running {backend.name} on {audio_path.name}...")
         backend_result = backend.run(audio_path)
-        
+
         if backend_result.success:
             vtc_available = True
             logger.info(f"  {backend.name} found {len(backend_result.segments)} segments")
@@ -249,6 +255,7 @@ def run_pipeline(config: PipelineConfig) -> Dict:
 
     # resolve hf token (never log it!)
     hf_token = _get_hf_token(config)
+    print("DEBUG: resolved HF token", flush=True)
 
     # validate input directory
     input_dir = Path(config.io.input_dir)
@@ -264,19 +271,25 @@ def run_pipeline(config: PipelineConfig) -> Dict:
         return {"processed": 0, "files": []}
 
     logger.info(f"Found {len(audio_files)} audio file(s) in {input_dir}")
+    print("DEBUG: discovered audio files", flush=True)
 
     # initialize diarizer
     logger.info("Initializing pyannote diarization pipeline...")
+    print("DEBUG: reached pipeline.py init point", flush=True)
+    print("DEBUG: about to create PyannoteDiarizer", flush=True)
     diarizer = PyannoteDiarizer(
         model_id=config.models.pyannote_pipeline,
         hf_token=hf_token,
         device=config.runtime.device,
         target_sample_rate=config.runtime.sample_rate,
     )
+    print("DEBUG: finished creating PyannoteDiarizer", flush=True)
 
     # initialize voice-type backend
     logger.info(f"Initializing voice-type backend: {config.voice_type.backend}...")
+    print("DEBUG: about to create backend", flush=True)
     backend = _create_backend(config)
+    print("DEBUG: finished creating backend", flush=True)
 
     if backend.is_available():
         logger.info(f"{backend.name} backend is available")
@@ -289,7 +302,7 @@ def run_pipeline(config: PipelineConfig) -> Dict:
     # process each file
     results = []
     vtc_success_count = 0
-    
+
     for audio_path in audio_files:
         try:
             result = _process_file(

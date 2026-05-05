@@ -1,0 +1,72 @@
+Bootstrap: docker
+From: python:3.13-slim
+
+%environment
+    export PATH="/root/.local/bin:/opt/conda/bin:$PATH"
+    export SPEECHLAB_CONFIG=/app/config.yaml
+    export DEBIAN_FRONTEND=noninteractive
+
+%post
+    # ---- system deps
+    apt-get update && apt-get install -y --no-install-recommends \
+        ffmpeg libsndfile1 git git-lfs curl ca-certificates \
+        wget bzip2 sox libsox-fmt-all \
+    && rm -rf /var/lib/apt/lists/*
+
+    git lfs install
+
+    # ---- uv (for vtc15 / vtc20 / vtc21)
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+    export PATH="/root/.local/bin:$PATH"
+
+    # ---- Miniforge / conda (for vtc10 only)
+    ARCH=$(uname -m)
+    wget -q "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-${ARCH}.sh" \
+        -O /tmp/miniforge.sh
+    bash /tmp/miniforge.sh -b -p /opt/conda
+    rm /tmp/miniforge.sh
+    export PATH="/opt/conda/bin:$PATH"
+
+    # ======== VTC 1.0 — marvinlvn/voice-type-classifier (conda + apply.sh) ========
+    git clone --recurse-submodules \
+        https://github.com/MarvinLvn/voice-type-classifier.git /opt/vtc10
+    cd /opt/vtc10
+    conda env create -f vtc.yml
+    sed -i 's/version=versioneer.get_version()/version="0.0.0"/g' \
+        /opt/vtc10/pyannote-audio/setup.py
+    conda run -n pyannote pip install -e /opt/vtc10/pyannote-audio
+
+    # ======== VTC 1.5 — LAAC-LSCP/VTC-IS-25 (uv + infer.py, Whisper encoder) ========
+    git clone --recurse-submodules \
+        https://github.com/LAAC-LSCP/VTC-IS-25.git /opt/vtc15
+    cd /opt/vtc15 && uv sync
+    cd /opt/vtc15 && uv run scripts/save_load_whisper.py --model small
+
+    # ======== VTC 2.0 — LAAC-LSCP/VTC pinned to tag v2.0.0 (uv + infer.py) ========
+    git clone https://github.com/LAAC-LSCP/VTC.git /opt/vtc20
+    cd /opt/vtc20 && git checkout v2.0.0 && git submodule update --init --recursive
+    cd /opt/vtc20 && uv sync
+
+    # ======== VTC 2.1 — LAAC-LSCP/VTC latest (uv + infer.py) ========
+    git clone --recurse-submodules https://github.com/LAAC-LSCP/VTC.git /opt/vtc21
+    cd /opt/vtc21 && uv sync
+
+    # ======== main app Python env ========
+    # CUDA PyTorch — cu124 matches typical NVIDIA GPU nodes; adjust if needed
+    pip install --no-cache-dir \
+        torch==2.6.0 torchaudio==2.6.0 \
+        --index-url https://download.pytorch.org/whl/cu124
+
+    pip install --no-cache-dir \
+        "huggingface_hub>=0.20,<0.25" \
+        "pyannote.audio>=3.1,<4.0" \
+        "pyyaml>=6.0"
+
+    # ======== clone app ========
+    git clone -b vtc-versioned https://github.com/CS26-05/SpeechLab.git /app
+    cd /app && pip install --no-cache-dir -e .
+
+    mkdir -p /data/input /data/output
+
+%runscript
+    python -m speechlab_diarization.main "$@"
